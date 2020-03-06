@@ -1,0 +1,90 @@
+<div class="row">
+    <div class="col-md-12 ">
+        <h4>{{ initialState.title }}</h4>
+    </div>
+</div>
+<hr>
+<form [formGroup]="formUnit" (ngSubmit)="saveFormUnit()">
+    <div class="row position-absolute">
+        <div class="col-md-12" [ngClass]="{'load-page-visibility':!loadPageStoreUpdate}">
+            <div class="card card-accent-info">
+                <div class="card-body card-personality">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="hidden" formControlName="id">
+                            <label for="name">Nombre *</label>
+                            <div class="input-group">
+                                <input class="form-control" [ngClass]="{'invalid': validation(name)}" formControlName="name" id="name" type="text" (keyup)="showDisplay()">
+                                <div class="input-group-append">
+                                    <ng-template #popTemplate>Agregar superindice con el símbolo '^', se recomienda usar corchetes para agrupar más de un termino en el superindice:<br><span>Ejemplo:</span><br><span>mm^3  => mm<sup>3</sup></span><br><span>10^-1  => 10<sup> -1</sup></span><br><span>10^[-1]mm^3  => 10<sup>-1</sup>mm<sup>3</sup></span></ng-template>
+                                    <button class="btn btn-outline-success" type="button" (click)="addSym()" title="Superindice">x<sup>2</sup></button>
+                                    <button class="btn btn-outline-info" [popover]="popTemplate" popoverTitle="Información" type="button" title="Información" triggers="focus">?</button>
+                                </div>
+                                <div class="text-validation" *ngIf="name.pending">
+                                    <i class="fa fa-spinner fa-spin"></i> Disponibilidad de Nombre
+                                </div>
+                                <div class="text-invalid" *ngIf="validation(name)">
+                                    <div *ngIf="name.hasError('required')">
+                                        <i>El <b>Nombre</b> es obligatorio.</i>
+                                    </div>
+                                    <div *ngIf="name.hasError('maxlength')">
+                                        <i>El <b>Nombre</b> no debe contener más de 100 caracteres.</i>
+                                    </div>
+                                    <div *ngIf="name.hasError('validateUnique')">
+                                        <i>El valor del <b>Nombre</b> ya está en uso.</i>
+                                    </div>
+                                    <div *ngIf="name.hasError('alphaNumericSpace')">
+                                        <i>El <b>Nombre</b>, solo puede contener letras, números y carácteres:"()".</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="display">Mostrar</label>
+                                <div class="form-control">
+                                    <p [innerHTML]="value"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="note">Nota <i>(Opcional)</i></label>
+                                <textarea class="form-control" style="resize: none;" [ngClass]="{'invalid': validation(note)}" formControlName="note" id="note" rows="4"></textarea>
+                                <div class="text-invalid" *ngIf="validation(note)">
+                                    <div *ngIf="note.hasError('maxlength')">
+                                        <i>El <b>Nota</b> no debe contener más de 180 caracteres.</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="status">Estado *</label>
+                                <br>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" formControlName="status" [value]="1" id="statusH" name="status">
+                                    <label class="custom-control-label" for="statusH">Habilitado</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" formControlName="status" [value]="0" id="statusD" name="status">
+                                    <label class="custom-control-label" for="statusD">Deshabilitado</label>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="col-md-12 personality-footer">
+                            <button type="submit" class="btn btn-primary btn-sm" [disabled]="formUnit.invalid || formUnit.pending"><i class="fa fa-fw fa-save" ></i> {{ initialState.btnStoreUpdate }}</button>
+                            <button type="button" class="btn btn-outline-warning btn-sm" (click)="getStore()"><i class="fa fa-fw fa-file-o"></i> Nuevo</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="align-middle-load" *ngIf="!loadPageStoreUpdate">
+            <div class="d-inline-block">
+                <app-load [txtLoad]="txtLoad"></app-load>
+            </div>
+        </div>
+    </div>
+</form>

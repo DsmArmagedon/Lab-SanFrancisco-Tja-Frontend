@@ -1,0 +1,62 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Usuario</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body" [ngClass]="{'load-page-visibility':!loadPage}">
+    <div class="row">
+        <div class="col-md-7 offset-1">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <b>Cédula de Identidad:</b> <span class="pull-right">{{ user?.ci }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Nombres:</b> <span class="pull-right">{{ user?.first_name }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Apellidos:</b> <span class="pull-right">{{ user?.last_name }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Username:</b> <span class="pull-right">{{ user?.username }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Email:</b> <span class="pull-right">{{ user?.email }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Título Profesional:</b> <span class="pull-right">{{ user?.job_title }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Dirección:</b> <span class="pull-right">{{ user?.address }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Rol:</b> <span class="pull-right">{{ user?.role.name }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Cargo:</b> <span class="pull-right">{{ user?.companyPosition.name }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Telefono:</b> <span class="pull-right">{{ user?.phone }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Estado:</b>
+                    <div class="pull-right badge badge-success" *ngIf="user?.status == true">Habilitado</div>
+                    <div class="pull-right badge badge-danger" *ngIf="user?.status == false">Deshabilitado</div>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-3">
+            <div class="card" style="width: 100%;">
+                <img [src]="urlImage" class="card-img-top">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="align-middle-load" *ngIf="!loadPage">
+    <div class="d-inline-block">
+        <app-load [txtLoad]="txtLoad"></app-load>
+    </div>
+</div>
+<div class="modal-footer" [ngClass]="{'load-page-visibility':!loadPage}">
+    <button type="button" class="btn btn-outline-danger" (click)="bsModalRef.hide()">Cerrar</button>
+</div>

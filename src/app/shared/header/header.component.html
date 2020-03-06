@@ -1,0 +1,52 @@
+<header class="app-header navbar">
+    <button class="navbar-toggler sidebar-toggler d-lg-none mr-auto" type="button" (click)="toggle()">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="#">
+        <!-- AQUI VIENE EL LOGO -->
+        <img class="navbar-brand-full logo" src="../../../assets/img/letra-logo.png" alt="Laboratorio San Francisco Tarija Logo">
+        <!-- AQUI VIENE  img/brand/sygnet.svg-->
+
+    </a>
+    <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" (click)="toggle()">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <ul class="nav navbar-nav ml-auto">
+        <div class="ui-g user-navbar">
+            <b>&nbsp;Usuario: &nbsp;</b> {{ user.email }} &nbsp;
+        </div>
+        <li class="nav-item dropdown " [ngClass]="{'show': dropdownActive}">
+            <a class="nav-link nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false" (click)="active($event)">
+                <img class="img-avatar image-user" src="{{ user.images.small }}">
+            </a>
+            <div class="dropdown-menu dropdown-menu-right wobble" [ngClass]="{'show': dropdownActive}">
+                <div class="dropdown-header text-center">
+                    <strong>Administración</strong>
+                </div>
+                <div class="ui-g-6 center" style="width: 100%">
+                    <img class="img-user-avatar center" src="{{ user.images.original }}">
+                </div>
+                <div>
+                    <ul>
+                        <li>
+                            {{ user.fullName | titlecase}}
+                        </li>
+                        <li>
+                            {{ user.email }}
+                        </li>
+                        <li>
+                            {{ user.role.name }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">
+                    <i class="fa fa-user"></i> Pérfil</a>
+                <a class="dropdown-item" href="#">
+                    <i class="fa fa-wrench"></i> Cambiar Contraseña</a>
+                <a class="dropdown-item" (click)="logout()">
+                    <i class="fa fa-sign-out"></i> Logout</a>
+            </div>
+        </li>
+    </ul>
+</header>

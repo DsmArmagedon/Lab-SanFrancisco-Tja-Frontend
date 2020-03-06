@@ -1,0 +1,123 @@
+<div class="row">
+
+    <div class="col-md-4 mb-1">
+        <button class="btn btn-outline-success btn-sm btn-block"><i class="fa fa-fw fa-eye"></i>Ver Prueba Completa</button>
+    </div>
+    <div class="col-md-4 mb-1">
+        <button class="btn btn-outline-warning btn-sm btn-block"><i class="fa fa-fw fa-print"></i>Imprimir Prueba Completa</button>
+    </div>
+    <div class="col-md-4 mb-1">
+        <button class="btn btn-outline-danger btn-sm btn-block" (click)="finish()"><i class="fa fa-fw fa-times"></i>Terminar</button>
+    </div>
+    <div class="w-100"></div>
+    <div class="col-md-6">
+        <div class="card card-accent-info" style="min-height: 350px;">
+            <div class="card-body card-personality">
+                <div class="row justify-content-between">
+                    <div class="col-md-4">
+                        <h5>Títulos</h5>
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <button type="button" class="btn btn-outline-info btn-sm" [disabled]="testSelected == null" (click)="toUpdateTitles()"><i class="fa fa-fw fa-refresh"></i>Actualizar</button>
+                        <button type="button" class="btn btn-outline-success btn-sm ml-2" [disabled]="testSelected == null" (click)="storeTitles()"><i class="fa fa-fw fa-plus" ></i>Añadir</button>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <b>Prueba: </b>
+                        <span> {{ test | uppercase }}</span>
+                    </div>
+                </div>
+
+                <table class="table table-sm mb-0 table-hover">
+                    <thead class="text-center">
+
+                        <td>
+                            Nombre
+                        </td>
+                        <td>
+                            Mostrar
+                        </td>
+                        <td>
+                            Nota
+                        </td>
+                        <td>
+                            H/D
+                        </td>
+                        <td>
+                            Acciones
+                        </td>
+                    </thead>
+                    <ng-container *ngIf="loadTitle; then tbody; else load">
+                    </ng-container>
+
+                    <ng-template #tbody>
+                        <ng-container *ngIf="titles.length > 0; then withValues; else nothingValues">
+                        </ng-container>
+                        <ng-template #withValues>
+                            <tbody>
+                                <tr *ngFor="let title of titles" [ngClass]="{'table-info': selectedRowIndex == title.id}">
+                                    <td>
+                                        {{ title.name }}
+                                    </td>
+                                    <td class="text-center">
+                                        <ng-container *ngIf="title.print; then si; else no">
+                                        </ng-container>
+                                        <ng-template #si>
+                                            <div class="badge badge-success">Si</div>
+                                        </ng-template>
+                                        <ng-template #no>
+                                            <div class="badge badge-danger">No</div>
+                                        </ng-template>
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="btn btn-light btn-sm" *ngIf="title.note" popoverTitle="Nota" popover="{{title.note}}" placement="top" outsideClick="true"><i class="fa fa-fw fa-info"></i></button>
+                                    </td>
+                                    <td class="text-center">
+                                        <ng-container *ngIf="title.status; then habilitado; else deshabilitado">
+                                        </ng-container>
+                                        <ng-template #habilitado>
+                                            <div class="badge badge-success">Habilitado</div>
+                                        </ng-template>
+                                        <ng-template #deshabilitado>
+                                            <div class="badge badge-danger">Deshabilitado</div>
+                                        </ng-template>
+                                    </td>
+                                    <td class="text-right">
+                                        <button type="button" class="btn btn-warning btn-sm mr-1" (click)="showParameters(title)" [disabled]="disabledButtonListParameters" title="Mostrar Parámetros"><i class="fa fa-fw fa-list fa-xs" ></i> </button>
+                                        <button type="button" class="btn btn-info btn-sm mr-1" (click)="updateTitles(title)" title="Editar"><i class="fa fa-fw fa-edit fa-xs" ></i> </button>
+                                        <button type="button" class="btn btn-danger btn-sm" title="Eliminar"><i class="fa fa-fw fa-trash fa-xs"></i> </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </ng-template>
+                        <ng-template #nothingValues>
+                            <tr>
+                                <td colspan="8">
+                                    <div class="alert alert-success">
+                                        <div class="row justify-content-center">
+                                            <h5>No existen títulos registrados.</h5>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </ng-template>
+                    <ng-template #load>
+                        <tr>
+                            <td colspan="5">
+                                <div class="row mt-3 justify-content-center">
+                                    <app-load [txtLoad]="'Cargando Títulos'"></app-load>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <app-parameters-index (statusLoadParameteres)="statusLoadParameters($event)"></app-parameters-index>
+    </div>
+</div>

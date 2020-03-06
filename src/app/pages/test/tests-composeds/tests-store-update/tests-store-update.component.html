@@ -1,0 +1,89 @@
+<form [formGroup]="formTest" (ngSubmit)="saveFormTest()">
+    <div class="card card-accent-info">
+        <div class="card-body card-personality">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Prueba</h5>
+                </div>
+            </div>
+            <div class="row justify-content-center" [ngClass]="{'load-page-visibility':!loadTest}">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="name">Nombre *</label>
+                        <input type="hidden" formControlName="id">
+                        <input class="form-control" [ngClass]="{'invalid': validation(name)}" formControlName="name" id="name" type="text">
+                        <div class="text-validation" *ngIf="name.pending">
+                            <i class="fa fa-spinner fa-spin"></i> Disponibilidad de Nombre
+                        </div>
+                        <div class="text-invalid" *ngIf="validation(name)">
+                            <div *ngIf="name.hasError('required')">
+                                <i>El <b>Nombre</b> es obligatorio.</i>
+                            </div>
+                            <div *ngIf="name.hasError('maxlength')">
+                                <i>El <b>Nombre</b> no debe contener más de 100 caracteres.</i>
+                            </div>
+                            <div *ngIf="name.hasError('validateUnique')">
+                                <i>El valor del <b>Nombre</b> ya está en uso.</i>
+                            </div>
+                            <div *ngIf="name.hasError('alphaNumericSpace')">
+                                <i>El <b>Nombre</b>, solo puede contener letras, números y carácteres:"()".</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-100"></div>
+                <div class="col-md-6">
+                    <label for="type_expense">Estudio *</label>
+                    <app-load-input [loadInput]="loadStudy"></app-load-input>
+                    <ng-select formControlName="study_id" *ngIf="loadStudy" [searchable]="true" [clearable]="false" placeholder="Seleccione un Estudio" [ngClass]="{'invalid': validation(study_id)}">
+                        <ng-option [value]="study.id" *ngFor="let study of studiesDB">{{ study.name | uppercase }}</ng-option>
+                    </ng-select>
+                    <div class="text-invalid" *ngIf="validation(study_id)">
+                        <div *ngIf="study_id.hasError('required')">
+                            <i>El <b>Estudio</b> es obligatorio.</i>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-100"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="price">Precio *</label>
+                        <input type="number" class="form-control" [ngClass]="{'invalid': validation(price)}" formControlName="price">
+                        <div class="text-invalid" *ngIf="validation(price)">
+                            <div *ngIf="price.hasError('required')">
+                                <i>El <b>Precio</b> es obligatorio.</i>
+                            </div>
+                            <div *ngIf="price.hasError('valueMin')">
+                                <i>El <b>Precio</b> debe ser mayor a 0.</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-100"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="status">Estado *</label>
+                        <br>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" class="custom-control-input" formControlName="status" [value]="1" id="statusH" name="status">
+                            <label class="custom-control-label" for="statusH">Habilitado</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" class="custom-control-input" formControlName="status" [value]="0" id="statusD" name="status">
+                            <label class="custom-control-label" for="statusD">Deshabilitado</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-100"></div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-primary btn-sm mt-3" [disabled]="formTest.invalid || formTest.pending"><i class="fa fa-fw fa-save" ></i> {{ initialState.btnStoreUpdate }}</button>
+                </div>
+            </div>
+        </div>
+        <div class="align-middle-load" *ngIf="!loadTest">
+            <div class="d-inline-block">
+                <app-load [txtLoad]="txtLoad"></app-load>
+            </div>
+        </div>
+    </div>
+</form>

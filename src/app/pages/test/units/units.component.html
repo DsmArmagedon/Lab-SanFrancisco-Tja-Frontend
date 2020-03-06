@@ -1,0 +1,15 @@
+<div class="main-container">
+    <div class="header-main-container">
+        <div class="title align-center-vertical">
+            UNIDADES
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <app-units-store-update (executeIndex)="executeIndex($event)" (selectRowIndexNull)="selectRowIndexNull($event)"></app-units-store-update>
+        </div>
+        <div class="col-md-8">
+            <app-units-index></app-units-index>
+        </div>
+    </div>
+</div>

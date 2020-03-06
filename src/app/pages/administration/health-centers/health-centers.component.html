@@ -1,0 +1,15 @@
+<div class="main-container">
+    <div class="header-main-container">
+        <div class="title align-center-vertical">
+            CENTROS DE SALUD
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <app-health-centers-store-update (executeIndex)="executeIndex($event)" (selectRowIndexNull)="selectRowIndexNull($event)"></app-health-centers-store-update>
+        </div>
+        <div class="col-md-8">
+            <app-health-centers-index></app-health-centers-index>
+        </div>
+    </div>
+</div>

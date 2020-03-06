@@ -1,0 +1,79 @@
+<form [formGroup]="formFilter" (submit)="filter()">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="input-group input-group-sm mb-1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Código</span>
+                </div>
+                <input type="text" class="form-control" formControlName="expense_code" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="input-group input-group-sm mb-1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Descripción</span>
+                </div>
+                <input type="text" class="form-control" formControlName="expense_description" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group input-group-sm mb-1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Tipo de Gasto</span>
+                </div>
+                <input type="text" class="form-control" formControlName="type_expense_name" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="input-group input-group-sm mb-1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Monto</span>
+                </div>
+                <select class="form-control" id="inputGroupSelect01" formControlName="expense_operator">
+                    <option value="=">Igual a:</option>
+                    <option value=">">Mayor a:</option>
+                    <option value="<">Menor a:</option>
+                  </select>
+                <input type="text" class="form-control" formControlName="expense_amount" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="input-group input-group-sm mb-1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Fecha</span>
+                </div>
+                <select class="form-control" id="date" formControlName="expense_date_option" (change)="changeDate()">
+                    <option value="">Todo</option>
+                    <option value="date_day">Día Actual</option>
+                    <option value="date_month">Mes Actual</option>
+                    <option value="date_year">Año Actual</option>
+                    <option value="date_range">Rango de Fechas</option>
+                  </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-group input-group-sm mb-1" *ngIf="rangeDateFlag">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Rango</span>
+                </div>
+                <input type="text" formControlName="expense_date" class="form-control" bsDaterangepicker [bsConfig]="config">
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="input-group input-group-sm mb-1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Estado</span>
+                </div>
+                <select clasS="form-control" formControlName="expense_status">
+                        <option value="revoke-restore">Todo</option>
+                        <option value="">Activo</option>
+                        <option value="revoke">Anulado</option>
+                    </select>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-outline-primary btn-sm btn-block"><i class="fa fa-fw fa-search"></i>Buscar</button>
+        </div>
+    </div>
+</form>

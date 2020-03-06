@@ -1,0 +1,101 @@
+<div class="card card-accent-info" style="min-height: 350px;">
+    <div class="card-body card-personality">
+        <div class="row justify-content-between">
+            <div class="col-md-4">
+                <h5>Parámetros</h5>
+            </div>
+            <div class="col-md-4 text-right">
+                <button type="button" class="btn btn-outline-info btn-sm" [disabled]="titleSelected === null" (click)="toUpdateParameters()"><i class="fa fa-fw fa-refresh"></i>Actualizar</button>
+                <button type="button" class="btn btn-outline-success btn-sm ml-2" (click)="storeParameters()"><i class="fa fa-fw fa-plus" ></i>Añadir</button>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <b>Título: </b>
+                <span> {{ title | uppercase }}</span>
+            </div>
+        </div>
+        <table class="table table-sm mb-0 table-hover">
+            <thead class="text-center">
+
+                <td>
+                    Nombre
+                </td>
+                <td>
+                    Unidad
+                </td>
+                <td>
+                    Tipo de Dato
+                </td>
+                <td>
+                    H/D
+                </td>
+                <td>
+                    Acciones
+                </td>
+            </thead>
+            <ng-container *ngIf="loadParameters; then tbody; else load">
+            </ng-container>
+            <ng-template #tbody>
+                <ng-container *ngIf="parameters.length > 0; then withValues; else nothingValues">
+                </ng-container>
+                <ng-template #withValues>
+                    <tbody>
+                        <tr *ngFor="let parameter of parameters">
+                            <td>
+                                {{ parameter.name }}
+                            </td>
+                            <td>
+                                <span [innerHTML]="parameter.unit.display"></span>
+                            </td>
+                            <td>
+                                {{ parameter.type_data | typeData}}
+                            </td>
+                            <td>
+                                <ng-container *ngIf="parameter.status; then habilitado; else deshabilitado">
+                                </ng-container>
+                                <ng-template #habilitado>
+                                    <div class="badge badge-success">Habilitado</div>
+                                </ng-template>
+                                <ng-template #deshabilitado>
+                                    <div class="badge badge-danger">Deshabilitado</div>
+                                </ng-template>
+                            </td>
+                            <td class="text-right">
+                                <button type="button" class="btn btn-success btn-sm mr-1" title="Mostrar"><i class="fa fa-fw fa-eye fa-xs"></i></button>
+                                <button type="button" class="btn btn-info btn-sm mr-1" (click)="updateParameter(parameter)" title="Editar"><i class="fa fa-fw fa-edit fa-xs"></i></button>
+                                <button type="button" class="btn btn-dark btn-sm mr-1" title="Agregar Valores Normales"><i class="fa fa-fw fa-cog fa-xs"></i></button>
+                                <button type="button" class="btn btn-danger btn-sm mr-0" title="Eliminar"><i class="fa fa-fw fa-trash fa-xs"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </ng-template>
+                <ng-template #nothingValues>
+                    <tr>
+                        <td colspan="5">
+                            <div class="alert alert-success">
+                                <div class="row justify-content-center" *ngIf="titleSelected !== null">
+                                    <h5>No existen parámetros registrados.</h5>
+                                </div>
+
+                                <div class="row justify-content-center" *ngIf="titleSelected == null">
+                                    <h5>Seleccione un Título.</h5>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </ng-template>
+            <ng-template #load>
+                <tr>
+                    <td colspan="5">
+                        <div class="row mt-3 justify-content-center">
+                            <app-load [txtLoad]="'Cargando Parámetros'" [width]="'145px'"></app-load>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </table>
+    </div>
+</div>

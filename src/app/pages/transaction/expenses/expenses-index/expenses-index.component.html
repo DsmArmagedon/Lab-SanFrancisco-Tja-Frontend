@@ -1,0 +1,133 @@
+<div class="row">
+    <div class="col-md-12">
+        <h4>Listar Gastos</h4>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-md-6">
+        <span>Mostrar </span>
+        <select class="form-control-sm block" [(ngModel)]="perPage" (change)="changePerPage()">
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+            </select>
+        <span> registros</span>
+    </div>
+    <div class="col-md-6">
+        <button type="button" class="btn btn-outline-info btn-sm float-right" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="filter">
+                <i class="fa fa-fw fa-arrow-up" *ngIf="!isCollapsed"></i>
+                <i class="fa fa-fw fa-arrow-down" *ngIf="isCollapsed"></i>
+                Filtrar
+            </button>
+        <button type="button" class="btn btn-info btn-sm float-right mr-1" *ngIf="!isCollapsed" (click)="resetFormFilter()">
+                <i class="fa fa-fw fa-eraser"></i>
+                Limpiar
+        </button>
+    </div>
+</div>
+<div id="filter" [collapse]="isCollapsed" [isAnimated]="true">
+    <div class="well well-lg card card-block card-header">
+        <app-expenses-filter (formGroupOutput)="filter($event)"></app-expenses-filter>
+    </div>
+</div>
+<hr>
+<table class="table table-sm table-hover">
+    <thead>
+
+        <td>
+            Código
+        </td>
+        <td>
+            Fecha
+        </td>
+        <td>
+            Descripción
+        </td>
+        <td>
+            Tipo de Gasto
+        </td>
+        <td>
+            Monto
+        </td>
+        <td>
+            H/D
+        </td>
+        <td>
+            Acciones
+        </td>
+    </thead>
+    <ng-container *ngIf="loadPage; then tbody; else load">
+    </ng-container>
+    <ng-template #tbody>
+        <ng-container *ngIf="expenses.length > 0; then withValues; else nothingValues">
+        </ng-container>
+        <ng-template #withValues>
+            <tbody>
+                <tr *ngFor="let expense of expenses">
+                    <td>
+                        {{ expense.code }}
+                    </td>
+                    <td>
+                        {{ expense.date_expense }}
+                    </td>
+                    <td>
+                        {{ expense.description }}
+                    </td>
+                    <td>
+                        {{ expense.typeExpense.name }}
+                    </td>
+                    <td class="text-right pr-4">
+                        {{ expense.amount | number:'1.2-2':'es'}}
+                    </td>
+                    <td>
+                        <ng-container *ngIf="expense.status; then habilitado; else deshabilitado">
+                        </ng-container>
+                        <ng-template #habilitado>
+                            <div class="badge badge-success">Activo</div>
+                        </ng-template>
+                        <ng-template #deshabilitado>
+                            <div class="badge badge-danger">Anulado</div>
+                        </ng-template>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-success btn-sm mr-1" (click)="showExpenses(expense)"><i class="fa fa-fw fa-eye fa-xs"></i></button>
+                        <button type="button" class="btn btn-info btn-sm mr-1" (click)="updateExpenses(expense.code)" *ngIf="valUpdateDeleteForDate(expense.date_expense)"><i class="fa fa-fw fa-edit fa-xs" ></i> </button>
+                        <button type="button" class="btn btn-danger btn-sm" (click)="revokeExpenses(expense.code)" *ngIf="expense.status && valUpdateDeleteForDate(expense.date_expense)" title="Anular"><i class="fa fa-fw fa-close fa-xs" ></i> </button>
+                        <button type="button" class="btn btn-success btn-sm" (click)="restoreExpenses(expense.code)" *ngIf="!expense.status  && valUpdateDeleteForDate(expense.date_expense)" title="Restaurar"><i class="fa fa-fw fa-check fa-xs" ></i> </button>
+                    </td>
+                </tr>
+            </tbody>
+        </ng-template>
+        <ng-template #nothingValues>
+            <tr>
+                <td colspan="8">
+                    <div class="alert alert-success">
+                        <div class="row justify-content-center">
+                            <h5>{{expenses.length}} Gastos encontrados</h5>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </ng-template>
+    <ng-template #load>
+        <tr>
+            <td colspan="8">
+                <div class="row mt-3 justify-content-center">
+                    <app-load [txtLoad]="'Cargando Gastos'"></app-load>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+</table>
+<div class="row" [style.visibility]="loadPage && expenses.length > 0 ? 'visible' : 'hidden'">
+    <div class="col-md-6">
+        <pagination [boundaryLinks]="true" [totalItems]="meta.total" (pageChanged)="pageChanged($event)" [itemsPerPage]="meta.per_page" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [maxSize]="maxSize" [(ngModel)]="currentPage">
+        </pagination>
+    </div>
+    <div class="col-md-6 text-right">
+        {{ meta.from }} - {{ meta.to }} de {{ meta.total }} registros
+    </div>
+</div>

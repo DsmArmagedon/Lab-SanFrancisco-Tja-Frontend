@@ -1,0 +1,35 @@
+<form [formGroup]="formFilter" (submit)="filter()">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="input-group input-group-sm mb-1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Nombre</span>
+                </div>
+                <input type="text" class="form-control" formControlName="study_name" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group input-group-sm mb-1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Descripción</span>
+                </div>
+                <input type="text" class="form-control" formControlName="study_description" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-group input-group-sm mb-1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Estado</span>
+                </div>
+                <select clasS="form-control" formControlName="study_status">
+                        <option value="">Todo</option>
+                        <option value="1">Habilitado</option>
+                        <option value="0">Deshabilitado</option>
+                    </select>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <button type="submit" class="btn btn-outline-primary btn-sm btn-block"><i class="fa fa-fw fa-search"></i></button>
+        </div>
+    </div>
+</form>

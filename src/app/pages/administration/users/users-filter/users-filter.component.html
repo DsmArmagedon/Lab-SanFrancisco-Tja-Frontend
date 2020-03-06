@@ -1,0 +1,69 @@
+<form [formGroup]="formFilter" (submit)="filter()">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="input-group input-group-sm mb-1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Cédula de Identidad</span>
+                </div>
+                <input type="text" class="form-control" formControlName="user_ci" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-group input-group-sm mb-1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Nombres</span>
+                </div>
+                <input type="text" class="form-control" formControlName="user_first_name" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-group input-group-sm mb-1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Apellidos</span>
+                </div>
+                <input type="text" class="form-control" formControlName="user_last_name" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-group input-group-sm mb-1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Email</span>
+                </div>
+                <input type="text" class="form-control" formControlName="user_email" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="input-group input-group-sm mb-1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Rol</span>
+                </div>
+                <input type="text" class="form-control" formControlName="role_name" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-group input-group-sm mb-1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Cargo</span>
+                </div>
+                <input type="text" class="form-control" formControlName="company_position_name" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-group input-group-sm mb-1">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Estado</span>
+                </div>
+                <select clasS="form-control" formControlName="user_status">
+                        <option value="">Todo</option>
+                        <option value="1">Habilitado</option>
+                        <option value="0">Deshabilitado</option>
+                    </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-outline-primary btn-sm btn-block"><i class="fa fa-fw fa-search"></i>Buscar</button>
+        </div>
+    </div>
+</form>

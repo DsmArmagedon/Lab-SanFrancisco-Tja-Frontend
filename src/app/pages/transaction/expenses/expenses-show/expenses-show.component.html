@@ -1,0 +1,50 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Gasto</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <b>Código:</b> <span> {{ expense.code }}</span>
+                        </div>
+                        <div class="col-md-6">
+                            <b>Fecha:</b> <span> {{ expense.date_expense }}</span>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <b>Nombre del Responsable:</b> <span> {{ expense.name_responsible }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Tipo de Gasto:</b> <span> {{ expense.typeExpense.name }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Monto Pagado:</b> <span> {{ expense.amount }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Documento:</b> <span> {{ expense.document | uppercase }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Número o Código de Documento:</b> <span> {{ expense.serial_document }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Descripción:</b> <span> {{ expense.description }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Estado:</b>
+                    <span class="badge badge-success" *ngIf="expense?.status == true"> Activo</span>
+                    <span class="badge badge-danger" *ngIf="expense?.status == false"> Anulado</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-danger" (click)="bsModalRef.hide()">Cerrar</button>
+</div>

@@ -1,0 +1,113 @@
+<div class="row">
+    <div class="col-md-12">
+        <h4>Listar Roles</h4>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-md-6">
+        <span>Mostrar </span>
+        <select class="form-control-sm block" [(ngModel)]="perPage" (change)="changePerPage()">
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+            </select>
+        <span> registros</span>
+    </div>
+    <div class="col-md-6">
+        <button type="button" class="btn btn-outline-info btn-sm float-right" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="filter">
+                <i class="fa fa-fw fa-arrow-up" *ngIf="!isCollapsed"></i>
+                <i class="fa fa-fw fa-arrow-down" *ngIf="isCollapsed"></i>
+                Filtrar
+            </button>
+        <button type="button" class="btn btn-info btn-sm float-right mr-1" *ngIf="!isCollapsed" (click)="resetFormFilter()">
+                <i class="fa fa-fw fa-eraser"></i>
+                Limpiar
+        </button>
+    </div>
+</div>
+<div id="filter" [collapse]="isCollapsed" [isAnimated]="true">
+    <div class="well well-lg card card-block card-header">
+        <app-roles-filter (formGroupOutput)="filter($event)"></app-roles-filter>
+    </div>
+</div>
+<hr>
+<table class="table table-sm table-hover">
+    <thead>
+        <td>
+            Nombre
+        </td>
+        <td>
+            Descripción
+        </td>
+        <td>
+            H/D
+        </td>
+        <td>
+            Acciones
+        </td>
+    </thead>
+    <ng-container *ngIf="loadPage; then tbody; else load">
+    </ng-container>
+    <ng-template #tbody>
+        <ng-container *ngIf="roles.length > 0; then withValues; else nothingValues">
+        </ng-container>
+        <ng-template #withValues>
+            <tbody>
+                <tr *ngFor="let role of roles">
+                    <td>
+                        {{ role.name }}
+                    </td>
+                    <td>
+                        {{ role.description }}
+                    </td>
+                    <td>
+                        <ng-container *ngIf="role.status; then habilitado; else deshabilitado">
+                        </ng-container>
+                        <ng-template #habilitado>
+                            <div class="badge badge-success"><i class="fa fa-check"></i></div>
+                        </ng-template>
+                        <ng-template #deshabilitado>
+                            <div class="badge badge-danger"><i class="fa fa-close"></i></div>
+                        </ng-template>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-success btn-sm mr-1" (click)="showRoles(role.id)"><i class="fa fa-fw fa-eye fa-xs"></i></button>
+                        <button type="button" class="btn btn-info btn-sm mr-1" (click)="updateRoles(role.id)"><i class="fa fa-fw fa-edit fa-xs" ></i> </button>
+                        <button type="button" class="btn btn-danger btn-sm" (click)="destroyRoles(role.id, role.name)"><i class="fa fa-fw fa-trash fa-xs"></i> </button>
+                    </td>
+                </tr>
+            </tbody>
+        </ng-template>
+        <ng-template #nothingValues>
+            <tr>
+                <td colspan="8">
+                    <div class="alert alert-success">
+                        <div class="row justify-content-center">
+                            <h5>{{roles.length}} Roles encontrados</h5>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </ng-template>
+    <ng-template #load>
+        <tr>
+            <td colspan="8">
+                <div class="row mt-3 justify-content-center">
+                    <app-load [txtLoad]="'Cargando Roles'"></app-load>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+</table>
+<div class="row" [style.visibility]="loadPage && roles.length > 0 ? 'visible' : 'hidden'">
+    <div class="col-md-6">
+        <pagination [boundaryLinks]="true" [totalItems]="meta.total" (pageChanged)="pageChanged($event)" [itemsPerPage]="meta.per_page" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [maxSize]="maxSize" [(ngModel)]="currentPage">
+        </pagination>
+    </div>
+    <div class="col-md-6 text-right">
+        {{ meta.from }} - {{ meta.to }} de {{ meta.total }} registros
+    </div>
+</div>

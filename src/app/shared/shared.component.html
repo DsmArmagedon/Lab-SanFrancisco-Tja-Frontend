@@ -1,0 +1,12 @@
+<div class="app header-fixed sidebar-fixed" id="box" [ngClass]="{'sidebar-show':toggle}">
+    <app-header (statusSidebar)=sideBar($event)></app-header>
+    <div class="app-body">
+        <div class="sidebar" style="box-sizing: border-box;">
+            <app-siderbar></app-siderbar>
+        </div>
+        <main class="main">
+            <router-outlet></router-outlet>
+        </main>
+    </div>
+    <app-footer></app-footer>
+</div>

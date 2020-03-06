@@ -1,0 +1,15 @@
+<div class="main-container">
+    <div class="header-main-container">
+        <div class="title align-center-vertical">
+            ESTUDIOS
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <app-studies-store-update (executeIndex)="executeIndex($event)" (selectRowIndexNull)="selectRowIndexNull($event)"></app-studies-store-update>
+        </div>
+        <div class="col-md-8">
+            <app-studies-index></app-studies-index>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,74 @@
+<div class="row">
+    <div class="col-md-12 ">
+        <h4>{{ initialState.title }}</h4>
+    </div>
+</div>
+<hr>
+<form [formGroup]="formStudy" (ngSubmit)="saveFormStudy()">
+    <div class="row position-absolute">
+        <div class="col-md-12" [ngClass]="{'load-page-visibility':!loadPageStoreUpdate}">
+            <div class="card card-accent-info">
+                <div class="card-body card-personality">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="name">Nombre *</label>
+                                <input type="hidden" formControlName="id">
+                                <input class="form-control" [ngClass]="{'invalid': validation(name)}" formControlName="name" id="name" type="text">
+                                <div class="text-validation" *ngIf="name.pending">
+                                    <i class="fa fa-spinner fa-spin"></i> Disponibilidad de Nombre
+                                </div>
+                                <div class="text-invalid" *ngIf="validation(name)">
+                                    <div *ngIf="name.hasError('required')">
+                                        <i>El <b>Nombre</b> es obligatorio.</i>
+                                    </div>
+                                    <div *ngIf="name.hasError('maxlength')">
+                                        <i>El <b>Nombre</b> no debe contener más de 100 caracteres.</i>
+                                    </div>
+                                    <div *ngIf="name.hasError('validateUnique')">
+                                        <i>El valor del <b>Nombre</b> ya está en uso.</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="description">Descripción <i>(Opcional)</i></label>
+                                <textarea class="form-control" style="resize: none;" [ngClass]="{'invalid': validation(description)}" formControlName="description" id="description" rows="4"></textarea>
+                                <div class="text-invalid" *ngIf="validation(description)">
+                                    <div *ngIf="description.hasError('maxlength')">
+                                        <i>El <b>Descripción</b> no debe contener más de 180 caracteres.</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="status">Estado *</label>
+                                <br>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" formControlName="status" [value]="1" id="statusH" name="status">
+                                    <label class="custom-control-label" for="statusH">Habilitado</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" formControlName="status" [value]="0" id="statusD" name="status">
+                                    <label class="custom-control-label" for="statusD">Deshabilitado</label>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="col-md-12 personality-footer">
+                            <button type="submit" class="btn btn-primary btn-sm" [disabled]="formStudy.invalid || formStudy.pending"><i class="fa fa-fw fa-save" ></i> {{ initialState.btnStoreUpdate }}</button>
+                            <button type="button" class="btn btn-outline-warning btn-sm" (click)="getStore()"><i class="fa fa-fw fa-file-o"></i> Nuevo</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="align-middle-load" *ngIf="!loadPageStoreUpdate">
+            <div class="d-inline-block">
+                <app-load [txtLoad]="txtLoad"></app-load>
+            </div>
+        </div>
+    </div>
+</form>

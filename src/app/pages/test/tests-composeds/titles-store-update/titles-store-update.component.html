@@ -1,0 +1,80 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">{{titleModal}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<form [formGroup]="formTitle" (ngSubmit)="saveFormTitle()" autocomplete="off">
+    <div class="modal-body" [ngClass]="{'load-page-visibility':!loadPage}">
+        <h6>Prueba: {{nameTest}}</h6>
+        <div class="row">
+            <div class="col-sm-12 ">
+                <hr>
+                <div class="form-group">
+                    <label for="name">Nombre *</label>
+                    <input type="hidden" formControlName="id">
+                    <input class="form-control" [ngClass]="{'invalid': validation(name)}" formControlName="name" id="name" type="text">
+                    <div class="text-validation" *ngIf="name.pending">
+                        <i class="fa fa-spinner fa-spin"></i> Disponibilidad del Nombre
+                    </div>
+                    <div class="text-invalid" *ngIf="validation(name)">
+                        <div *ngIf="name.hasError('required')">
+                            <i>El <b>Nombre</b> es obligatorio.</i>
+                        </div>
+                        <div *ngIf="name.hasError('minlength')">
+                            <i>El <b>Nombre</b> debe contener menos de 10 caracteres</i>
+                        </div>
+                        <div *ngIf="name.hasError('maxlength')">
+                            <i>El <b>Nombre</b> no debe contener más de 15 caracteres.</i>
+                        </div>
+                        <div *ngIf="name.hasError('validateUnique')">
+                            <i>El valor del <b>Nombre</b> ya está en uso.</i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="note">Nota <i>(Opcional)</i></label>
+                    <textarea class="js form-control" style="resize: none;" [ngClass]="{'invalid': validation(note)}" rows="4" formControlName="note" id="note"></textarea>
+                    <div class="text-invalid" *ngIf="validation(note)">
+                        <div *ngIf="note.hasError('maxlength')">
+                            <i>El <b>Nota</b> no debe contener más de 180 caracteres.</i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="statusTitle">Estado *</label>
+                    <br>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" formControlName="status" [value]="1" id="statusTitleH" name="status">
+                        <label class="custom-control-label" for="statusTitleH">Habilitado</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" formControlName="status" [value]="0" id="statusTitleD" name="status">
+                        <label class="custom-control-label" for="statusTitleD">Deshabilitado</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <hr>
+                <div class="custom-control custom-checkbox">
+                    <input class="custom-control-input" [ngClass]="{'invalid': validation(print)}" formControlName="print" id="print" type="checkbox">
+                    <label class="custom-control-label" for="print">Mostrar Título en Formularios</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="align-middle-load" *ngIf="!loadPage">
+        <div class="d-inline-block">
+            <app-load [txtLoad]="txtLoad"></app-load>
+        </div>
+    </div>
+    <div class="modal-footer" [ngClass]="{'load-page-visibility': !loadPage}">
+        <button type="button" class="btn btn-outline-danger btn-sm" (click)="bsModalRef.hide()"><i class="fa fa-fw fa-times"></i>Cerrar</button>
+        <button type="submit" class="btn btn-primary btn-sm" [disabled]="formTitle.invalid || formTitle.pending"><i class="fa fa-save"></i> {{ btnStoreUpdate }}</button>
+    </div>
+</form>

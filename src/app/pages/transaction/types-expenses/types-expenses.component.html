@@ -1,0 +1,15 @@
+<div class="main-container">
+    <div class="header-main-container">
+        <div class="title align-center-vertical">
+            TIPOS DE GASTO
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <app-types-expenses-store-update (executeIndex)="executeIndex($event)" (selectRowIndexNull)="selectRowIndexNull($event)"></app-types-expenses-store-update>
+        </div>
+        <div class="col-md-8">
+            <app-types-expenses-index></app-types-expenses-index>
+        </div>
+    </div>
+</div>

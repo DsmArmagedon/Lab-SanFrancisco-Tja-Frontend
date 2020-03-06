@@ -1,0 +1,123 @@
+<div class="row">
+    <div class="col-md-12">
+        <h4>{{ initialState.title }}</h4>
+    </div>
+</div>
+<hr>
+<form [formGroup]="formExpense" (ngSubmit)="saveFormExpense()">
+    <div class="row  justify-content-center">
+        <div class="col-md-6">
+            <div class="card card-accent-info" [ngClass]="{'load-page-visibility':!loadPage}">
+                <div class="card-body card-personality">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="date_expense_notFormat">Fecha *</label>
+                                <input type="text" class="form-control" [minDate]="minDate" [maxDate]="maxDate" formControlName="date_expense_notFormat" [bsConfig]="configDateExpense" bsDatepicker [ngClass]="{'invalid': validation(date_expense_notFormat)}">
+                                <div class="text-invalid" *ngIf="validation(date_expense_notFormat)">
+                                    <div *ngIf="date_expense_notFormat.hasError('bsDate')">
+                                        <i>El <b>Fecha</b> es incorrecto.</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="code">Código *</label>
+                                <input type="hidden" formControlName="id">
+                                <app-load-input [loadInput]="loadCode"></app-load-input>
+                                <input *ngIf="loadCode" class="form-control" readonly [ngClass]="{'invalid': validation(code)}" formControlName="code" id="code" type="text">
+                            </div>
+                        </div>
+                        <div class="w-100"></div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="name_responsible">Nombre del Responsable *</label>
+                                <input type="text" class="form-control" [ngClass]="{'invalid': validation(name_responsible)}" formControlName="name_responsible">
+                                <div class="text-invalid" *ngIf="validation(name_responsible)">
+                                    <div *ngIf="name_responsible.hasError('required')">
+                                        <i>El <b>Nombre del Responsable</b> es obligatorio.</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="type_expense">Tipo de Gasto *</label>
+                                <app-load-input [loadInput]="loadTypeExpense"></app-load-input>
+                                <ng-select formControlName="type_expense_id" *ngIf="loadTypeExpense" [searchable]="true" [clearable]="false" placeholder="Seleccione un Tipo de Gasto" [ngClass]="{'invalid': validation(type_expense_id)}">
+                                    <ng-option [value]="typeExpense.id" *ngFor="let typeExpense of typeExpensesDB">{{ typeExpense.name | uppercase }}</ng-option>
+                                </ng-select>
+                                <div class="text-invalid" *ngIf="validation(type_expense_id)">
+                                    <div *ngIf="type_expense_id.hasError('required')">
+                                        <i>El <b>Tipo de Gasto</b> es obligatorio.</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="amount">Monto Pagado *</label>
+                                <input type="number" class="form-control" [ngClass]="{'invalid': validation(amount)}" formControlName="amount">
+                                <div class="text-invalid" *ngIf="validation(amount)">
+                                    <div *ngIf="amount.hasError('required')">
+                                        <i>El <b>Monto Pagado</b> es obligatorio.</i>
+                                    </div>
+                                    <div *ngIf="amount.hasError('valueMin')">
+                                        <i>El <b>Monto Pagado</b> debe ser mayor a 0.</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <hr>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="document">Documento <i>(Opcional)</i></label>
+                                <ng-select formControlName="document" bindLabel="name" bindValue="id" [items]="documentDB" [searchable]="false" [clearable]="true" placeholder="Seleccione un Documento" (change)="onChange($event)"></ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="serial_document">Número o Código del Documento <i>(opcional)</i></label>
+                                <input type="text" class="form-control" [ngClass]="{'invalid': validation(serial_document)}" formControlName="serial_document">
+                                <div class="text-invalid" *ngIf="validation(serial_document)">
+                                    <div *ngIf="serial_document.hasError('required')">
+                                        <i>El <b>Número o Código del Documento</b> es obligatorio.</i>
+                                    </div>
+                                    <div *ngIf="serial_document.hasError('maxlength')">
+                                        <i>El <b>Número o Código del Documento</b> no debe contener más de 100 caracteres.</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="name">Descripción *</label>
+                                <textarea class="form-control" style="resize: none;" [ngClass]="{'invalid': validation(description)}" formControlName="description" id="description" rows="4"></textarea>
+                                <div class="text-invalid" *ngIf="validation(description)">
+                                    <div *ngIf="description.hasError('required')">
+                                        <i>El <b>Descripción</b> es obligatorio.</i>
+                                    </div>
+                                    <div *ngIf="description.hasError('maxlength')">
+                                        <i>El <b>Descripción</b> no debe contener más de 100 caracteres.</i>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                        <div class="col-md-12 personality-footer">
+                            <button type="submit" class="btn btn-primary btn-sm" [disabled]="formExpense.invalid"><i class="fa fa-fw fa-save" ></i> {{ initialState.btnStoreUpdate }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="align-middle-load" *ngIf="!loadPage">
+                <div class="d-inline-block">
+                    <app-load [txtLoad]="txtLoad"></app-load>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
