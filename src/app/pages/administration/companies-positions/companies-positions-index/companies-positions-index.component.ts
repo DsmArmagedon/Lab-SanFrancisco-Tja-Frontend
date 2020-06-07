@@ -50,7 +50,7 @@ export class CompaniesPositionsIndexComponent implements OnInit {
 
   updateCompanyPositions(companyPosition: CompanyPosition): void {
     this.selectedRowIndex = companyPosition.id;
-    this.companyPositionService.editCompanyPositionObs(companyPosition);
+    this.companyPositionService.updateCompanyPositionObs(companyPosition);
   }
 
   resetFormFilter(): void {

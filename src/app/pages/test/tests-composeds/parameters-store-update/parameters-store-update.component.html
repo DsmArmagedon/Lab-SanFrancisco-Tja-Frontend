@@ -1,1 +1,129 @@
-<p>parameters-store-update works!</p>
+<div class="modal-header">
+    <h4 class="modal-title pull-left">{{titleModal}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<form [formGroup]="formParameter" (ngSubmit)="saveFormParameter()" autocomplete="off">
+    <div class="modal-body" [ngClass]="{'load-page-visibility':!loadPage}">
+        <div class="row">
+            <div class="col-sm-7 ">
+                <div class="form-group">
+                    <label for="name">Nombre *</label>
+                    <input type="hidden" formControlName="id">
+                    <input class="form-control" [ngClass]="{'invalid': validation(name)}" formControlName="name" id="name" type="text">
+                    <div class="text-validation" *ngIf="name.pending">
+                        <i class="fa fa-spinner fa-spin"></i> Disponibilidad del Nombre
+                    </div>
+                    <div class="text-invalid" *ngIf="validation(name)">
+                        <div *ngIf="name.hasError('required')">
+                            <i>El <b>Nombre</b> es obligatorio.</i>
+                        </div>
+                        <div *ngIf="name.hasError('maxlength')">
+                            <i>El <b>Nombre</b> no debe contener más de 100 caracteres.</i>
+                        </div>
+                        <div *ngIf="name.hasError('validateUnique')">
+                            <i>El valor del <b>Nombre</b> ya está en uso.</i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <label for="unit_id">Unidad de Medida <i>(Opc.)</i></label>
+                    <app-load-input [loadInput]="loadUnits"></app-load-input>
+                    <ng-select *ngIf="loadUnits" placeholder="Seleccione una Unidad" formControlName="unit_id">
+                        <ng-option value="unitDB.id" *ngFor="let unitDB of unitsDB"><span [innerHTML]="unitDB.display"></span></ng-option>
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="title_test_id">Título *</label>
+                    <app-load-input [loadInput]="loadTitles"></app-load-input>
+                    <ng-select [clearable]="false" *ngIf="loadTitles" placeholder="Seleccione un Título" id="title_test_id" bindValue="id" bindLabel="name" [items]="titlesDB" formControlName="title_test_id"></ng-select>
+                    <div class="text-invalid" *ngIf="validation(title_test_id)">
+                        <div *ngIf="title_test_id.hasError('required')">
+                            <i>El <b>Título</b> es obligatorio.</i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="type_data">Tipo de Dato *</label>
+                    <ng-select id="type_data" (change)="resetDefaultValue($event)" bindLabel="name" bindValue="id" [items]="typeDataDB" [searchable]="false" [clearable]="false" placeholder="Seleccione un Tipo de Dato" formControlName="type_data"></ng-select>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="reference_values">Valores de Referencia <i>(Opcional)</i></label>
+                    <textarea class="js form-control" style="resize: none;" [ngClass]="{'invalid': validation(reference_values)}" rows="4" formControlName="reference_values" id="reference_values"></textarea>
+                    <div class="text-invalid" *ngIf="validation(reference_values)">
+                        <div *ngIf="reference_values.hasError('maxlength')">
+                            <i>El <b>Valores de Referencia</b> no debe contener más de 180 caracteres.</i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <hr>
+                <div class="form-group">
+                    <label for="default_value">Valor por Defecto <i>(Opcional)</i></label>
+                    <ng-container [ngSwitch]="type_data.value">
+                        <div *ngSwitchCase="'opciones'">
+                            <ng-select placeholder="Seleccione un Valor" id="default_value" formControlName="default_value">
+                                <ng-option [value]="optionDB" *ngFor="let optionDB of optionsDB">{{optionDB}}</ng-option>
+                            </ng-select>
+                        </div>
+                        <div *ngSwitchCase="'texto'">
+                            <input class="form-control" [ngClass]="{'invalid': validation(type_data)}" formControlName="default_value" id="default_value" type="text">
+                        </div>
+                        <div *ngSwitchCase="'parrafo'">
+                            <textarea class="js form-control" style="resize: none;" [ngClass]="{'invalid': validation(type_data)}" rows="3" formControlName="default_value" id="default_value"></textarea>
+                        </div>
+                        <div *ngSwitchCase="'numerico'">
+                            <input class="form-control" [ngClass]="{'invalid': validation(type_data)}" formControlName="default_value" id="default_value" type="number">
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group" *ngIf="type_data.value === 'opciones'">
+                    <label for="options">Opciones *</label>
+                    <tag-input placeholder="+  Opciones" (onRemove)="onRemoveOption($event)" (onAdd)="onAddOption($event)" [modelAsStrings]="true" secondaryPlaceholder="+ Nuevas opciones" formControlName="options">
+                    </tag-input>
+                    <div class="text-invalid" *ngIf="validation(options)">
+                        <div *ngIf="options.hasError('required')">
+                            <i>Las <b>Opciones</b> son obligatorias.</i>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="statusTitle">Estado *</label>
+                    <br>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" formControlName="status" [value]="1" id="statusParameterH" name="status">
+                        <label class="custom-control-label" for="statusParameterH">Habilitado</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" formControlName="status" [value]="0" id="statusParameterD" name="status">
+                        <label class="custom-control-label" for="statusParameterD">Deshabilitado</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="align-middle-load" *ngIf="!loadPage">
+        <div class="d-inline-block">
+            <app-load [txtLoad]="txtLoad"></app-load>
+        </div>
+    </div>
+    <div class="modal-footer" [ngClass]="{'load-page-visibility': !loadPage}">
+        <button type="button" class="btn btn-outline-danger btn-sm" (click)="bsModalRef.hide()"><i class="fa fa-fw fa-times"></i>Cerrar</button>
+        <button type="submit" class="btn btn-primary btn-sm" [disabled]="formParameter.invalid || formParameter.pending"><i class="fa fa-save"></i> {{ btnStoreUpdate }}</button>
+    </div>
+</form>

@@ -11,16 +11,16 @@ import { Params } from '@angular/router';
   providedIn: 'root'
 })
 export class StudyService {
-  private editStudySubject = new Subject<Study>();
-  public editStudyObservable = this.editStudySubject.asObservable();
+  private updateStudySubject = new Subject<Study>();
+  public updateStudyObservable = this.updateStudySubject.asObservable();
 
   studyEdit: Study = new Study;
 
   constructor(private http: HttpClient) { }
 
-  editStudyObs(study: Study): void {
+  updateStudyObs(study: Study): void {
     this.studyEdit = study;
-    this.editStudySubject.next(this.studyEdit);
+    this.updateStudySubject.next(this.studyEdit);
   }
 
   indexStudies(formFilter: any, per_page: number, page: number): Observable<any> {

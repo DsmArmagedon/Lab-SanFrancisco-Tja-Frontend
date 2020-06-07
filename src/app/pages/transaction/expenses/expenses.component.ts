@@ -15,7 +15,7 @@ export class ExpensesComponent implements OnInit {
   routeUpdate = 'transaction/expenses/update';
   constructor(private expenseService: ExpenseService,
               private router: Router) {
-    this.expenseService.disabledEditObservable.subscribe(
+    this.expenseService.disabledUpdateObservable.subscribe(
       resp => setTimeout( () => this.disabled = resp,0)
     );
     this.expenseService.selectBtnActiveObservable.subscribe(

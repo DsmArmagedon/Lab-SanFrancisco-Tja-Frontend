@@ -30,7 +30,6 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { SelectDropDownModule } from 'ngx-select-dropdown';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
@@ -53,7 +52,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     ReactiveFormsModule,
     LoadModule,
     LoadInputModule,
-    SelectDropDownModule,
     CollapseModule.forRoot(),
     PaginationModule.forRoot(),
     ButtonsModule.forRoot(),

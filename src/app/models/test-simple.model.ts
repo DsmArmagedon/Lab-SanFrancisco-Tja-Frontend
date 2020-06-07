@@ -37,13 +37,13 @@ export class TestSimple implements ITestSimple {
     private _type?: TestType;
     private _status?: boolean;
     private _study_id?: number;
-    private _study?: Study;
+    private _study?: Study =  new Study;
     private _unit_id?: number;
-    private _unit?: Unit;
+    private _unit?: Unit = new Unit;
     private _type_data?: TestTypeData;
     private _reference_values?: string;
     private _note?: string;
-    private _options?: Array<string>;
+    private _options?: Array<string> = new Array<string>();
     private _default_values?: string;
 
     set id(id: number) {

@@ -36,7 +36,7 @@ export class HealthCentersStoreUpdateComponent implements OnInit {
    }
   ngOnInit() {
     this.formHealthCenter = this.formGroupHealthCenter();
-    this.healthCenterService.editHealthCenterObservable.subscribe(
+    this.healthCenterService.updateHealthCenterObservable.subscribe(
       resp => {
         this.formHealthCenter.reset();
         this.initialState = this.stateUpdate;

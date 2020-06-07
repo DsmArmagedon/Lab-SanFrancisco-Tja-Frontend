@@ -8,7 +8,8 @@
         <div class="btn-group btn-group-sm ml-3">
             <button class="btn btn-outline-success" [(ngModel)]="radioModel" btnRadio="store" (click)="routerStore()"><i class="fa fa-fw fa-plus"></i>Agregar</button>
             <button class="btn btn-outline-success" [(ngModel)]="radioModel" btnRadio="index" (click)="routerIndex()"><i class="fa fa-fw fa-list"></i>Listar</button>
-            <button class="btn btn-outline-success" [(ngModel)]="radioModel" btnRadio="update" [disabled]="disabled"><i class="fa fa-fw fa-edit"></i>Editar</button>
+            <button class="btn btn-outline-success" [(ngModel)]="radioModel" btnRadio="update" [disabled]="disabledUpdate"><i class="fa fa-fw fa-edit"></i>Editar</button>
+            <button class="btn btn-outline-success" [(ngModel)]="radioModel" btnRadio="show" [disabled]="disabledShow"><i class="fa fa-fw fa-eye"></i>Ver</button>
         </div>
     </div>
     <hr>

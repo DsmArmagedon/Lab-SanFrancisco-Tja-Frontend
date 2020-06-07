@@ -12,16 +12,16 @@ import { map } from 'rxjs/operators';
 })
 export class UnitService {
 
-  private editUnitSubject = new Subject<Unit>();
-  public editUnitObservable = this.editUnitSubject.asObservable();
+  private updateUnitSubject = new Subject<Unit>();
+  public updateUnitObservable = this.updateUnitSubject.asObservable();
 
   unitEdit: Unit = new Unit;
 
   constructor(private http: HttpClient) { }
 
-  editUnitObs(unit: Unit) {
+  updateUnitObs(unit: Unit) {
     this.unitEdit = unit;
-    this.editUnitSubject.next(this.unitEdit);
+    this.updateUnitSubject.next(this.unitEdit);
   }
 
   indexUnits(formFilter: any, per_page: number, page: number): Observable<any> {

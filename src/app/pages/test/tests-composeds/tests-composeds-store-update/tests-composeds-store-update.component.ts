@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { TabsetComponent } from 'ngx-bootstrap';
+import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { TestComposedService } from '../../../../services/test-composed/test-composed.service';
 import { STORE, UPDATE } from '../../../../global-variables';
 import { ActivatedRoute } from '@angular/router';
 import { TestsStoreUpdateComponent } from '../tests-store-update/tests-store-update.component';
 import { TitlesIndexComponent } from '../titles-index/titles-index.component';
-import { TitleService } from '../../../../services/test-composed/title.service';
 
 @Component({
   selector: 'app-tests-composeds-store-update',
@@ -44,7 +43,7 @@ export class TestsComposedsStoreUpdateComponent implements OnInit, OnDestroy {
         break;
       case UPDATE:
         this.tabsTestComposed.tabs[1].disabled = false;
-        this.testComposedService.changeDisabled(false);
+        this.testComposedService.changeDisabledUpdate(false);
         this.testComposedService.changeSelectBtn(UPDATE);
         this.getUpdate();
         break;
@@ -54,7 +53,7 @@ export class TestsComposedsStoreUpdateComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.initialState.type == UPDATE) {
-      this.testComposedService.changeDisabled(true);
+      this.testComposedService.changeDisabledUpdate(true);
     }
   }
 

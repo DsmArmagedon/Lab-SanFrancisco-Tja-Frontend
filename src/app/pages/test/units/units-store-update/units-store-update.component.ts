@@ -38,7 +38,7 @@ export class UnitsStoreUpdateComponent implements OnInit {
   value: string;
   ngOnInit() {
     this.formUnit = this.formGroupUnit();
-    this.unitService.editUnitObservable.subscribe(
+    this.unitService.updateUnitObservable.subscribe(
       resp => {
         this.unit = resp;
         this.initialState = this.stateUpdate;

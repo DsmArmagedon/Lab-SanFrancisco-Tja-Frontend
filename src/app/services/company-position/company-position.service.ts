@@ -12,15 +12,15 @@ import { Params } from '@angular/router';
 })
 export class CompanyPositionService {
 
-  private editCompanyPositionSubject = new Subject<CompanyPosition>();
-  public editCompanyPositionObservable = this.editCompanyPositionSubject.asObservable();
+  private updateCompanyPositionSubject = new Subject<CompanyPosition>();
+  public updateCompanyPositionObservable = this.updateCompanyPositionSubject.asObservable();
 
   companyPositionEdit: CompanyPosition = new CompanyPosition;
   constructor(private http: HttpClient) { }
 
-  editCompanyPositionObs(companyPosition: CompanyPosition) {
+  updateCompanyPositionObs(companyPosition: CompanyPosition) {
     this.companyPositionEdit = companyPosition;
-    this.editCompanyPositionSubject.next(this.companyPositionEdit);
+    this.updateCompanyPositionSubject.next(this.companyPositionEdit);
   }
   indexCompanyPositions(formFilter:any, per_page: number, page: number): Observable<any> {
     let url = `${URL_GLOBAL}/companies-positions`;

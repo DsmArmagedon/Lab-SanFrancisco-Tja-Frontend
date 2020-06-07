@@ -23,10 +23,10 @@ export class TypesExpensesIndexComponent implements OnInit {
   maxSize: number = 3;
   loadPage: boolean;
   meta: Meta;
-  @ViewChild(TypesExpensesFilterComponent,{ static: true }) typeExpenseFilter: TypesExpensesFilterComponent;
+  @ViewChild(TypesExpensesFilterComponent, { static: true }) typeExpenseFilter: TypesExpensesFilterComponent;
   constructor(private typeExpenseService: TypeExpenseService,
-              private toastr: ToastrService,
-              private swalService: SwalService) {
+    private toastr: ToastrService,
+    private swalService: SwalService) {
     this.meta = new Meta;
   }
 
@@ -64,32 +64,34 @@ export class TypesExpensesIndexComponent implements OnInit {
 
   updateTypeExpenses(typeExpense: TypeExpense): void {
     this.selectedRowIndex = typeExpense.id;
-    this.typeExpenseService.editTypeExpenseObs(typeExpense);
+    this.typeExpenseService.updateTypeExpenseObs(typeExpense);
   }
 
-  destroyTypeExpenses(id: number, name: string):void {
+  destroyTypeExpenses(id: number, name: string): void {
     let title: string = 'Tipo de Cargo';
-    if(id == this.typeExpenseService.typeExpenseEdit.id) {
+    if (id == this.typeExpenseService.typeExpenseEdit.id) {
       this.toastr.error('Prohibido eliminar el TIPO DE CARGO, mientras se encuentre en edición, para continuar seleccione Nuevo.', 'Error al eliminar el TIPO DE CARGO');
       return;
     }
     Swal.fire(
       this.swalService.deleteOptions(name, title)
-    ).then((result) => {
-      if (result.value) {
-        this.swalService.deleteLoad(title);
-        this.typeExpenseService.destroyTypeExpenses(id).subscribe(
-          resp => {
-            Swal.close();
-            this.toastr.success(`${title} ${resp.name.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente.`);
-            this.indexTypeExpenses();
-          },
-          err => {
-            this.swalService.deleteError(err.status,title);
-          }
-        );
+    ).then(
+      (result) => {
+        if (result.value) {
+          this.swalService.deleteLoad(title);
+          this.typeExpenseService.destroyTypeExpenses(id).subscribe(
+            resp => {
+              Swal.close();
+              this.toastr.success(`${title} ${resp.name.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente.`);
+              this.indexTypeExpenses();
+            },
+            err => {
+              this.swalService.deleteError(err.status, title);
+            }
+          );
+        }
       }
-    })
+    );
   }
 
   filter(event): void {

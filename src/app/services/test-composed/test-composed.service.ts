@@ -16,12 +16,15 @@ interface IIdNameTestSelected {
   providedIn: 'root'
 })
 export class TestComposedService {
- idNameTestSelected: IIdNameTestSelected;
+  idNameTestSelected: IIdNameTestSelected;
 
   testComposed: TestComposed = new TestComposed;
   
-  private disabledEditSubject = new Subject<boolean>();
-  public disabledEditObservable = this.disabledEditSubject.asObservable();
+  private disabledUpdateSubject = new Subject<boolean>();
+  public disabledUpdateObservable = this.disabledUpdateSubject.asObservable();
+
+  private disabledShowSubject = new Subject<boolean>();
+  public disabledShowObservable = this.disabledShowSubject.asObservable();
 
   private selectBtnActiveSubject = new Subject<string>();
   public selectBtnActiveObservable = this.selectBtnActiveSubject.asObservable();
@@ -31,8 +34,12 @@ export class TestComposedService {
 
   constructor(private http: HttpClient) {}
 
-  changeDisabled(disabled: boolean) {
-    this.disabledEditSubject.next(disabled);
+  changeDisabledUpdate(disabled: boolean) {
+    this.disabledUpdateSubject.next(disabled);
+  }
+
+  changeDisabledShow(disabled: boolean) {
+    this.disabledShowSubject.next(disabled);
   }
 
   changeSelectBtn(text: string) {
@@ -75,6 +82,28 @@ export class TestComposedService {
 
     return this.http.get(url, { params }).pipe(
       map( (resp: any) => {
+        return Object.assign(new TestComposed, resp.data);
+      })
+    );
+  }
+
+  showTests(id: number): Observable<any> {
+    let url = `${URL_GLOBAL}/tests-composeds/${id}`;
+
+    const params: Params = {
+      study: 'load',
+      titles: 'load',
+      parameters: 'load',
+      unit: 'load',
+      study_select: 'name',
+      title_select: 'name,print,note,status',
+      test_select: 'name,price,status',
+      parameter_select: 'name,type_data,reference_values,options,default_value'
+    }
+
+    return this.http.get(url, {params}).pipe(
+      map( (resp: any) => {
+        console.log(resp.data);
         return Object.assign(new TestComposed, resp.data);
       })
     );

@@ -73,7 +73,7 @@ export class UnitsIndexComponent implements OnInit {
 
   updateUnits(unit: Unit): void {
     this.selectedRowIndex = unit.id;
-    this.unitService.editUnitObs(unit);
+    this.unitService.updateUnitObs(unit);
   }
 
   destroyUnits(id: number, name: string): void {

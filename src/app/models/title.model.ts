@@ -8,7 +8,6 @@ interface ITitle {
     note?: string;
     status?: boolean;
     test_id?: number;
-    test?: TestComposed;
     parameters?: Array<Parameter>;
 }
 
@@ -20,8 +19,7 @@ export class Title implements ITitle {
     private _note?: string;
     private _status?: boolean;
     private _test_id?: number;
-    private _test?: TestComposed;
-    private _parameters?: Array<Parameter>;
+    private _parameters?: Array<Parameter> = new Array<Parameter>();
 
     set id(id: number) {
         this._id = id;
@@ -70,13 +68,6 @@ export class Title implements ITitle {
     }
     get test_id(): number{
         return this._test_id;
-    }
-
-    set test(test: TestComposed) {
-        this._test = test;
-    }
-    get test(): TestComposed {
-        return this._test;
     }
 
     set parameters(parameters: Array<Parameter>) {

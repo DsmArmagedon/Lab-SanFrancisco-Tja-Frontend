@@ -120,7 +120,10 @@ export class TitlesIndexComponent implements OnInit {
   }
 
   toUpdateTitles(): void {
-    console.log(this.testSelected);
     this.indexTitles();
+  }
+
+  showTestComplete(): void {
+    this.router.navigate(['/test/tests-composeds/show/',this.testSelected])
   }
 }

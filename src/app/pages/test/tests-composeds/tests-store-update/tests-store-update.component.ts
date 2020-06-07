@@ -1,4 +1,3 @@
-import { STORE, UPDATE } from './../../../../global-variables';
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { TestComposed } from 'src/app/models/test-composed.model';
@@ -6,10 +5,8 @@ import { Study } from 'src/app/models/study.model';
 import { StudyService } from 'src/app/services/study/study.service';
 import { ToastrService } from 'ngx-toastr';
 import { TestComposedService } from '../../../../services/test-composed/test-composed.service';
-import { ValidatorsPattern } from '../../../../validators/validators-pattern';
 import { ValidationsNameDirective } from '../../../../directives/validations-name.directive';
 import { ValidatorsGlobal } from '../../../../validators/validators-global';
-import { TitleService } from '../../../../services/test-composed/title.service';
 @Component({
   selector: 'app-tests-store-update',
   templateUrl: './tests-store-update.component.html',
@@ -40,8 +37,7 @@ export class TestsStoreUpdateComponent implements OnInit {
   constructor(private studyService: StudyService,
     private toastr: ToastrService,
     private validationsDirective: ValidationsNameDirective,
-    private testComposedService: TestComposedService,
-    private titleService: TitleService) {
+    private testComposedService: TestComposedService) {
     }
 
   ngOnInit() {
@@ -53,7 +49,7 @@ export class TestsStoreUpdateComponent implements OnInit {
     return new FormGroup({
       id: new FormControl(null),
       name: new FormControl('', {
-        validators: [ Validators.required, Validators.maxLength(100), ValidatorsPattern.alphaNumericSpacePattern ],
+        validators: [ Validators.required, Validators.maxLength(100) ],
         asyncValidators: [ this.validationsDirective.validateUniqueTest.bind(this.validationsDirective) ] 
       }),
       price: new FormControl(0, [ Validators.required, ValidatorsGlobal.valueMin(0) ]),
@@ -96,9 +92,7 @@ export class TestsStoreUpdateComponent implements OnInit {
     if(this.formTest.valid) {
       this.loadTest = false;
       if(!this.id.value) {
-        // this.storeForm();
-        this.testComposedService.changeIdNameTestSelected(1,this.name.value);
-        this.disabledTabTest.emit();
+        this.storeForm();
       } else {
         this.updateForm();
       }

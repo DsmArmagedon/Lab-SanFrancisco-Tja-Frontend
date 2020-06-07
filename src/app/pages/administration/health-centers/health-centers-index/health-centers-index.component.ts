@@ -51,7 +51,7 @@ export class HealthCentersIndexComponent implements OnInit {
 
   updateHealthCenters(healthCenter: HealthCenter) {
     this.selectedRowIndex = healthCenter.id;
-    this.healthCenterService.editHealthCenterObs(healthCenter);
+    this.healthCenterService.updateHealthCenterObs(healthCenter);
   }
 
   changePerPage(): void {

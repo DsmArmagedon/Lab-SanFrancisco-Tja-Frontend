@@ -6,12 +6,11 @@ interface IParameter {
     type_data?: TestTypeData;
     reference_vaues?: string;
     options?: Array<string>;
-    default_values?: string;
+    default_value?: string;
     status?: boolean;
     unit_id?: number;
     unit?: Unit;
     title_id?: number;
-    title?: Title;
 }
 enum TestTypeData {
     'numerico',
@@ -24,13 +23,12 @@ export class Parameter implements IParameter {
     private _name?: string;
     private _type_data?: TestTypeData;
     private _reference_values?: string;
-    private _options?: Array<string>;
-    private _default_values?: string;
+    private _options?: Array<string> = new Array<string>();
+    private _default_value?: string;
     private _status?: boolean;
     private _unit_id?: number;
-    private _unit?: Unit;
+    private _unit?: Unit = new Unit;
     private _title_id?: number;
-    private _title?: Title;
 
     set id(id: number) {
         this._id = id;
@@ -67,11 +65,11 @@ export class Parameter implements IParameter {
         return this._options;
     }
 
-    set default_values(default_values: string) {
-        this._default_values = default_values;
+    set default_value(default_value: string) {
+        this._default_value = default_value;
     }
-    get default_values(): string {
-        return this._default_values;
+    get default_value(): string {
+        return this._default_value;
     }
 
     set status(status: boolean) {
@@ -100,12 +98,5 @@ export class Parameter implements IParameter {
     } 
     get title_id (): number {
         return this._title_id;
-    }
-
-    set title(title: Title) {
-        this._title = title;
-    }
-    get title(): Title {
-        return this._title;
     }
 }

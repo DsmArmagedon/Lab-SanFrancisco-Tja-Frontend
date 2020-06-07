@@ -17,8 +17,8 @@ export class Role implements IRole {
     private _slug?: string;
     private _description?: string;
     private _status?: boolean;
-    private _permissions?: Permission[];
-    private _permissions_id?: number[];
+    private _permissions?: Permission[] = [];
+    private _permissions_id?: number[] = [];
 
     set id(id: number) {
         this._id = id;
