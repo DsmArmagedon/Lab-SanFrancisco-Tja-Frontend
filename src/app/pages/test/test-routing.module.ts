@@ -10,6 +10,7 @@ import { LoginGuard } from '../../guards/login.guard';
 import { TestsComposedsStoreUpdateComponent } from './tests-composeds/tests-composeds-store-update/tests-composeds-store-update.component';
 import { TestsComposedsIndexComponent } from './tests-composeds/tests-composeds-index/tests-composeds-index.component';
 import { STORE, UPDATE } from 'src/app/global-variables';
+import { TestsComposedsShowComponent } from './tests-composeds/tests-composeds-show/tests-composeds-show.component';
 
 /* COMPONENTS */
 
@@ -77,6 +78,16 @@ const routes: Routes = [
                 title: 'Actualizar Prueba',
                 type: UPDATE,
                 btnStoreUpdate: 'Actualizar'
+              }
+            },
+            {
+              path: 'show/:id',
+              component: TestsComposedsShowComponent,
+              canActivate: [
+                LoginGuard
+              ],
+              data: {
+                title: 'Ver Prueba'
               }
             },
             {

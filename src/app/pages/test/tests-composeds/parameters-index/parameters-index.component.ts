@@ -1,12 +1,11 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Parameter } from 'src/app/models/parameter.model';
 import { ParameterService } from '../../../../services/test-composed/parameter.service';
-import { Title } from 'src/app/models/title.model';
 import { ToastrService } from 'ngx-toastr';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ParametersStoreUpdateComponent } from '../parameters-store-update/parameters-store-update.component';
-import { Subscription } from 'rxjs';
 import { TitleService } from 'src/app/services/test-composed/title.service';
+import { TestComposedService } from '../../../../services/test-composed/test-composed.service';
 
 @Component({
   selector: 'app-parameters-index',
@@ -16,8 +15,10 @@ import { TitleService } from 'src/app/services/test-composed/title.service';
 export class ParametersIndexComponent implements OnInit {
   loadParameters: boolean = true;
   parameters: Parameter[] = [];
-  titleSelected: number = null;
+  titleSelected: number;
   title: string = '';
+
+  testSelected: number;
 
   bsModalRef: BsModalRef;
 
@@ -26,6 +27,7 @@ export class ParametersIndexComponent implements OnInit {
   @Output() statusLoadParameteres: EventEmitter<boolean> = new EventEmitter<boolean>();
   constructor(private parameterService: ParameterService,
               private titleService: TitleService,
+              private testComposedService: TestComposedService,
               private toastr: ToastrService,
               private modalService: BsModalService) {
   }
@@ -37,6 +39,7 @@ export class ParametersIndexComponent implements OnInit {
         this.titleSelected = resp.id;
       }
     );
+    this.testComposedService.idNameTestSelectedObservable.subscribe(resp => this.testSelected = resp.id);
   }
   updateParameter(parameter: Parameter) {
 
@@ -61,13 +64,13 @@ export class ParametersIndexComponent implements OnInit {
       idTitle: this.titleSelected,
       nameTitle: this.title,
       parameter: null,
-      btnStoreUpdate: 'Guardar'
+      btnStoreUpdate: 'Guardar',
+      idTest: this.testSelected
     }
     this.showModal(initialState);
   }
   showModal(initialState: any): void {
-    this.bsModalRef = this.modalService.show(ParametersStoreUpdateComponent, { initialState: initialState, ignoreBackdropClick: false });
-    console.log(this.titleSelected);
+    this.bsModalRef = this.modalService.show(ParametersStoreUpdateComponent, { initialState: initialState, ignoreBackdropClick: true });
     // this.subscription = this.modalService.onHide.subscribe( () => {
     //   if(this.bsModalRef.content.optionModal) {
     //     // this.indexParameters();

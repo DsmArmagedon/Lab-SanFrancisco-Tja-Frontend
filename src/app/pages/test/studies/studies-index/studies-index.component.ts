@@ -72,7 +72,7 @@ export class StudiesIndexComponent implements OnInit {
 
   updateStudies(study: Study): void {
     this.selectedRowIndex = study.id;
-    this.studyService.editStudyObs(study);
+    this.studyService.updateStudyObs(study);
   }
 
   destroyStudies(id: number, name: string): void {

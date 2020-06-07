@@ -39,7 +39,7 @@ export class StudiesStoreUpdateComponent implements OnInit {
 
   ngOnInit() {
     this.formStudy = this.formGroupStudy();
-    this.studyService.editStudyObservable.subscribe(
+    this.studyService.updateStudyObservable.subscribe(
       resp => {
         this.formStudy.reset();
         this.study = resp;

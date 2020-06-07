@@ -8,7 +8,8 @@ import { Router } from '@angular/router';
 })
 export class TestsComposedsComponent implements OnInit {
   radioModel: string;
-  disabled: boolean = true;
+  disabledUpdate: boolean = true;
+  disabledShow: boolean = true;
 
   routeIndex = 'test/tests-composeds/index';
   routeStore = 'test/tests-composeds/store';
@@ -16,11 +17,14 @@ export class TestsComposedsComponent implements OnInit {
 
   constructor(private testComposedService: TestComposedService,
               private router: Router) {
-    this.testComposedService.disabledEditObservable.subscribe(
-      resp => setTimeout( ()=> this.disabled = resp, 0 )
+    this.testComposedService.disabledUpdateObservable.subscribe(
+      resp => setTimeout( () => this.disabledUpdate = resp, 0 )
     );
     this.testComposedService.selectBtnActiveObservable.subscribe(
       resp => setTimeout( () => this.radioModel = resp, 0 )
+    );
+    this.testComposedService.disabledShowObservable.subscribe(
+      resp => setTimeout( () => this.disabledShow = resp, 0)
     );
    }
 

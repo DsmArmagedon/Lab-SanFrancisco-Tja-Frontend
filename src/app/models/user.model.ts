@@ -31,11 +31,11 @@ export class User implements IUser {
     private _phone?:  string;
     private _password?: string;
     private _role_id?: number;
-    private _role: Role;
+    private _role: Role = new Role;
     private _images: any;
     private _image?: File;
     private _company_position_id?: number;
-    private _companyPosition?: CompanyPosition; 
+    private _companyPosition?: CompanyPosition = new CompanyPosition; 
     private _job_title: string;
     private _status?: boolean;
 

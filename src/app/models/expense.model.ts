@@ -21,7 +21,7 @@ export class Expense implements IExpense {
     private _id?: string;
     private _code?: string;
     private _type_expense_id?: number;
-    private _typeExpense?: TypeExpense;
+    private _typeExpense?: TypeExpense = new TypeExpense;
     private _description?: string;
     private _date_expense?: string;
     private _amount?: number;
@@ -29,7 +29,7 @@ export class Expense implements IExpense {
     private _serial_document?: string;
     private _name_responsible?: string;
     private _user_id?: string;
-    private _user: User;
+    private _user: User = new User;
     private _status?: boolean;
 
     set id(id: string) {

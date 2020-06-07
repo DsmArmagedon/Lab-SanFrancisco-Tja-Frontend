@@ -11,16 +11,16 @@ import { Params } from '@angular/router';
   providedIn: 'root'
 })
 export class TypeExpenseService {
-  private editTypeExpenseSubject = new Subject<TypeExpense>();
-  public editTypeExpenseObservable = this.editTypeExpenseSubject.asObservable();
+  private updateTypeExpenseSubject = new Subject<TypeExpense>();
+  public updateTypeExpenseObservable = this.updateTypeExpenseSubject.asObservable();
 
   typeExpenseEdit: TypeExpense = new TypeExpense;
 
   constructor(private http: HttpClient) { }
 
-  editTypeExpenseObs(typeExpense: TypeExpense): void {
+  updateTypeExpenseObs(typeExpense: TypeExpense): void {
     this.typeExpenseEdit = typeExpense;
-    this.editTypeExpenseSubject.next(this.typeExpenseEdit);
+    this.updateTypeExpenseSubject.next(this.typeExpenseEdit);
   }
 
   indexTypeExpenses(formFilter:any, per_page: number, page: number): Observable<any> {

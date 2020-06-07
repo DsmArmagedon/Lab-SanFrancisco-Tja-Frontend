@@ -15,14 +15,14 @@ export class HealthCenterService {
 
   constructor(private http: HttpClient) { }
 
-  private editHealthCenterSubject = new Subject<HealthCenter>();
-  public editHealthCenterObservable = this.editHealthCenterSubject.asObservable();
+  private updateHealthCenterSubject = new Subject<HealthCenter>();
+  public updateHealthCenterObservable = this.updateHealthCenterSubject.asObservable();
 
   healthCenterEdit: HealthCenter = new HealthCenter;
 
-  editHealthCenterObs(healthCenter: HealthCenter) {
+  updateHealthCenterObs(healthCenter: HealthCenter) {
     this.healthCenterEdit = healthCenter;
-    this.editHealthCenterSubject.next(this.healthCenterEdit);
+    this.updateHealthCenterSubject.next(this.healthCenterEdit);
   }
 
   indexHealthCenters(formFilter:any, per_page: number, page: number): Observable<any> {

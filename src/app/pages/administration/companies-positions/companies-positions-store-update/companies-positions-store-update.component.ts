@@ -40,7 +40,7 @@ export class CompaniesPositionsStoreUpdateComponent implements OnInit {
 
   ngOnInit() {
     this.formCompanyPosition = this.formGroupCompanyPosition();
-    this.companyPositionService.editCompanyPositionObservable.subscribe(
+    this.companyPositionService.updateCompanyPositionObservable.subscribe(
       resp => {
           this.formCompanyPosition.reset();
           this.companyPosition = resp;

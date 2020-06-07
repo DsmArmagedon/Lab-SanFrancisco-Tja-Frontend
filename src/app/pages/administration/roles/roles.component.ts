@@ -15,7 +15,7 @@ export class RolesComponent implements OnInit {
 
   constructor(private roleService: RoleService,
               private router: Router) {
-    this.roleService.disabledEditObservable.subscribe(
+    this.roleService.disabledUpdateObservable.subscribe(
       // setTimeOut => Error: ExpressionChangedAfterItHasBeenCheckedError
       resp => setTimeout( () => this.disabled = resp, 0 )
     );

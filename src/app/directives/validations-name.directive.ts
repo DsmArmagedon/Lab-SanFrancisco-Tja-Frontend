@@ -1,9 +1,11 @@
+
 import { URL_GLOBAL } from '../config';
 import { HttpClient } from '@angular/common/http';
 import { Directive } from '@angular/core';
 import {  AbstractControl, ValidationErrors, NG_ASYNC_VALIDATORS } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Params } from '@angular/router';
 
 @Directive({
   selector: '[validateUnique]',
@@ -47,6 +49,16 @@ export class ValidationsNameDirective {
 
   validateUniqueTest(control: AbstractControl): Observable<ValidationErrors | null > {
     this.url = `${URL_GLOBAL}/tests-validate-unique`;
+    return this.getValidations(control);
+  }
+
+  validateUniqueTitle(control: AbstractControl): Observable<ValidationErrors | null> {
+    this.url = `${URL_GLOBAL}`;
+    return this.getValidations(control);
+  }
+
+  validateUniqueParameter(control: AbstractControl): Observable<ValidationErrors | null> {
+    this.url = `${URL_GLOBAL}`;
     return this.getValidations(control);
   }
 

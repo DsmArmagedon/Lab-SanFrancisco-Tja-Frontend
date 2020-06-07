@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Title } from 'src/app/models/title.model';
-import { TestComposedService } from '../../../../services/test-composed/test-composed.service';
 
 @Component({
   selector: 'app-titles-store-update',
@@ -21,7 +20,7 @@ export class TitlesStoreUpdateComponent implements OnInit {
   title: Title = new Title;
   idTest: number = null;
   nameTest: string = '';
-  test: string;
+
   constructor(public bsModalRef: BsModalRef) { 
     this.optionModal = false;
   }

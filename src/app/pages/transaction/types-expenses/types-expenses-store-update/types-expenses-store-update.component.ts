@@ -38,7 +38,7 @@ export class TypesExpensesStoreUpdateComponent implements OnInit {
 
   ngOnInit() {
     this.formTypeExpense = this.formGroupTypeExpense();
-    this.typeExpenseService.editTypeExpenseObservable.subscribe(
+    this.typeExpenseService.updateTypeExpenseObservable.subscribe(
       resp => {
         this.typeExpense = resp;
         this.initialState = this.stateUpdate;
@@ -59,7 +59,7 @@ export class TypesExpensesStoreUpdateComponent implements OnInit {
       id: new FormControl(null),
       name: new FormControl('', {
         validators: [ Validators.required, Validators.maxLength(100), ValidatorsPattern.alphaNumericSpacePattern ],
-        asyncValidators: [ this.validationsDirective.validateUniqueTypeExpense.bind(this.validationsDirective) ]
+        asyncValidators: [ this.validationsDirective.validateUniqueTypeExpense.bind(this.validationsDirective) ],
       }),
       description: new FormControl('', [ Validators.maxLength(180) ]),
       status: new FormControl(1)
@@ -90,7 +90,8 @@ export class TypesExpensesStoreUpdateComponent implements OnInit {
         this.executeIndex.emit();
         this.resetFormTypeExpense();
       },
-      () => this.toastr.error('Consulte con el Administrador.', 'Error al crear: TIPO DE GASTO.')
+      () => 
+        this.toastr.error('Consulte con el Administrador.', 'Error al crear: TIPO DE GASTO.')
     ).add(
       () => this.loadPageStoreUpdate = true
     );
@@ -121,10 +122,5 @@ export class TypesExpensesStoreUpdateComponent implements OnInit {
   }
 
   getStore(): void {
-    this.formTypeExpense.reset();
-    this.status.setValue(1);
-    this.initialState = this.stateStore;
-    this.selectRowIndexNull.emit();
-    this.typeExpenseService.typeExpenseEdit = new TypeExpense;
   }
 }

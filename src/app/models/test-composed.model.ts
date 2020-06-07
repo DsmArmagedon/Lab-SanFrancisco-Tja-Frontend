@@ -24,8 +24,8 @@ export class TestComposed implements ITestComposed {
     private _type?: TestType;
     private _study_id?: number;
     private _status?: boolean;
-    private _study?: Study;
-    private _titles?: Title[];
+    private _study?: Study = new Study;
+    private _titles?: Title[] = [];
 
     set id(id: number) {
         this._id = id;

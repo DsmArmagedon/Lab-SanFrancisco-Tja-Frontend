@@ -36,6 +36,7 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { TagInputModule } from 'ngx-chips';
 
 /* COMPONENTS TEST SIMPLES */
 import { TestsSimplesFilterComponent } from './tests-simples/tests-simples-filter/tests-simples-filter.component';
@@ -60,6 +61,7 @@ import { TokenErrorInterceptorService } from 'src/app/services/interceptors/toke
 
 /* PIPES */
 import { TypeDataPipe } from '../../pipes/type-data.pipe';
+import { NormalValuesComponent } from './normal-values/normal-values.component';
 @NgModule({
   declarations: [
     StudiesComponent,
@@ -85,7 +87,8 @@ import { TypeDataPipe } from '../../pipes/type-data.pipe';
     TitlesStoreUpdateComponent,
     ParametersShowComponent,
     TypeDataPipe,
-    TestsComposedsShowComponent
+    TestsComposedsShowComponent,
+    NormalValuesComponent
   ],
   imports: [
     CommonModule,
@@ -101,7 +104,8 @@ import { TypeDataPipe } from '../../pipes/type-data.pipe';
     TabsModule.forRoot(),
     AccordionModule.forRoot(),
     ModalModule.forRoot(),
-    NgSelectModule
+    NgSelectModule,
+    TagInputModule
   ],
   providers: [
     {
@@ -112,7 +116,8 @@ import { TypeDataPipe } from '../../pipes/type-data.pipe';
   ],
   entryComponents: [
     TitlesStoreUpdateComponent,
-    ParametersStoreUpdateComponent
+    ParametersStoreUpdateComponent,
+    TestsComposedsShowComponent
   ]
 })
 export class TestModule { }

@@ -18,8 +18,8 @@ export class ExpenseService extends BaseService {
   /**
    * Activar y desactivar el boton de editar
    */
-  private disabledEditSubject = new Subject<boolean>();
-  public disabledEditObservable = this.disabledEditSubject.asObservable();
+  private disabledUpdateSubject = new Subject<boolean>();
+  public disabledUpdateObservable = this.disabledUpdateSubject.asObservable();
   
   private selectBtnActiveSubject = new Subject<string>();
   public selectBtnActiveObservable = this.selectBtnActiveSubject.asObservable();
@@ -35,7 +35,7 @@ export class ExpenseService extends BaseService {
    * @param disabled 
    */
   changeDisabled(disabled: boolean) {
-    this.disabledEditSubject.next(disabled);
+    this.disabledUpdateSubject.next(disabled);
   }
 
   changeSelectBtn(text: string) {

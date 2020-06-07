@@ -5,8 +5,8 @@
                 <h5>Parámetros</h5>
             </div>
             <div class="col-md-4 text-right">
-                <button type="button" class="btn btn-outline-info btn-sm" [disabled]="titleSelected === null" (click)="toUpdateParameters()"><i class="fa fa-fw fa-refresh"></i>Actualizar</button>
-                <button type="button" class="btn btn-outline-success btn-sm ml-2" (click)="storeParameters()"><i class="fa fa-fw fa-plus" ></i>Añadir</button>
+                <button type="button" class="btn btn-outline-info btn-sm" [disabled]="titleSelected === undefined" (click)="toUpdateParameters()"><i class="fa fa-fw fa-refresh"></i>Actualizar</button>
+                <button type="button" class="btn btn-outline-success btn-sm ml-2" [disabled]="testSelected === undefined" (click)="storeParameters()"><i class="fa fa-fw fa-plus" ></i>Añadir</button>
             </div>
         </div>
         <hr>
@@ -75,11 +75,11 @@
                     <tr>
                         <td colspan="5">
                             <div class="alert alert-success">
-                                <div class="row justify-content-center" *ngIf="titleSelected !== null">
+                                <div class="row justify-content-center" *ngIf="titleSelected !== undefined">
                                     <h5>No existen parámetros registrados.</h5>
                                 </div>
 
-                                <div class="row justify-content-center" *ngIf="titleSelected == null">
+                                <div class="row justify-content-center" *ngIf="titleSelected == undefined">
                                     <h5>Seleccione un Título.</h5>
                                 </div>
                             </div>

@@ -7,6 +7,11 @@ import { TestComposedService } from '../../../../services/test-composed/test-com
 import { ToastrService } from 'ngx-toastr';
 import { INDEX } from 'src/app/global-variables';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
+import { SwalService } from '../../../../services/swal/swal.service';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { Subscription } from 'rxjs';
+import { TestsComposedsShowComponent } from '../tests-composeds-show/tests-composeds-show.component';
 
 @Component({
   selector: 'app-tests-composeds-index',
@@ -23,10 +28,15 @@ export class TestsComposedsIndexComponent implements OnInit {
   testComposeds: TestComposed[] = [];
   maxSize: number = 3;
   
+
+  bsModalRef: BsModalRef;
+  subscription: Subscription;
+
   @ViewChild(TestsComposedsFilterComponent,{ static: true }) testComposedFilter: TestsComposedsFilterComponent;
   constructor(private testComposedService: TestComposedService,
               private toastr: ToastrService,
-              private router: Router) {
+              private router: Router,
+              private swalService: SwalService) {
     this.testComposedService.changeSelectBtn(INDEX);
     this.meta = new Meta;
   }
@@ -60,15 +70,34 @@ export class TestsComposedsIndexComponent implements OnInit {
   }
 
   updateTest(id: number): void {
-    this.router.navigate(['test/tests-composeds/update',id])
+    this.router.navigate(['test/tests-composeds/update',id]);
   }
 
   showTest(id: number): void {
-
+    this.router.navigate(['test/tests-composeds/show',id]);
   }
 
   destroyTest(id: number, name: string): void {
-    
+    let title: string = 'Prueba Compuesta';
+    Swal.fire(
+      this.swalService.deleteOptions(name,title)
+    ).then(
+      (result) => {
+        if(result.value) {
+          this.swalService.deleteLoad(title);
+          this.testComposedService.destroyTests(id).subscribe(
+            resp => {
+              Swal.close();
+              this.toastr.success(`${title} ${resp.name.toUpperCase()}`,`${title.toUpperCase()} Eliminado Correctamente.`);
+              this.indexTestComposeds();
+            },
+            err => {
+              this.swalService.deleteError(err.status, title);
+            }
+          );
+        }
+      }
+    );
   }
 
   resetFormFilter(): void {
