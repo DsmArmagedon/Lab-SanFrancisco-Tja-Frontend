@@ -122,10 +122,5 @@ export class TypesExpensesStoreUpdateComponent implements OnInit {
   }
 
   getStore(): void {
-    this.formTypeExpense.reset();
-    this.status.setValue(1);
-    this.initialState = this.stateStore;
-    this.selectRowIndexNull.emit();
-    this.typeExpenseService.typeExpenseEdit = new TypeExpense;
   }
 }
