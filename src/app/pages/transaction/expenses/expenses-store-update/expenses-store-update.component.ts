@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, OnDestroy, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { esLocale } from 'ngx-bootstrap/locale';
@@ -125,7 +125,7 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
     this.documentEnable();
   }
 
-  validation(formControl: FormControl): boolean {
+  validation(formControl: AbstractControl): boolean {
     return formControl.invalid && (formControl.dirty || formControl.touched);
   }
 

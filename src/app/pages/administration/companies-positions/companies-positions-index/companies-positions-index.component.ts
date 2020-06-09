@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { CompanyPosition } from '../../../../models/company-position.model';
 import { CompanyPositionService } from '../../../../services/company-position/company-position.service';
 import { CompaniesPositionsFilterComponent } from '../companies-positions-filter/companies-positions-filter.component';
-import { SwalService } from '../../../../services/swal/swal.service';
+import { SwalService } from '../../../../services/common/swal.service';
 
 @Component({
   selector: 'app-companies-positions-index',

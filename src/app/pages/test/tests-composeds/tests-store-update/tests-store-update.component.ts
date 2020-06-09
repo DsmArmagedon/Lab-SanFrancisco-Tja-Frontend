@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { TestComposed } from 'src/app/models/test-composed.model';
 import { Study } from 'src/app/models/study.model';
 import { StudyService } from 'src/app/services/study/study.service';
@@ -84,7 +84,7 @@ export class TestsStoreUpdateComponent implements OnInit {
   get study_id() { return this.formTest.get('study_id'); }
   get status() { return this.formTest.get('status'); }
   
-  validation(formControl: FormControl): boolean {
+  validation(formControl: AbstractControl): boolean {
     return formControl.invalid && (formControl.dirty || formControl.touched);
   }
 

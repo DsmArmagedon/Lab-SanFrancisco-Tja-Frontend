@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { INDEX } from 'src/app/global-variables';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { SwalService } from '../../../../services/swal/swal.service';
+import { SwalService } from '../../../../services/common/swal.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs';
 import { TestsComposedsShowComponent } from '../tests-composeds-show/tests-composeds-show.component';

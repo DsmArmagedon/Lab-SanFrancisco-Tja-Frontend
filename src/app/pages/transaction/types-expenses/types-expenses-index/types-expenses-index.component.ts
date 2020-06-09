@@ -6,7 +6,7 @@ import { TypesExpensesFilterComponent } from '../types-expenses-filter/types-exp
 import { TypeExpenseService } from '../../../../services/type-expense/type-expense.service';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
-import { SwalService } from '../../../../services/swal/swal.service';
+import { SwalService } from '../../../../services/common/swal.service';
 
 @Component({
   selector: 'app-types-expenses-index',

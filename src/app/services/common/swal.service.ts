@@ -67,7 +67,7 @@ export class SwalService {
     return {
       title: `¿Esta seguro que desea ${parameters.verb}?`,
       text: parameters.title+ ': ' + parameters.name,
-      type: 'warning',
+      icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, FormArray, Validators, Form } from '@angular/forms';
+import { FormGroup, FormControl, FormArray, Validators, Form, AbstractControl } from '@angular/forms';
 import { PermissionService } from '../../../../services/permission/permission.service';
 import { Permission } from 'src/app/models/permission.model';
 import { RoleService } from '../../../../services/role/role.service';
@@ -215,7 +215,7 @@ export class RolesStoreUpdateComponent implements OnInit, OnDestroy {
     );
   }
 
-  validation(formControl: FormControl): boolean {
+  validation(formControl: AbstractControl): boolean {
     return formControl.invalid && (formControl.dirty || formControl.touched);
   }
 

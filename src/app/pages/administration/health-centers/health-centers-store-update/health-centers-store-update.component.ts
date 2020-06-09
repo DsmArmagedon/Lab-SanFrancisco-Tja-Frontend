@@ -1,6 +1,6 @@
 import { HealthCenter } from './../../../../models/health-center.model';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { HealthCenterService } from '../../../../services/health-center/health-center.service';
 import { ToastrService } from 'ngx-toastr';
 import { ValidatorsPattern } from '../../../../validators/validators-pattern';
@@ -122,7 +122,7 @@ export class HealthCentersStoreUpdateComponent implements OnInit {
     this.selectRowIndexNull.emit();
     this.healthCenterService.healthCenterEdit = new HealthCenter;
   }
-  validation(formControl: FormControl): boolean {
+  validation(formControl: AbstractControl): boolean {
     return formControl.invalid && (formControl.dirty || formControl.touched);
   }
 

@@ -24,7 +24,7 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/@coreui/coreui/dist/css/coreui.min.css",
+              "src/assets/css/coreui.min.css",
               "src/styles.css",
               "src/assets/css/ngx-toastr-bs4-alert.css",
               "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",

@@ -10,6 +10,8 @@ import { HealthCentersComponent } from './health-centers/health-centers.componen
 import { RolesIndexComponent } from './roles/roles-index/roles-index.component';
 import { RolesStoreUpdateComponent } from './roles/roles-store-update/roles-store-update.component';
 import { STORE, UPDATE } from 'src/app/global-variables';
+import { UsersIndexComponent } from './users/users-index/users-index.component';
+import { UsersStoreUpdateComponent } from './users/users-store-update/users-store-update.component';
 
 const routes: Routes = [
   {
@@ -30,7 +32,45 @@ const routes: Routes = [
         ],
         data: {
           title: 'Usuarios'
-        }
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'store'
+          },
+          {
+            path: 'index',
+            component: UsersIndexComponent,
+            canActivate: [
+              LoginGuard
+            ]
+          },
+          {
+            path: 'store',
+            component: UsersStoreUpdateComponent,
+            canActivate: [
+              LoginGuard
+            ],
+            data: {
+              title: 'Crear Usuario',
+              type: STORE,
+              btnStoreUpdate: 'Guardar'
+            }
+          },
+          {
+            path: 'update/:ci',
+            component: UsersStoreUpdateComponent,
+            canActivate: [
+              LoginGuard
+            ],
+            data: {
+              title: 'Actualizar Usuario',
+              type: UPDATE,
+              btnStoreUpdate: 'Actualizar',
+              txtLoad: 'Cargando Usuario'
+            }
+          }
+        ]
       },
       {
         path: 'roles',

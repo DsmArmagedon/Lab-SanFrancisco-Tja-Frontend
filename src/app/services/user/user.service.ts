@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { URL_GLOBAL } from '../../config';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -11,7 +11,28 @@ import { Params } from '@angular/router';
   providedIn: 'root'
 })
 export class UserService {
+  /**
+   * Activar y desactivar el boton de editar
+   */
+  private disabledUpdateSubject = new Subject<boolean>();
+  public disabledUpdateObservable = this.disabledUpdateSubject.asObservable();
+  
+  private selectBtnActiveSubject = new Subject<string>();
+  public selectBtnActiveObservable = this.selectBtnActiveSubject.asObservable();
+  
   constructor(private http: HttpClient) { }
+  /**
+   * Observable para activar y desactivar el boton editar
+   * @param disabled 
+   */
+  changeDisabled(disabled: boolean){
+    this.disabledUpdateSubject.next(disabled);
+  }
+
+  changeSelectBtn(text: string) {
+    this.selectBtnActiveSubject.next(text);
+  }
+  
   indexUsers(formFilter: any, per_page: number, page: number = 1): Observable<any> {
     let url = `${URL_GLOBAL}/users`;
     const params: Params = {

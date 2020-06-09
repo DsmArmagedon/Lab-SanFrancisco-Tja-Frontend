@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { LoginService } from '../../services/login/login.service';
 import { AuthenticationService } from '../../services/login/authentication.service';
 import { Router } from '@angular/router';
@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
   
   get username() { return this.formLogin.get('username') };
   get password() { return this.formLogin.get('password') };
-  validation(formControl: FormControl): boolean {
+  validation(formControl: AbstractControl): boolean {
     return formControl.invalid && (formControl.dirty || formControl.touched);
   }
   resetForm():void {
@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/dashboard']);
         Swal.fire({
           title:'Bienvenido al Sistema', 
-          type:'success',
+          icon:'success',
           showConfirmButton: false,
           timer: 2500
         });
@@ -79,7 +79,7 @@ export class LoginComponent implements OnInit {
           this.loadLogin = false;
           Swal.fire({
             title: 'Credenciales Inválidas',
-            type: 'info'
+            icon: 'info'
           });
         }
       );

@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./shared.component.css']
 })
 export class SharedComponent implements OnInit {
-  private toggle: boolean;
+  toggle: boolean;
 
   constructor() {
     this.toggle = true;

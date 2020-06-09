@@ -5,7 +5,7 @@ import { RoleService } from '../../../../services/role/role.service';
 import { CompanyPositionService } from '../../../../services/company-position/company-position.service';
 import { UserService } from '../../../../services/user/user.service';
 import { User } from 'src/app/models/user.model';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { IMAGES } from '../../../../config';
 import { Role } from 'src/app/models/role.model';
 import bsCustomFileInput from 'bs-custom-file-input';
@@ -13,6 +13,8 @@ import { ValidationsUserDirective } from '../../../../directives/validations-use
 import { ValidatorsPattern } from '../../../../validators/validators-pattern';
 import { ToastrService } from 'ngx-toastr';
 import { TitleCasePipe } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { STORE, UPDATE } from 'src/app/global-variables';
 @Component({
   selector: 'app-users-store-update',
   templateUrl: './users-store-update.component.html',
@@ -24,6 +26,7 @@ export class UsersStoreUpdateComponent implements OnInit {
   // User
   formUser: FormGroup;
   user: User = new User;
+  idUser: string;
 
   // Imagen
   urlImage: string;
@@ -42,25 +45,37 @@ export class UsersStoreUpdateComponent implements OnInit {
   loadRoles: boolean = true;
   loadCompanyPositions: boolean = true;
   optionModal: boolean;
+  initialState: any;
 
-  constructor( public bsModalRef: BsModalRef,
-               private roleService: RoleService,
+  constructor( private roleService: RoleService,
                private companyPositionService: CompanyPositionService,
                private userService: UserService,
                private toastr: ToastrService,
+               private route: ActivatedRoute,
                private validationsDirective: ValidationsUserDirective,
-               private titleCasePipe: TitleCasePipe) {
+               private titleCasePipe: TitleCasePipe,
+               private router: Router) {
                 this.urlImage = IMAGES.original // Carga imagen por defecto para crear usuarios
                 this.optionModal = false; // Bandera que determina que al cerrar el componente modal con onHide, solo se ejecute el index si se actualiza o guarda.
                 }
   ngOnInit() {
     bsCustomFileInput.init()
     this.formUser = this.formGroupUser();
-    if(this.ciId) {
-      this.loadUserForm();
-    } 
+    this.route.data.subscribe(
+      resp => this.initialState = resp
+    );
     this.loadRolesForm();
     this.loadCompanyPositionsForm();
+    switch (this.initialState.type) {
+      case STORE:
+        this.userService.changeSelectBtn(STORE);
+        break;
+      case UPDATE:
+        this.userService.changeDisabled(false);
+        this.userService.changeSelectBtn(UPDATE);
+        this.getUpdate();
+        break;
+    }
   }
 
   /**
@@ -190,7 +205,6 @@ export class UsersStoreUpdateComponent implements OnInit {
       this.optionModal = true;
       let fullName = `${ user.first_name } ${ user.last_name }`;
       this.toastr.success(this.titleCasePipe.transform(fullName),title);
-      this.bsModalRef.hide();
   }
 
   /**
@@ -220,7 +234,7 @@ export class UsersStoreUpdateComponent implements OnInit {
     )
   }
 
-  validation(formControl: FormControl): boolean {
+  validation(formControl: AbstractControl): boolean {
     return formControl.invalid && (formControl.dirty || formControl.touched);
   }
 
@@ -245,5 +259,30 @@ export class UsersStoreUpdateComponent implements OnInit {
     reader.readAsDataURL( file );
     reader.onloadend = () => this.tmpImage = reader.result;
 
+  }
+
+  getUpdate(): void {
+    this.route.paramMap.subscribe(
+      params => this.idUser = params.get('ci')
+    );
+    this.loadPage = false;
+    this.userService.editShowUsers(this.idUser).subscribe(
+      resp => {
+        this.user = resp;
+        this.assignValuesFormUser();
+      },
+      () => {
+        this.toastr.error('Consulte con el Administrador', 'Error al mostrar el formulario para Actualizar el Usuario');
+        this.router.navigate(['administration/users/index']);
+      }
+    ).add(
+      () => this.loadPage = true
+    );
+  }
+
+  ngOnDestroy() {
+    if(this.initialState.type == UPDATE) {
+      this.userService.changeDisabled(true);
+    }
   }
 }

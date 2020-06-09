@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { TYPE_DATA, OBJECT_TYPE_DATA } from '../../../../global-variables';
 import { UnitService } from '../../../../services/unit/unit.service';
@@ -70,7 +70,7 @@ export class ParametersStoreUpdateComponent implements OnInit {
   get default_value() { return this.formParameter.get('default_value'); }
   get status() { return this.formParameter.get('status'); }
 
-  validation(formControl: FormControl): boolean {
+  validation(formControl: AbstractControl): boolean {
     return formControl.invalid && (formControl.dirty || formControl.touched);
   }
 

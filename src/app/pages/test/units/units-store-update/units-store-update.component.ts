@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 import { Unit } from 'src/app/models/unit.model';
 import { UnitService } from '../../../../services/unit/unit.service';
 import { ToastrService } from 'ngx-toastr';
@@ -69,7 +69,7 @@ export class UnitsStoreUpdateComponent implements OnInit {
     this.status.setValue(this.unit.status);
   }
 
-  validation(formControl: FormControl): boolean {
+  validation(formControl: AbstractControl): boolean {
     return formControl.invalid && (formControl.dirty || formControl.touched);
   }
 

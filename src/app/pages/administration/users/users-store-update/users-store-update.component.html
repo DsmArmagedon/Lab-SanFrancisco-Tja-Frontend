@@ -1,12 +1,11 @@
-<div class="modal-header">
-    <h4 class="modal-title pull-left">{{titleModal}}</h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
+<div class="row">
+    <div class="col-md-12">
+        <h4>{{ initialState.title }}</h4>
+    </div>
 </div>
+<hr>
 <form [formGroup]="formUser" (ngSubmit)="saveFormUser()" autocomplete="off">
-    <div class="modal-body" [ngClass]="{'load-page-visibility':!loadPage}">
-        <div class="row">
+    <div class="row" [ngClass]="{'load-page-visibility':!loadPage}">
             <div class="col-md-8">
                 <div class="row">
                     <div class="col-sm-6 ">
@@ -211,24 +210,25 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card" style="width: 100%;">
+                <div class="card" style="width: 350px; height: 350px;">
                     <img *ngIf="!tmpImage" [src]="urlImage" class="card-img-top">
                     <img *ngIf="tmpImage" [src]="tmpImage" class="card-img-top">
                 </div>
-                <div class="custom-file">
+                <div class="custom-file" style="width: 350px;">
                     <input id="imagen" (change)="selectImage($event.target.files[0])" type="file" class="custom-file-input" accept="image/jpeg">
                     <label class="custom-file-label" for="imagen" data-browse="Foto">Seleccionar Imagen</label>
                 </div>
             </div>
-        </div>
+            
+            <div class="col-md-12 personality-footer">
+                <hr>
+                <button type="submit" class="btn btn-primary btn-sm" [disabled]="formUser.invalid || formUser.pending"><i class="fa fa-save"></i> {{ initialState.btnStoreUpdate }}</button>
+            </div>
     </div>
     <div class="align-middle-load" *ngIf="!loadPage">
         <div class="d-inline-block">
             <app-load [txtLoad]="txtLoad"></app-load>
         </div>
     </div>
-    <div class="modal-footer" [ngClass]="{'load-page-visibility': !loadPage}">
-        <button type="button" class="btn btn-outline-danger btn-sm" (click)="bsModalRef.hide()"><i class="fa fa-fw fa-times"></i>Cerrar</button>
-        <button type="submit" class="btn btn-primary btn-sm" [disabled]="formUser.invalid || formUser.pending"><i class="fa fa-save"></i> {{ btnStoreUpdate }}</button>
-    </div>
+    
 </form>

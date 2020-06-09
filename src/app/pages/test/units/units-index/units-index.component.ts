@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { Meta } from 'src/app/models/meta.model';
 import { Unit } from 'src/app/models/unit.model';
 import { ToastrService } from 'ngx-toastr';
-import { SwalService } from '../../../../services/swal/swal.service';
+import { SwalService } from '../../../../services/common/swal.service';
 import { UnitsFilterComponent } from '../units-filter/units-filter.component';
 import { UnitService } from 'src/app/services/unit/unit.service';
 import Swal from 'sweetalert2';

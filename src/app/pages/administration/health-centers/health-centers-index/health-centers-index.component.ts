@@ -7,7 +7,7 @@ import { Meta } from 'src/app/models/meta.model';
 import { HealthCenterService } from '../../../../services/health-center/health-center.service';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
-import { SwalService } from '../../../../services/swal/swal.service';
+import { SwalService } from '../../../../services/common/swal.service';
 
 @Component({
   selector: 'app-health-centers-index',

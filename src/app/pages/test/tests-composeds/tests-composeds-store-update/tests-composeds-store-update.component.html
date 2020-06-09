@@ -8,10 +8,10 @@
     <div class="col-md-12">
         <tabset #tabsTestComposed>
             <tab heading="Prueba" id="tab1">
-                <app-tests-store-update (disabledTabTest)="disabledTabTest($event)" (activeTabTest)="activeTabTest($event)"></app-tests-store-update>
+                <app-tests-store-update (disabledTabTest)="disabledTabTest()" (activeTabTest)="activeTabTest()"></app-tests-store-update>
             </tab>
             <tab heading="Títulos y Parámetros">
-                <app-titles-index (executeResetFormTestComposed)="resetFormTestComposed($event)"></app-titles-index>
+                <app-titles-index (executeResetFormTestComposed)="resetFormTestComposed()"></app-titles-index>
             </tab>
         </tabset>
     </div>

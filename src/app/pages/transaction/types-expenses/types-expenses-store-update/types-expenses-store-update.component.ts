@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { TypeExpense } from 'src/app/models/type-expense.model';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { TypeExpenseService } from '../../../../services/type-expense/type-expense.service';
 import { ValidatorsPattern } from '../../../../validators/validators-pattern';
 import { ValidationsNameDirective } from 'src/app/directives/validations-name.directive';
@@ -112,7 +112,7 @@ export class TypesExpensesStoreUpdateComponent implements OnInit {
     );
   }
 
-  validation(formControl: FormControl): boolean {
+  validation(formControl: AbstractControl): boolean {
     return formControl.invalid && (formControl.dirty || formControl.touched);
   }
 
@@ -122,5 +122,10 @@ export class TypesExpensesStoreUpdateComponent implements OnInit {
   }
 
   getStore(): void {
+    this.formTypeExpense.reset();
+    this.status.setValue(1);
+    this.initialState = this.stateStore;
+    this.selectRowIndexNull.emit();
+    this.typeExpenseService.typeExpenseEdit = new TypeExpense;
   }
 }

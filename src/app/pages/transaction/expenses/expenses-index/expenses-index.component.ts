@@ -8,7 +8,7 @@ import { ExpensesFilterComponent } from '../expenses-filter/expenses-filter.comp
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ExpensesShowComponent } from '../expenses-show/expenses-show.component';
 import Swal from 'sweetalert2';
-import { SwalService } from 'src/app/services/swal/swal.service';
+import { SwalService } from 'src/app/services/common/swal.service';
 import { Router } from '@angular/router';
 import { INDEX } from '../../../../global-variables';
 

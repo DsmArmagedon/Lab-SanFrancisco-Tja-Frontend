@@ -5,7 +5,7 @@ import { Meta } from 'src/app/models/meta.model';
 import { StudiesFilterComponent } from '../studies-filter/studies-filter.component';
 import { StudyService } from '../../../../services/study/study.service';
 import { ToastrService } from 'ngx-toastr';
-import { SwalService } from '../../../../services/swal/swal.service';
+import { SwalService } from '../../../../services/common/swal.service';
 import Swal from 'sweetalert2';
 
 @Component({

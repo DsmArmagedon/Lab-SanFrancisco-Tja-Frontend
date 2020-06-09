@@ -8,7 +8,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { RolesShowComponent } from '../roles-show/roles-show.component';
 import Swal from 'sweetalert2';
 import { ToastrService } from 'ngx-toastr';
-import { SwalService } from '../../../../services/swal/swal.service';
+import { SwalService } from '../../../../services/common/swal.service';
 import { Router } from '@angular/router';
 import { INDEX } from '../../../../global-variables';
 
@@ -55,10 +55,11 @@ export class RolesIndexComponent implements OnInit{
       () => this.loadPage = true
     );
   }
+
   showRoles(id: number) {
     const initialState = {
       id:id,
-      txtLoad: 'Rol',
+      txtLoad: 'Cargando Rol',
       nroInitial: 1
     }
     this.bsModalRef = this.modalService.show(RolesShowComponent, { initialState });

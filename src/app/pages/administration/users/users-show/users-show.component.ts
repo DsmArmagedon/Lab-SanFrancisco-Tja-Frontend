@@ -13,17 +13,16 @@ export class UsersShowComponent implements OnInit {
   urlImage: string;
   loadPage: boolean;
   txtLoad: string;
-  ciId: string;
+  id: string;
   constructor(public bsModalRef: BsModalRef, 
               private userService: UserService,
               private toastr: ToastrService) {
     this.urlImage = IMAGES.original;
-    this.txtLoad = 'Cargando Usuario';
    }
 
   ngOnInit() {
     this.loadPage = false;
-    this.userService.editShowUsers(this.ciId).subscribe(
+    this.userService.editShowUsers(this.id).subscribe(
       resp => {
         this.user = resp;
         this.urlImage = this.user.images.original;

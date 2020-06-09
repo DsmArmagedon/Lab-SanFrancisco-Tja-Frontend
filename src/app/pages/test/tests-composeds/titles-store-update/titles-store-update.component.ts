@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Title } from 'src/app/models/title.model';
 
@@ -49,7 +49,7 @@ export class TitlesStoreUpdateComponent implements OnInit {
 
   }
 
-  validation(formControl: FormControl): boolean {
+  validation(formControl: AbstractControl): boolean {
     return formControl.invalid && (formControl.dirty || formControl.touched);
   }
 }

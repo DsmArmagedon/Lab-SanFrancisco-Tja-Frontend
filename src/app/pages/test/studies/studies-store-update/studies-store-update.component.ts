@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Study } from 'src/app/models/study.model';
 import { StudyService } from '../../../../services/study/study.service';
 import { ValidationsNameDirective } from '../../../../directives/validations-name.directive';
@@ -72,7 +72,7 @@ export class StudiesStoreUpdateComponent implements OnInit {
   get description() { return this.formStudy.get('description'); }
   get status() { return this.formStudy.get('status'); }
 
-  validation(formControl: FormControl): boolean {
+  validation(formControl: AbstractControl): boolean {
     return formControl.invalid && (formControl.dirty || formControl.touched);
   }
 

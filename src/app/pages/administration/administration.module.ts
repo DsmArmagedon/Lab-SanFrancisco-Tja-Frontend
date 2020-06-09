@@ -9,6 +9,7 @@ import { UsersComponent } from './users/users.component';
 import { UsersStoreUpdateComponent } from './users/users-store-update/users-store-update.component';
 import { UsersShowComponent } from './users/users-show/users-show.component';
 import { UsersFilterComponent } from './users/users-filter/users-filter.component';
+import { UsersIndexComponent } from './users/users-index/users-index.component';
 
 /* COMPONENTS ROLES */
 import { RolesComponent } from './roles/roles.component';
@@ -56,6 +57,7 @@ import { LoadInputModule } from '../../components/load/load-input/load-input.mod
     UsersStoreUpdateComponent,
     UsersFilterComponent,
     UsersShowComponent,
+    UsersIndexComponent,
     RolesIndexComponent,
     RolesStoreUpdateComponent,
     RolesShowComponent,

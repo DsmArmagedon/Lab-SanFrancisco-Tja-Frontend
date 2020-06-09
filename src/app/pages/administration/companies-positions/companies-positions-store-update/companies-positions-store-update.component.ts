@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { CompanyPositionService } from '../../../../services/company-position/company-position.service';
 import { CompanyPosition } from 'src/app/models/company-position.model';
 import { ValidatorsPattern } from '../../../../validators/validators-pattern';
@@ -124,7 +124,7 @@ export class CompaniesPositionsStoreUpdateComponent implements OnInit {
   get description() { return this.formCompanyPosition.get('description') }
   get status() { return this.formCompanyPosition.get('status'); }
 
-  validation(formControl: FormControl): boolean {
+  validation(formControl: AbstractControl): boolean {
     return formControl.invalid && (formControl.dirty || formControl.touched);
   }
 

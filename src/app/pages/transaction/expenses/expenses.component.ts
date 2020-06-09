@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ExpenseService } from '../../../services/expense/expense.service';
 import { Router } from '@angular/router';
-import { INDEX, STORE, UPDATE } from '../../../global-variables';
 
 @Component({
   selector: 'app-expenses',
