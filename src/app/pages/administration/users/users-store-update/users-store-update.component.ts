@@ -15,6 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 import { TitleCasePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { STORE, UPDATE } from 'src/app/global-variables';
+import { GeneralService } from 'src/app/services/common/general.service';
 @Component({
   selector: 'app-users-store-update',
   templateUrl: './users-store-update.component.html',
@@ -54,7 +55,8 @@ export class UsersStoreUpdateComponent implements OnInit {
                private route: ActivatedRoute,
                private validationsDirective: ValidationsUserDirective,
                private titleCasePipe: TitleCasePipe,
-               private router: Router) {
+               private router: Router,
+               public gralService: GeneralService) {
                 this.urlImage = IMAGES.original // Carga imagen por defecto para crear usuarios
                 this.optionModal = false; // Bandera que determina que al cerrar el componente modal con onHide, solo se ejecute el index si se actualiza o guarda.
                 }
@@ -232,10 +234,6 @@ export class UsersStoreUpdateComponent implements OnInit {
     ).add(
       () => this.loadPage = true
     )
-  }
-
-  validation(formControl: AbstractControl): boolean {
-    return formControl.invalid && (formControl.dirty || formControl.touched);
   }
 
   /**

@@ -4,6 +4,7 @@ import { LoginService } from '../../services/login/login.service';
 import { AuthenticationService } from '../../services/login/authentication.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { GeneralService } from 'src/app/services/common/general.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -13,7 +14,10 @@ export class LoginComponent implements OnInit {
   
   formLogin: FormGroup;
   loadLogin: boolean;
-  constructor(private loginService: LoginService,  private router: Router,private authenticationService: AuthenticationService) { 
+  constructor(private loginService: LoginService, 
+              private router: Router,
+              private authenticationService: AuthenticationService,
+              public gralService: GeneralService) { 
     this.loadLogin = false;
   }
   ngOnInit() {
@@ -34,9 +38,7 @@ export class LoginComponent implements OnInit {
   
   get username() { return this.formLogin.get('username') };
   get password() { return this.formLogin.get('password') };
-  validation(formControl: AbstractControl): boolean {
-    return formControl.invalid && (formControl.dirty || formControl.touched);
-  }
+
   resetForm():void {
     this.formLogin.reset();
   }

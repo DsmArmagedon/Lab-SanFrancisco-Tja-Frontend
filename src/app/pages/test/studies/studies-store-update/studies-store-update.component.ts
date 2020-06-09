@@ -4,6 +4,7 @@ import { Study } from 'src/app/models/study.model';
 import { StudyService } from '../../../../services/study/study.service';
 import { ValidationsNameDirective } from '../../../../directives/validations-name.directive';
 import { ToastrService } from 'ngx-toastr';
+import { GeneralService } from 'src/app/services/common/general.service';
 
 @Component({
   selector: 'app-studies-store-update',
@@ -33,7 +34,8 @@ export class StudiesStoreUpdateComponent implements OnInit {
   initialState: any;
   constructor(private studyService: StudyService,
               private validationsDirective: ValidationsNameDirective,
-              private toastr: ToastrService) {
+              private toastr: ToastrService,
+              public gralService: GeneralService) {
     this.initialState = this.stateStore;
   }
 
@@ -71,10 +73,6 @@ export class StudiesStoreUpdateComponent implements OnInit {
   get name() { return this.formStudy.get('name'); }
   get description() { return this.formStudy.get('description'); }
   get status() { return this.formStudy.get('status'); }
-
-  validation(formControl: AbstractControl): boolean {
-    return formControl.invalid && (formControl.dirty || formControl.touched);
-  }
 
   saveFormStudy(): void {
     if(this.formStudy.valid) {

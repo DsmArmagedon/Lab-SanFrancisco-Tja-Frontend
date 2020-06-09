@@ -11,6 +11,7 @@ import { ValidatorsPattern } from '../../../../validators/validators-pattern';
 import { ValidationsNameDirective } from 'src/app/directives/validations-name.directive';
 import { STORE, UPDATE } from '../../../../global-variables';
 import { ActivatedRoute, Router } from '@angular/router';
+import { GeneralService } from 'src/app/services/common/general.service';
 
 @Component({
   selector: 'app-roles-store-update',
@@ -36,7 +37,8 @@ export class RolesStoreUpdateComponent implements OnInit, OnDestroy {
     private validationsDirective: ValidationsNameDirective,
     private toastr: ToastrService,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    public gralService: GeneralService) {
   }
 
   ngOnInit() {
@@ -213,10 +215,6 @@ export class RolesStoreUpdateComponent implements OnInit, OnDestroy {
     ).add(
       () => this.loadPage = true
     );
-  }
-
-  validation(formControl: AbstractControl): boolean {
-    return formControl.invalid && (formControl.dirty || formControl.touched);
   }
 
   ngOnDestroy() {

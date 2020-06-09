@@ -11,11 +11,11 @@
                     <div class="form-group">
                         <label for="name">Nombre *</label>
                         <input type="hidden" formControlName="id">
-                        <input class="form-control" [ngClass]="{'invalid': validation(name)}" formControlName="name" id="name" type="text">
+                        <input class="form-control" [ngClass]="{'invalid': gralService.validation(name)}" formControlName="name" id="name" type="text">
                         <div class="text-validation" *ngIf="name.pending">
                             <i class="fa fa-spinner fa-spin"></i> Disponibilidad de Nombre
                         </div>
-                        <div class="text-invalid" *ngIf="validation(name)">
+                        <div class="text-invalid" *ngIf="gralService.validation(name)">
                             <div *ngIf="name.hasError('required')">
                                 <i>El <b>Nombre</b> es obligatorio.</i>
                             </div>
@@ -32,10 +32,10 @@
                 <div class="col-md-6">
                     <label for="type_expense">Estudio *</label>
                     <app-load-input [loadInput]="loadStudy"></app-load-input>
-                    <ng-select formControlName="study_id" *ngIf="loadStudy" [searchable]="true" [clearable]="false" placeholder="Seleccione un Estudio" [ngClass]="{'invalid': validation(study_id)}">
+                    <ng-select formControlName="study_id" *ngIf="loadStudy" [searchable]="true" [clearable]="false" placeholder="Seleccione un Estudio" [ngClass]="{'invalid': gralService.validation(study_id)}">
                         <ng-option [value]="study.id" *ngFor="let study of studiesDB">{{ study.name | uppercase }}</ng-option>
                     </ng-select>
-                    <div class="text-invalid" *ngIf="validation(study_id)">
+                    <div class="text-invalid" *ngIf="gralService.validation(study_id)">
                         <div *ngIf="study_id.hasError('required')">
                             <i>El <b>Estudio</b> es obligatorio.</i>
                         </div>
@@ -45,8 +45,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="price">Precio *</label>
-                        <input type="number" class="form-control" [ngClass]="{'invalid': validation(price)}" formControlName="price">
-                        <div class="text-invalid" *ngIf="validation(price)">
+                        <input type="number" class="form-control" [ngClass]="{'invalid': gralService.validation(price)}" formControlName="price">
+                        <div class="text-invalid" *ngIf="gralService.validation(price)">
                             <div *ngIf="price.hasError('required')">
                                 <i>El <b>Precio</b> es obligatorio.</i>
                             </div>

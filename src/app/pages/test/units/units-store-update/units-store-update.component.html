@@ -14,7 +14,7 @@
                             <input type="hidden" formControlName="id">
                             <label for="name">Nombre *</label>
                             <div class="input-group">
-                                <input class="form-control" [ngClass]="{'invalid': validation(name)}" formControlName="name" id="name" type="text" (keyup)="showDisplay()">
+                                <input class="form-control" [ngClass]="{'invalid': gralService.validation(name)}" formControlName="name" id="name" type="text" (keyup)="showDisplay()">
                                 <div class="input-group-append">
                                     <ng-template #popTemplate>Agregar superindice con el símbolo '^', se recomienda usar corchetes para agrupar más de un termino en el superindice:<br><span>Ejemplo:</span><br><span>mm^3  => mm<sup>3</sup></span><br><span>10^-1  => 10<sup> -1</sup></span><br><span>10^[-1]mm^3  => 10<sup>-1</sup>mm<sup>3</sup></span></ng-template>
                                     <button class="btn btn-outline-success" type="button" (click)="addSym()" title="Superindice">x<sup>2</sup></button>
@@ -23,7 +23,7 @@
                                 <div class="text-validation" *ngIf="name.pending">
                                     <i class="fa fa-spinner fa-spin"></i> Disponibilidad de Nombre
                                 </div>
-                                <div class="text-invalid" *ngIf="validation(name)">
+                                <div class="text-invalid" *ngIf="gralService.validation(name)">
                                     <div *ngIf="name.hasError('required')">
                                         <i>El <b>Nombre</b> es obligatorio.</i>
                                     </div>
@@ -50,8 +50,8 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="note">Nota <i>(Opcional)</i></label>
-                                <textarea class="form-control" style="resize: none;" [ngClass]="{'invalid': validation(note)}" formControlName="note" id="note" rows="4"></textarea>
-                                <div class="text-invalid" *ngIf="validation(note)">
+                                <textarea class="form-control" style="resize: none;" [ngClass]="{'invalid': gralService.validation(note)}" formControlName="note" id="note" rows="4"></textarea>
+                                <div class="text-invalid" *ngIf="gralService.validation(note)">
                                     <div *ngIf="note.hasError('maxlength')">
                                         <i>El <b>Nota</b> no debe contener más de 180 caracteres.</i>
                                     </div>

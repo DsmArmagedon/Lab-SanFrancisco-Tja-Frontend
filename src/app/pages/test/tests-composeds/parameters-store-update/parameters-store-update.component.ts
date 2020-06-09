@@ -7,6 +7,7 @@ import { Unit } from 'src/app/models/unit.model';
 import { ToastrService } from 'ngx-toastr';
 import { Title } from 'src/app/models/title.model';
 import { TitleService } from '../../../../services/test-composed/title.service';
+import { GeneralService } from 'src/app/services/common/general.service';
 
 @Component({
   selector: 'app-parameters-store-update',
@@ -38,7 +39,8 @@ export class ParametersStoreUpdateComponent implements OnInit {
   constructor(public bsModalRef: BsModalRef,
     private unitService: UnitService,
     private titleService: TitleService,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService,
+    public gralService: GeneralService) { }
 
   ngOnInit() {
     this.formParameter = this.formGroupParameter();
@@ -69,10 +71,6 @@ export class ParametersStoreUpdateComponent implements OnInit {
   get options() { return this.formParameter.get('options'); }
   get default_value() { return this.formParameter.get('default_value'); }
   get status() { return this.formParameter.get('status'); }
-
-  validation(formControl: AbstractControl): boolean {
-    return formControl.invalid && (formControl.dirty || formControl.touched);
-  }
 
   saveFormParameter(): void {
     console.log(this.default_value);

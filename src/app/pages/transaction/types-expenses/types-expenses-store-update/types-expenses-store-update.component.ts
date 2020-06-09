@@ -5,6 +5,7 @@ import { TypeExpenseService } from '../../../../services/type-expense/type-expen
 import { ValidatorsPattern } from '../../../../validators/validators-pattern';
 import { ValidationsNameDirective } from 'src/app/directives/validations-name.directive';
 import { ToastrService } from 'ngx-toastr';
+import { GeneralService } from 'src/app/services/common/general.service';
 
 @Component({
   selector: 'app-types-expenses-store-update',
@@ -20,6 +21,7 @@ export class TypesExpensesStoreUpdateComponent implements OnInit {
   txtLoad: string;
   loadPage: boolean = true;
   loadPageStoreUpdate: boolean = true;
+
   stateStore: any = {
     title: 'Crear Tipo de Gasto',
     btnStoreUpdate: 'Guardar'
@@ -29,10 +31,12 @@ export class TypesExpensesStoreUpdateComponent implements OnInit {
     title: 'Editar Tipo de Gasto',
     btnStoreUpdate: 'Actualizar'
   }
+
   initialState: any;
   constructor(private typeExpenseService: TypeExpenseService,
               private validationsDirective: ValidationsNameDirective,
-              private toastr: ToastrService) {
+              private toastr: ToastrService,
+              public gralService: GeneralService) {
     this.initialState = this.stateStore;
   }
 
@@ -110,10 +114,6 @@ export class TypesExpensesStoreUpdateComponent implements OnInit {
     ).add(
       () => this.loadPageStoreUpdate = true
     );
-  }
-
-  validation(formControl: AbstractControl): boolean {
-    return formControl.invalid && (formControl.dirty || formControl.touched);
   }
 
   resetFormTypeExpense(): void {

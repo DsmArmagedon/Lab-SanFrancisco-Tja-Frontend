@@ -11,12 +11,12 @@
                     <div class="col-sm-6 ">
                         <div class="form-group">
                             <label for="ci">Cédula de Identidad *</label>
-                            <input class="form-control" [ngClass]="{'invalid': validation(ci)}" formControlName="ci" id="ci" type="text">
+                            <input class="form-control" [ngClass]="{'invalid': gralService.validation(ci)}" formControlName="ci" id="ci" type="text">
                             <input type="hidden" formControlName="id">
                             <div class="text-validation" *ngIf="ci.pending">
                                 <i class="fa fa-spinner fa-spin"></i> Disponibilidad de la Cédula de Identidad
                             </div>
-                            <div class="text-invalid" *ngIf="validation(ci)">
+                            <div class="text-invalid" *ngIf="gralService.validation(ci)">
                                 <div *ngIf="ci.hasError('required')">
                                     <i>El <b>Cédula de Identidad</b> es obligatorio.</i>
                                 </div>
@@ -36,7 +36,7 @@
                         <div class="form-group">
                             <label for="username">Username *</label>
                             <div class="input-group">
-                                <input class="form-control" [ngClass]="{'invalid': validation(username)}" formControlName="username" id="username" type="text">
+                                <input class="form-control" [ngClass]="{'invalid': gralService.validation(username)}" formControlName="username" id="username" type="text">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-info" type="button" triggers="focus" popover="Formato: El Username debe contener entre 7 y 12 carácteres alfabeticos en mayúsculas y terminar con 3 carácteres numéricos.">?</button>
                                 </div>
@@ -44,7 +44,7 @@
                             <div class="text-validation" *ngIf="username.pending">
                                 <i class="fa fa-spinner fa-spin"></i> Disponibilidad del Username
                             </div>
-                            <div class="text-invalid" *ngIf="validation(username)">
+                            <div class="text-invalid" *ngIf="gralService.validation(username)">
                                 <div *ngIf="username.hasError('required')">
                                     <i>El <b>Username</b> es obligatorio.</i>
                                 </div>
@@ -68,8 +68,8 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="first_name">Nombres *</label>
-                            <input class="form-control" [ngClass]="{'invalid': validation(first_name)}" formControlName="first_name" id="first_name" type="text">
-                            <div class="text-invalid" *ngIf="validation(first_name)">
+                            <input class="form-control" [ngClass]="{'invalid': gralService.validation(first_name)}" formControlName="first_name" id="first_name" type="text">
+                            <div class="text-invalid" *ngIf="gralService.validation(first_name)">
                                 <div *ngIf="first_name.hasError('required')">
                                     <i>El <b>Nombres</b> es obligatorio.</i>
                                 </div>
@@ -85,8 +85,8 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="last_name">Apellidos *</label>
-                            <input class="form-control" [ngClass]="{'invalid': validation(last_name)}" formControlName="last_name" id="last_name" type="text">
-                            <div class="text-invalid" *ngIf="validation(last_name)">
+                            <input class="form-control" [ngClass]="{'invalid': gralService.validation(last_name)}" formControlName="last_name" id="last_name" type="text">
+                            <div class="text-invalid" *ngIf="gralService.validation(last_name)">
                                 <div *ngIf="last_name.hasError('required')">
                                     <i>El <b>Apellidos</b> es obligatorio.</i>
                                 </div>
@@ -104,11 +104,11 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label for="email">Email *</label>
-                            <input class="form-control" [ngClass]="{'invalid': validation(email)}" formControlName="email" id="email" type="text">
+                            <input class="form-control" [ngClass]="{'invalid': gralService.validation(email)}" formControlName="email" id="email" type="text">
                             <div class="text-validation" *ngIf="email.pending">
                                 <i class="fa fa-spinner fa-spin"></i> Disponibilidad del Email
                             </div>
-                            <div class="text-invalid" *ngIf="validation(email)">
+                            <div class="text-invalid" *ngIf="gralService.validation(email)">
                                 <div *ngIf="email.hasError('required')">
                                     <i>El <b>Email</b> es obligatorio.</i>
                                 </div>
@@ -129,8 +129,8 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="job_title">Título Profesional <i>(Opcional)</i></label>
-                            <input class="form-control" [ngClass]="{'invalid': validation(job_title)}" formControlName="job_title" id="job_title" type="text">
-                            <div class="text-invalid" *ngIf="validation(job_title)">
+                            <input class="form-control" [ngClass]="{'invalid': gralService.validation(job_title)}" formControlName="job_title" id="job_title" type="text">
+                            <div class="text-invalid" *ngIf="gralService.validation(job_title)">
                                 <div *ngIf="job_title.hasError('maxlength')">
                                     <i>El <b>Título Profesional</b> no debe contener más de 150 caracteres.</i>
                                 </div>
@@ -140,8 +140,8 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="address">Dirección *</label>
-                            <input class="form-control" [ngClass]="{'invalid': validation(address)}" formControlName="address" id="address" type="text">
-                            <div class="text-invalid" *ngIf="validation(address)">
+                            <input class="form-control" [ngClass]="{'invalid': gralService.validation(address)}" formControlName="address" id="address" type="text">
+                            <div class="text-invalid" *ngIf="gralService.validation(address)">
                                 <div *ngIf="address.hasError('required')">
                                     <i>El <b>Dirección</b> es obligatorio.</i>
                                 </div>
@@ -157,8 +157,8 @@
                         <div class="form-group">
                             <label for="role">Rol *</label>
                             <app-load-input [loadInput]="loadRoles"></app-load-input>
-                            <ng-select formControlName="role_id" placeholder="Seleccione un Rol" bindLabel="name" bindValue="id" *ngIf="loadRoles" [ngClass]="{'invalid': validation(role_id)}" [items]="rolesDB" [clearable]="false"></ng-select>
-                            <div class="text-invalid" *ngIf="validation(role_id)">
+                            <ng-select formControlName="role_id" placeholder="Seleccione un Rol" bindLabel="name" bindValue="id" *ngIf="loadRoles" [ngClass]="{'invalid': gralService.validation(role_id)}" [items]="rolesDB" [clearable]="false"></ng-select>
+                            <div class="text-invalid" *ngIf="gralService.validation(role_id)">
                                 <div *ngIf="role_id.hasError('required')">
                                     <i>El <b>Rol</b> es obligatorio.</i>
                                 </div>
@@ -169,8 +169,8 @@
                         <div class="form-group">
                             <label for="company_position">Cargo *</label>
                             <app-load-input [loadInput]="loadCompanyPositions"></app-load-input>
-                            <ng-select formControlName="company_position_id" *ngIf="loadCompanyPositions" placeholder="Seleccione un Cargo" bindLabel="name" bindValue="id" [ngClass]="{'invalid': validation(company_position_id)}" [items]="companyPositionsDB" [clearable]="false"></ng-select>
-                            <div class="text-invalid" *ngIf="validation(company_position_id)">
+                            <ng-select formControlName="company_position_id" *ngIf="loadCompanyPositions" placeholder="Seleccione un Cargo" bindLabel="name" bindValue="id" [ngClass]="{'invalid': gralService.validation(company_position_id)}" [items]="companyPositionsDB" [clearable]="false"></ng-select>
+                            <div class="text-invalid" *ngIf="gralService.validation(company_position_id)">
                                 <div *ngIf="company_position_id.hasError('required')">
                                     <i>El <b>Cargo</b> es obligatorio.</i>
                                 </div>
@@ -182,8 +182,8 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="phone">Teléfono *</label>
-                            <input class="form-control" [ngClass]="{'invalid': validation(phone)}" formControlName="phone" id="phone" type="text">
-                            <div class="text-invalid" *ngIf="validation(phone)">
+                            <input class="form-control" [ngClass]="{'invalid': gralService.validation(phone)}" formControlName="phone" id="phone" type="text">
+                            <div class="text-invalid" *ngIf="gralService.validation(phone)">
                                 <div *ngIf="phone.hasError('required')">
                                     <i>El <b>Teléfono</b> es obligatorio.</i>
                                 </div>

@@ -5,6 +5,7 @@ import { CompanyPosition } from 'src/app/models/company-position.model';
 import { ValidatorsPattern } from '../../../../validators/validators-pattern';
 import { ValidationsNameDirective } from '../../../../directives/validations-name.directive';
 import { ToastrService } from 'ngx-toastr';
+import { GeneralService } from 'src/app/services/common/general.service';
 
 @Component({
   selector: 'app-companies-positions-store-update',
@@ -34,7 +35,8 @@ export class CompaniesPositionsStoreUpdateComponent implements OnInit {
 
   constructor(private companyPositionService: CompanyPositionService,
               private validationsDirective: ValidationsNameDirective,
-              private toastr: ToastrService) {
+              private toastr: ToastrService,
+              public gralService: GeneralService) {
     this.initialState = this.stateStore; 
   }
 
@@ -123,10 +125,6 @@ export class CompaniesPositionsStoreUpdateComponent implements OnInit {
   get name() { return this.formCompanyPosition.get('name'); }
   get description() { return this.formCompanyPosition.get('description') }
   get status() { return this.formCompanyPosition.get('status'); }
-
-  validation(formControl: AbstractControl): boolean {
-    return formControl.invalid && (formControl.dirty || formControl.touched);
-  }
 
   resetFormCompanyPosition(): void {
     this.formCompanyPosition.reset();

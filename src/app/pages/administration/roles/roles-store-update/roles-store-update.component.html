@@ -14,11 +14,11 @@
                             <div class="form-group">
                                 <label for="name">Nombre *</label>
                                 <input type="hidden" formControlName="id">
-                                <input class="form-control" [ngClass]="{'invalid': validation(name)}" formControlName="name" id="name" type="text">
+                                <input class="form-control" [ngClass]="{'invalid': gralService.validation(name)}" formControlName="name" id="name" type="text">
                                 <div class="text-validation" *ngIf="name.pending">
                                     <i class="fa fa-spinner fa-spin"></i> Disponibilidad de Nombre
                                 </div>
-                                <div class="text-invalid" *ngIf="validation(name)">
+                                <div class="text-invalid" *ngIf="gralService.validation(name)">
                                     <div *ngIf="name.hasError('required')">
                                         <i>El <b>Nombre</b> es obligatorio.</i>
                                     </div>
@@ -37,8 +37,8 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="name">Descripción <i>(Opcional)</i></label>
-                                <textarea class="form-control" style="resize: none;" [ngClass]="{'invalid': validation(description)}" formControlName="description" id="description" rows="4"></textarea>
-                                <div class="text-invalid" *ngIf="validation(description)">
+                                <textarea class="form-control" style="resize: none;" [ngClass]="{'invalid': gralService.validation(description)}" formControlName="description" id="description" rows="4"></textarea>
+                                <div class="text-invalid" *ngIf="gralService.validation(description)">
                                     <div *ngIf="description.hasError('maxlength')">
                                         <i>El <b>Descripción</b> no debe contener más de 180 caracteres.</i>
                                     </div>
@@ -148,7 +148,7 @@
                                     </div>
                                 </accordion-group>
                             </accordion>
-                            <div class="text-invalid" *ngIf="validation(permissions)">
+                            <div class="text-invalid" *ngIf="gralService.validation(permissions)">
                                 <div *ngIf="permissions.hasError('arrayRequired')">
                                     <i>El <b>Permisos</b> es obligatorio.</i>
                                 </div>

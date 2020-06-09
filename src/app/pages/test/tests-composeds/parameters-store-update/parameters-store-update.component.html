@@ -11,11 +11,11 @@
                 <div class="form-group">
                     <label for="name">Nombre *</label>
                     <input type="hidden" formControlName="id">
-                    <input class="form-control" [ngClass]="{'invalid': validation(name)}" formControlName="name" id="name" type="text">
+                    <input class="form-control" [ngClass]="{'invalid': gralService.validation(name)}" formControlName="name" id="name" type="text">
                     <div class="text-validation" *ngIf="name.pending">
                         <i class="fa fa-spinner fa-spin"></i> Disponibilidad del Nombre
                     </div>
-                    <div class="text-invalid" *ngIf="validation(name)">
+                    <div class="text-invalid" *ngIf="gralService.validation(name)">
                         <div *ngIf="name.hasError('required')">
                             <i>El <b>Nombre</b> es obligatorio.</i>
                         </div>
@@ -42,7 +42,7 @@
                     <label for="title_test_id">Título *</label>
                     <app-load-input [loadInput]="loadTitles"></app-load-input>
                     <ng-select [clearable]="false" *ngIf="loadTitles" placeholder="Seleccione un Título" id="title_test_id" bindValue="id" bindLabel="name" [items]="titlesDB" formControlName="title_test_id"></ng-select>
-                    <div class="text-invalid" *ngIf="validation(title_test_id)">
+                    <div class="text-invalid" *ngIf="gralService.validation(title_test_id)">
                         <div *ngIf="title_test_id.hasError('required')">
                             <i>El <b>Título</b> es obligatorio.</i>
                         </div>
@@ -58,8 +58,8 @@
             <div class="col-sm-12">
                 <div class="form-group">
                     <label for="reference_values">Valores de Referencia <i>(Opcional)</i></label>
-                    <textarea class="js form-control" style="resize: none;" [ngClass]="{'invalid': validation(reference_values)}" rows="4" formControlName="reference_values" id="reference_values"></textarea>
-                    <div class="text-invalid" *ngIf="validation(reference_values)">
+                    <textarea class="js form-control" style="resize: none;" [ngClass]="{'invalid': gralService.validation(reference_values)}" rows="4" formControlName="reference_values" id="reference_values"></textarea>
+                    <div class="text-invalid" *ngIf="gralService.validation(reference_values)">
                         <div *ngIf="reference_values.hasError('maxlength')">
                             <i>El <b>Valores de Referencia</b> no debe contener más de 180 caracteres.</i>
                         </div>
@@ -77,13 +77,13 @@
                             </ng-select>
                         </div>
                         <div *ngSwitchCase="'texto'">
-                            <input class="form-control" [ngClass]="{'invalid': validation(type_data)}" formControlName="default_value" id="default_value" type="text">
+                            <input class="form-control" [ngClass]="{'invalid': gralService.validation(type_data)}" formControlName="default_value" id="default_value" type="text">
                         </div>
                         <div *ngSwitchCase="'parrafo'">
-                            <textarea class="js form-control" style="resize: none;" [ngClass]="{'invalid': validation(type_data)}" rows="3" formControlName="default_value" id="default_value"></textarea>
+                            <textarea class="js form-control" style="resize: none;" [ngClass]="{'invalid': gralService.validation(type_data)}" rows="3" formControlName="default_value" id="default_value"></textarea>
                         </div>
                         <div *ngSwitchCase="'numerico'">
-                            <input class="form-control" [ngClass]="{'invalid': validation(type_data)}" formControlName="default_value" id="default_value" type="number">
+                            <input class="form-control" [ngClass]="{'invalid': gralService.validation(type_data)}" formControlName="default_value" id="default_value" type="number">
                         </div>
                     </ng-container>
                 </div>
@@ -93,7 +93,7 @@
                     <label for="options">Opciones *</label>
                     <tag-input placeholder="+  Opciones" (onRemove)="onRemoveOption($event)" (onAdd)="onAddOption($event)" [modelAsStrings]="true" secondaryPlaceholder="+ Nuevas opciones" formControlName="options">
                     </tag-input>
-                    <div class="text-invalid" *ngIf="validation(options)">
+                    <div class="text-invalid" *ngIf="gralService.validation(options)">
                         <div *ngIf="options.hasError('required')">
                             <i>Las <b>Opciones</b> son obligatorias.</i>
                         </div>

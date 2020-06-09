@@ -5,6 +5,7 @@ import { HealthCenterService } from '../../../../services/health-center/health-c
 import { ToastrService } from 'ngx-toastr';
 import { ValidatorsPattern } from '../../../../validators/validators-pattern';
 import { ValidationsNameDirective } from '../../../../directives/validations-name.directive';
+import { GeneralService } from 'src/app/services/common/general.service';
 
 @Component({
   selector: 'app-health-centers-store-update',
@@ -31,7 +32,8 @@ export class HealthCentersStoreUpdateComponent implements OnInit {
   initialState: any;
   constructor(private healthCenterService: HealthCenterService,
               private validationsDirective: ValidationsNameDirective,
-              private toastr: ToastrService) {
+              private toastr: ToastrService,
+              public gralService: GeneralService) {
     this.initialState = this.stateStore;
    }
   ngOnInit() {
@@ -121,9 +123,6 @@ export class HealthCentersStoreUpdateComponent implements OnInit {
     this.initialState = this.stateStore;
     this.selectRowIndexNull.emit();
     this.healthCenterService.healthCenterEdit = new HealthCenter;
-  }
-  validation(formControl: AbstractControl): boolean {
-    return formControl.invalid && (formControl.dirty || formControl.touched);
   }
 
   resetFormHealthCenter(): void {

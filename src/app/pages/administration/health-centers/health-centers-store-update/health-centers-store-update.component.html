@@ -14,11 +14,11 @@
                             <div class="form-group">
                                 <label for="name">Nombre *</label>
                                 <input type="hidden" formControlName="id">
-                                <input class="form-control" [ngClass]="{'invalid': validation(name)}" formControlName="name" id="name" type="text">
+                                <input class="form-control" [ngClass]="{'invalid': gralService.validation(name)}" formControlName="name" id="name" type="text">
                                 <div class="text-validation" *ngIf="name.pending">
                                     <i class="fa fa-spinner fa-spin"></i> Disponibilidad de Nombre
                                 </div>
-                                <div class="text-invalid" *ngIf="validation(name)">
+                                <div class="text-invalid" *ngIf="gralService.validation(name)">
                                     <div *ngIf="name.hasError('required')">
                                         <i>El <b>Nombre</b> es obligatorio.</i>
                                     </div>
@@ -37,8 +37,8 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="deduction">Descuento *</label>
-                                <input class="form-control" [ngClass]="{'invalid': validation(deduction)}" formControlName="deduction" id="deduction" type="number">
-                                <div class="text-invalid" *ngIf="validation(deduction)">
+                                <input class="form-control" [ngClass]="{'invalid': gralService.validation(deduction)}" formControlName="deduction" id="deduction" type="number">
+                                <div class="text-invalid" *ngIf="gralService.validation(deduction)">
                                     <div *ngIf="deduction.hasError('required')">
                                         <i>El <b>Descuento</b> es obligatorio.</i>
                                     </div>
@@ -51,8 +51,8 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label for="phone">Teléfono <i>(Opcional)</i></label>
-                                <input class="form-control" [ngClass]="{'invalid': validation(phone)}" formControlName="phone" id="phone" type="text">
-                                <div class="text-invalid" *ngIf="validation(phone)">
+                                <input class="form-control" [ngClass]="{'invalid': gralService.validation(phone)}" formControlName="phone" id="phone" type="text">
+                                <div class="text-invalid" *ngIf="gralService.validation(phone)">
                                     <div *ngIf="phone.hasError('maxlength')">
                                         <i>El <b>Teléfono</b> no debe contener más de 50 caracteres.</i>
                                     </div>
@@ -62,8 +62,8 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="information">Información <i>(Opcional)</i></label>
-                                <textarea class="js form-control" style="resize: none;" [ngClass]="{'invalid': validation(information)}" rows="4" formControlName="information" id="information"></textarea>
-                                <div class="text-invalid" *ngIf="validation(information)">
+                                <textarea class="js form-control" style="resize: none;" [ngClass]="{'invalid': gralService.validation(information)}" rows="4" formControlName="information" id="information"></textarea>
+                                <div class="text-invalid" *ngIf="gralService.validation(information)">
                                     <div *ngIf="information.hasError('maxlength')">
                                         <i>El <b>Información</b> no debe contener más de 180 caracteres.</i>
                                     </div>

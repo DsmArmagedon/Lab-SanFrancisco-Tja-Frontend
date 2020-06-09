@@ -3,6 +3,7 @@ import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 import { Unit } from 'src/app/models/unit.model';
 import { UnitService } from '../../../../services/unit/unit.service';
 import { ToastrService } from 'ngx-toastr';
+import { GeneralService } from 'src/app/services/common/general.service';
 
 @Component({
   selector: 'app-units-store-update',
@@ -31,7 +32,8 @@ export class UnitsStoreUpdateComponent implements OnInit {
 
   initialState: any;
   constructor(private unitService: UnitService,
-              private toastr: ToastrService) {
+              private toastr: ToastrService,
+              public gralService: GeneralService) {
     this.initialState = this.stateStore;
   }
 
@@ -67,10 +69,6 @@ export class UnitsStoreUpdateComponent implements OnInit {
     this.note.setValue(this.unit.note);
     this.value = this.unit.display;
     this.status.setValue(this.unit.status);
-  }
-
-  validation(formControl: AbstractControl): boolean {
-    return formControl.invalid && (formControl.dirty || formControl.touched);
   }
 
   saveFormUnit(): void {

@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { TestComposedService } from '../../../../services/test-composed/test-composed.service';
 import { ValidationsNameDirective } from '../../../../directives/validations-name.directive';
 import { ValidatorsGlobal } from '../../../../validators/validators-global';
+import { GeneralService } from 'src/app/services/common/general.service';
 @Component({
   selector: 'app-tests-store-update',
   templateUrl: './tests-store-update.component.html',
@@ -37,7 +38,8 @@ export class TestsStoreUpdateComponent implements OnInit {
   constructor(private studyService: StudyService,
     private toastr: ToastrService,
     private validationsDirective: ValidationsNameDirective,
-    private testComposedService: TestComposedService) {
+    private testComposedService: TestComposedService,
+    public gralService: GeneralService) {
     }
 
   ngOnInit() {
@@ -83,10 +85,6 @@ export class TestsStoreUpdateComponent implements OnInit {
   get price() { return this.formTest.get('price'); }
   get study_id() { return this.formTest.get('study_id'); }
   get status() { return this.formTest.get('status'); }
-  
-  validation(formControl: AbstractControl): boolean {
-    return formControl.invalid && (formControl.dirty || formControl.touched);
-  }
 
   saveFormTest(): void {
     if(this.formTest.valid) {

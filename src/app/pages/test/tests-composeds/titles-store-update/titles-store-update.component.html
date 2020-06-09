@@ -13,11 +13,11 @@
                 <div class="form-group">
                     <label for="name">Nombre *</label>
                     <input type="hidden" formControlName="id">
-                    <input class="form-control" [ngClass]="{'invalid': validation(name)}" formControlName="name" id="name" type="text">
+                    <input class="form-control" [ngClass]="{'invalid': gralService.validation(name)}" formControlName="name" id="name" type="text">
                     <div class="text-validation" *ngIf="name.pending">
                         <i class="fa fa-spinner fa-spin"></i> Disponibilidad del Nombre
                     </div>
-                    <div class="text-invalid" *ngIf="validation(name)">
+                    <div class="text-invalid" *ngIf="gralService.validation(name)">
                         <div *ngIf="name.hasError('required')">
                             <i>El <b>Nombre</b> es obligatorio.</i>
                         </div>
@@ -37,8 +37,8 @@
             <div class="col-sm-12">
                 <div class="form-group">
                     <label for="note">Nota <i>(Opcional)</i></label>
-                    <textarea class="js form-control" style="resize: none;" [ngClass]="{'invalid': validation(note)}" rows="4" formControlName="note" id="note"></textarea>
-                    <div class="text-invalid" *ngIf="validation(note)">
+                    <textarea class="js form-control" style="resize: none;" [ngClass]="{'invalid': gralService.validation(note)}" rows="4" formControlName="note" id="note"></textarea>
+                    <div class="text-invalid" *ngIf="gralService.validation(note)">
                         <div *ngIf="note.hasError('maxlength')">
                             <i>El <b>Nota</b> no debe contener más de 180 caracteres.</i>
                         </div>
@@ -62,7 +62,7 @@
             <div class="col-sm-12">
                 <hr>
                 <div class="custom-control custom-checkbox">
-                    <input class="custom-control-input" [ngClass]="{'invalid': validation(print)}" formControlName="print" id="print" type="checkbox">
+                    <input class="custom-control-input" [ngClass]="{'invalid': gralService.validation(print)}" formControlName="print" id="print" type="checkbox">
                     <label class="custom-control-label" for="print">Mostrar Título en Formularios</label>
                 </div>
             </div>

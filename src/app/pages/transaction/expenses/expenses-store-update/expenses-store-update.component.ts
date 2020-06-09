@@ -12,6 +12,7 @@ import { FunctionService } from '../../../../services/function/function.service'
 import { TypeExpenseService } from '../../../../services/type-expense/type-expense.service';
 import { ValidatorsGlobal } from '../../../../validators/validators-global';
 import { ActivatedRoute, Router } from '@angular/router';
+import { GeneralService } from 'src/app/services/common/general.service';
 defineLocale('es', esLocale);
 @Component({
   selector: 'app-expenses-store-update',
@@ -46,7 +47,8 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
               private typeExpenseService: TypeExpenseService,
               private functionService: FunctionService,
               private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              public gralService: GeneralService) {
     this.localService.use('es');
     this.missingDays = this.functionService.getMissingDays();
     this.minDate = new Date;
@@ -123,10 +125,6 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
     this.amount.setValue(this.expense.amount);
     this.description.setValue(this.expense.description);
     this.documentEnable();
-  }
-
-  validation(formControl: AbstractControl): boolean {
-    return formControl.invalid && (formControl.dirty || formControl.touched);
   }
 
   saveFormExpense(): void{

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Title } from 'src/app/models/title.model';
+import { GeneralService } from 'src/app/services/common/general.service';
 
 @Component({
   selector: 'app-titles-store-update',
@@ -21,7 +22,8 @@ export class TitlesStoreUpdateComponent implements OnInit {
   idTest: number = null;
   nameTest: string = '';
 
-  constructor(public bsModalRef: BsModalRef) { 
+  constructor(public bsModalRef: BsModalRef,
+              public gralService: GeneralService) { 
     this.optionModal = false;
   }
   
@@ -49,7 +51,4 @@ export class TitlesStoreUpdateComponent implements OnInit {
 
   }
 
-  validation(formControl: AbstractControl): boolean {
-    return formControl.invalid && (formControl.dirty || formControl.touched);
-  }
 }
