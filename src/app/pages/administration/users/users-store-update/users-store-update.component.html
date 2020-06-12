@@ -225,7 +225,7 @@
                 <button type="submit" class="btn btn-primary btn-sm" [disabled]="formUser.invalid || formUser.pending"><i class="fa fa-save"></i> {{ initialState.btnStoreUpdate }}</button>
             </div>
     </div>
-    <div class="align-middle-load" *ngIf="!loadPage">
+    <div class="align-middle-load-page" *ngIf="!loadPage">
         <div class="d-inline-block">
             <app-load [txtLoad]="txtLoad"></app-load>
         </div>

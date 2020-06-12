@@ -25,7 +25,7 @@ export class HealthCenterService {
     this.updateHealthCenterSubject.next(this.healthCenterEdit);
   }
 
-  indexHealthCenters(formFilter:any, per_page: number, page: number): Observable<any> {
+  indexHealthCenters(formFilter: any, per_page: number, page: number): Observable<HealthCenter[]> {
     let url = `${URL_GLOBAL}/health-centers`;
 
     const params: Params = {
@@ -35,9 +35,9 @@ export class HealthCenterService {
       health_center_order_option: 'DESC',
       ...formFilter
     }
-    return this.http.get(url, { params } ).pipe(
-      map( (resp: any) => {
-        resp.data = resp.data.map((e)=> {
+    return this.http.get<HealthCenter[]>(url, { params }).pipe(
+      map((resp: any) => {
+        resp.data = resp.data.map((e) => {
           return Object.assign(new HealthCenter, e);
         })
         resp.meta = Object.assign(new Meta, resp.meta)
@@ -46,29 +46,29 @@ export class HealthCenterService {
     );
   }
 
-  storeHealthCenters(healthCenter: HealthCenter): Observable<any> {
+  storeHealthCenters(healthCenter: HealthCenter): Observable<HealthCenter> {
     let url = `${URL_GLOBAL}/health-centers`;
-    return this.http.post(url, healthCenter).pipe(
-      map( (resp: any) => {
+    return this.http.post<HealthCenter>(url, healthCenter).pipe(
+      map((resp: any) => {
         return resp.data;
       })
     );
   }
 
-  updateHealthCenters(healthCenter: HealthCenter): Observable<any> {
+  updateHealthCenters(healthCenter: HealthCenter): Observable<HealthCenter> {
     let url = `${URL_GLOBAL}/health-centers/${healthCenter.id}`;
-    return this.http.put(url, healthCenter).pipe(
-      map( (resp: any)  => {
-        return resp.data; 
+    return this.http.put<HealthCenter>(url, healthCenter).pipe(
+      map((resp: any) => {
+        return resp.data;
       })
     );
   }
 
-  destroyHealthCenters(id: number): Observable<any> {
+  destroyHealthCenters(id: number): Observable<HealthCenter> {
     let url = `${URL_GLOBAL}/health-centers/${id}`;
 
-    return this.http.delete(url).pipe(
-      map( (resp: any) => {
+    return this.http.delete<HealthCenter>(url).pipe(
+      map((resp: any) => {
         return resp.data;
       })
     );

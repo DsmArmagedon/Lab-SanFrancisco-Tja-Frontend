@@ -11,13 +11,15 @@ import { ToastrService } from 'ngx-toastr';
 import { SwalService } from '../../../../services/common/swal.service';
 import { Router } from '@angular/router';
 import { INDEX } from '../../../../global-variables';
+import { GeneralService } from 'src/app/services/common/general.service';
 
 @Component({
   selector: 'app-roles-index',
   templateUrl: './roles-index.component.html',
   styles: []
 })
-export class RolesIndexComponent implements OnInit{
+export class RolesIndexComponent implements OnInit {
+  @ViewChild(RolesFilterComponent, { static: true }) rolesFilter: RolesFilterComponent;
   public isCollapsed: boolean = true;
   public currentPage: number;
 
@@ -28,16 +30,16 @@ export class RolesIndexComponent implements OnInit{
   roles: Role[] = [];
   maxSize: number = 3;
   bsModalRef: BsModalRef;
-  @ViewChild(RolesFilterComponent,{ static: true }) rolesFilter: RolesFilterComponent;
   constructor(private roleService: RoleService,
-              private modalService: BsModalService,
-              private swalService: SwalService,
-              private toastr: ToastrService,
-              private router: Router) {
+    private modalService: BsModalService,
+    private swalService: SwalService,
+    private toastr: ToastrService,
+    private router: Router,
+    private gralService: GeneralService) {
     this.meta = new Meta();
-    this.roleService.changeSelectBtn(INDEX);
-   }
-  
+    this.gralService.changeSelectBtn(INDEX);
+  }
+
   ngOnInit() {
     this.formFilter = this.rolesFilter.formGroupFilter();
     this.indexRoles();
@@ -47,7 +49,7 @@ export class RolesIndexComponent implements OnInit{
     this.loadPage = false;
     this.roleService.indexRoles(this.formFilter.value, this.perPage, this.currentPage).subscribe(
       resp => {
-        this.roles = resp.data;
+        this.roles = resp.roles;
         this.meta = resp.meta;
       },
       () => this.toastr.error('Consulte con el Administrador.', 'Error al listar los ROLES.')
@@ -58,7 +60,7 @@ export class RolesIndexComponent implements OnInit{
 
   showRoles(id: number) {
     const initialState = {
-      id:id,
+      id: id,
       txtLoad: 'Cargando Rol',
       nroInitial: 1
     }
@@ -80,14 +82,14 @@ export class RolesIndexComponent implements OnInit{
             this.indexRoles();
           },
           err => {
-            this.swalService.deleteError(err.status,title);
+            this.swalService.deleteError(err.status, title);
           }
         );
       }
     })
   }
 
-  filter(event):void {
+  filter(event): void {
     this.currentPage = 1;
     this.formFilter = event;
     this.indexRoles();
@@ -108,6 +110,6 @@ export class RolesIndexComponent implements OnInit{
   }
 
   updateRoles(id: number) {
-    this.router.navigate(['administration/roles/update',id]);
+    this.router.navigate(['administration/roles/update', id]);
   }
 }

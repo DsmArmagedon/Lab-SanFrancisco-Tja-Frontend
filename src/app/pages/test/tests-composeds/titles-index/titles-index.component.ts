@@ -17,6 +17,8 @@ import { ToastrService } from 'ngx-toastr';
   styles: []
 })
 export class TitlesIndexComponent implements OnInit {
+  @ViewChild(ParametersIndexComponent, { static: true }) parameterIndexComponent: ParametersIndexComponent;
+
   loadTitle: boolean = true;
   test: string = '';
   titles: Title[] = [];
@@ -31,16 +33,15 @@ export class TitlesIndexComponent implements OnInit {
   @Input()
   type: string;
 
-  @ViewChild(ParametersIndexComponent, { static: true }) parameterIndexComponent: ParametersIndexComponent;
 
   @Output()
   executeResetFormTestComposed: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private testComposedService: TestComposedService,
-              private titleService: TitleService,
-              private router: Router,
-              private modalService: BsModalService,
-              private toastr: ToastrService) {
+    private titleService: TitleService,
+    private router: Router,
+    private modalService: BsModalService,
+    private toastr: ToastrService) {
   }
 
   ngOnInit() {
@@ -93,7 +94,7 @@ export class TitlesIndexComponent implements OnInit {
       idTest: this.testSelected,
       nameTest: this.test,
       title: null,
-      btnStoreUpdate: 'Guardar' 
+      btnStoreUpdate: 'Guardar'
     }
     this.showModal(initialState);
   }
@@ -110,12 +111,12 @@ export class TitlesIndexComponent implements OnInit {
   }
 
   showModal(initialState: any): void {
-    this.bsModalRef = this.modalService.show(TitlesStoreUpdateComponent, {initialState: initialState, ignoreBackdropClick: true});
-    this.subscription = this.modalService.onHide.subscribe(()=> {
-        if(this.bsModalRef.content.optionModal) {
-          this.indexTitles();
-        }
-        this.subscription.unsubscribe();
+    this.bsModalRef = this.modalService.show(TitlesStoreUpdateComponent, { initialState: initialState, ignoreBackdropClick: true });
+    this.subscription = this.modalService.onHide.subscribe(() => {
+      if (this.bsModalRef.content.optionModal) {
+        this.indexTitles();
+      }
+      this.subscription.unsubscribe();
     })
   }
 
@@ -124,6 +125,6 @@ export class TitlesIndexComponent implements OnInit {
   }
 
   showTestComplete(): void {
-    this.router.navigate(['/test/tests-composeds/show/',this.testSelected])
+    this.router.navigate(['/test/tests-composeds/show/', this.testSelected])
   }
 }

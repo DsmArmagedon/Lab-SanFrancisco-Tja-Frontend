@@ -12,16 +12,19 @@ import { GeneralService } from 'src/app/services/common/general.service';
   selector: 'app-tests-store-update',
   templateUrl: './tests-store-update.component.html',
   styles: [],
-  providers: [ ValidationsNameDirective ]
+  providers: [ValidationsNameDirective]
 })
 export class TestsStoreUpdateComponent implements OnInit {
+  @Output() disabledTabTest: EventEmitter<any> = new EventEmitter<any>();
+
+  @Output() activeTabTest: EventEmitter<any> = new EventEmitter<any>();
 
   studiesDB: Study[] = []; // Lista de estudios de la base de datos
-  formTest: FormGroup; 
+  formTest: FormGroup;
 
   loadStudy: boolean = false; // Bandera para determinar la carga de la lista de Estudios para el formulario de Prueba
   btnStoreUpdate: string; // Texto del botón Guardar o Actualizar, según sea 'store' o 'update'
-  
+
   loadTest: boolean = true; // Bandera para determinar la carga de la sección: Prueba funcion en edit
   txtLoad: string; // Texto de mensaje de carga de la sección
 
@@ -30,17 +33,13 @@ export class TestsStoreUpdateComponent implements OnInit {
     type: string
   }; // Estado inicial del componente para Guardar o Actualizar recursos, 'store' o 'update'.
 
-  @Output() disabledTabTest: EventEmitter<any> = new EventEmitter<any>();
-
-  @Output() activeTabTest: EventEmitter<any> = new EventEmitter<any>();
-
   test: TestComposed = new TestComposed;
   constructor(private studyService: StudyService,
     private toastr: ToastrService,
     private validationsDirective: ValidationsNameDirective,
     private testComposedService: TestComposedService,
     public gralService: GeneralService) {
-    }
+  }
 
   ngOnInit() {
     this.formTest = this.formGroupTest();
@@ -51,11 +50,11 @@ export class TestsStoreUpdateComponent implements OnInit {
     return new FormGroup({
       id: new FormControl(null),
       name: new FormControl('', {
-        validators: [ Validators.required, Validators.maxLength(100) ],
-        asyncValidators: [ this.validationsDirective.validateUniqueTest.bind(this.validationsDirective) ] 
+        validators: [Validators.required, Validators.maxLength(100)],
+        asyncValidators: [this.validationsDirective.validateUniqueTest.bind(this.validationsDirective)]
       }),
-      price: new FormControl(0, [ Validators.required, ValidatorsGlobal.valueMin(0) ]),
-      study_id: new FormControl(null, [ Validators.required ]),
+      price: new FormControl(0, [Validators.required, ValidatorsGlobal.valueMin(0)]),
+      study_id: new FormControl(null, [Validators.required]),
       status: new FormControl(1)
     });
   }
@@ -73,7 +72,7 @@ export class TestsStoreUpdateComponent implements OnInit {
     this.loadStudy = false;
     this.studyService.listStudies().subscribe(
       resp => this.studiesDB = resp,
-      ()  => this.toastr.error('Consulte con el Administrador', 'Error al Cargar los ESTUDIOS.')
+      () => this.toastr.error('Consulte con el Administrador', 'Error al Cargar los ESTUDIOS.')
     ).add(
       () => this.loadStudy = true
     );
@@ -87,9 +86,9 @@ export class TestsStoreUpdateComponent implements OnInit {
   get status() { return this.formTest.get('status'); }
 
   saveFormTest(): void {
-    if(this.formTest.valid) {
+    if (this.formTest.valid) {
       this.loadTest = false;
-      if(!this.id.value) {
+      if (!this.id.value) {
         this.storeForm();
       } else {
         this.updateForm();
@@ -102,7 +101,7 @@ export class TestsStoreUpdateComponent implements OnInit {
     this.testComposedService.storeTests(this.formTest.value).subscribe(
       resp => {
         this.toastr.success(resp.name.toUpperCase(), 'PRUEBA creada correctamente');
-        this.testComposedService.changeIdNameTestSelected(resp.id,resp.name);
+        this.testComposedService.changeIdNameTestSelected(resp.id, resp.name);
         this.disabledTabTest.emit();
       },
       () => this.toastr.error('Consulte con el Administrador', 'Error al crear: PRUEBA.')
@@ -116,7 +115,7 @@ export class TestsStoreUpdateComponent implements OnInit {
     this.testComposedService.updateTests(this.formTest.value).subscribe(
       resp => {
         this.toastr.success(resp.name.toUpperCase(), 'PRUEBA Actualizada Correctamente');
-        this.testComposedService.changeIdNameTestSelected(resp.id,resp.name);
+        this.testComposedService.changeIdNameTestSelected(resp.id, resp.name);
         this.activeTabTest.emit();
       },
       () => this.toastr.error('Consulte con el Administrador', 'Error al actualizar: PRUEBA')

@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { UserService } from '../../../services/user/user.service';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { GeneralService } from 'src/app/services/common/general.service';
 
 @Component({
   selector: 'app-users',
@@ -14,13 +14,13 @@ export class UsersComponent implements OnInit {
   routeStore = 'administration/users/store';
   routeUpdate = 'administration/users/update';
 
-  constructor(private userService: UserService,
+  constructor(private gralService: GeneralService,
               private router: Router) {
-    this.userService.disabledUpdateObservable.subscribe(
+    this.gralService.disabledUpdateObservable.subscribe(
       // setTimeOut => Error: ExpressionChangedAfterItHasBeenCheckedError
       resp => setTimeout( () => this.disabled = resp, 0 )
     );
-    this.userService.selectBtnActiveObservable.subscribe(
+    this.gralService.selectBtnActiveObservable.subscribe(
       resp => setTimeout( () => this.radioModel = resp, 0 )
     );
   }

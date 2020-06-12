@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 import { SwalService } from 'src/app/services/common/swal.service';
 import { Router } from '@angular/router';
 import { INDEX } from '../../../../global-variables';
+import { GeneralService } from 'src/app/services/common/general.service';
 
 @Component({
   selector: 'app-expenses-index',
@@ -35,9 +36,10 @@ export class ExpensesIndexComponent implements OnInit {
               private toastr: ToastrService,
               private modalService: BsModalService,
               private swalService: SwalService,
-              private router: Router) {
+              private router: Router,
+              private gralService: GeneralService) {
     this.meta = new Meta;
-    this.expenseService.changeSelectBtn(INDEX);
+    this.gralService.changeSelectBtn(INDEX);
   }
 
   ngOnInit() {

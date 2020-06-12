@@ -22,7 +22,7 @@ export class CompanyPositionService {
     this.companyPositionEdit = companyPosition;
     this.updateCompanyPositionSubject.next(this.companyPositionEdit);
   }
-  indexCompanyPositions(formFilter:any, per_page: number, page: number): Observable<any> {
+  indexCompanyPositions(formFilter: any, per_page: number, page: number): Observable<CompanyPosition[]> {
     let url = `${URL_GLOBAL}/companies-positions`;
 
     const params: Params = {
@@ -33,9 +33,9 @@ export class CompanyPositionService {
       ...formFilter
     }
 
-    return this.http.get(url, { params } ).pipe(
-      map( (resp: any) => {
-        resp.data = resp.data.map((e)=> {
+    return this.http.get<CompanyPosition[]>(url, { params }).pipe(
+      map((resp: any) => {
+        resp.data = resp.data.map((e) => {
           return Object.assign(new CompanyPosition, e);
         })
         resp.meta = Object.assign(new Meta, resp.meta)
@@ -45,7 +45,7 @@ export class CompanyPositionService {
   }
 
 
-  listCompanyPositions(): Observable<any> {
+  listCompanyPositions(): Observable<CompanyPosition[]> {
     let url = `${URL_GLOBAL}/companies-positions`;
     const params: Params = {
       company_position_select: 'name',
@@ -53,9 +53,9 @@ export class CompanyPositionService {
       company_position_status: 1
     }
 
-    return this.http.get(url, { params }).pipe(
-      map( (resp: any) => {
-        let data = resp.data.map(function(e) {
+    return this.http.get<CompanyPosition[]>(url, { params }).pipe(
+      map((resp: any) => {
+        let data = resp.data.map(function (e) {
           return Object.assign(new CompanyPosition, e);
         });
         return data;
@@ -63,30 +63,30 @@ export class CompanyPositionService {
     );
   }
 
-  storeCompanyPositions(companyPosition: CompanyPosition): Observable<any> {
+  storeCompanyPositions(companyPosition: CompanyPosition): Observable<CompanyPosition> {
     let url = `${URL_GLOBAL}/companies-positions`;
-    return this.http.post(url,companyPosition).pipe(
-      map( (resp: any) => {
+    return this.http.post<CompanyPosition>(url, companyPosition).pipe(
+      map((resp: any) => {
         return resp.data;
       })
     );
   }
 
-  updateCompanyPositions(companyPosition: CompanyPosition): Observable<any> {
+  updateCompanyPositions(companyPosition: CompanyPosition): Observable<CompanyPosition> {
     let url = `${URL_GLOBAL}/companies-positions/${companyPosition.id}`;
-    return this.http.put(url,companyPosition).pipe(
-      map( (resp:any) => {
+    return this.http.put<CompanyPosition>(url, companyPosition).pipe(
+      map((resp: any) => {
         return resp.data;
       })
     );
   }
 
-  destroyCompanyPositions(id: number): Observable<any> {
+  destroyCompanyPositions(id: number): Observable<CompanyPosition> {
     let url = `${URL_GLOBAL}/companies-positions/${id}`;
 
-    return this.http.delete(url).pipe(
-      map( (resp: any) => {
-        return  resp.data;
+    return this.http.delete<CompanyPosition>(url).pipe(
+      map((resp: any) => {
+        return resp.data;
       })
     );
   }

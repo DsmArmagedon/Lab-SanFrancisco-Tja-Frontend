@@ -20,6 +20,7 @@ export class CompaniesPositionsStoreUpdateComponent implements OnInit {
   loadPage: boolean = true;
   loadPageStoreUpdate: boolean = true;
   companyPosition: CompanyPosition;
+  initialState: any;
 
 
   stateStore: any = {
@@ -31,7 +32,6 @@ export class CompaniesPositionsStoreUpdateComponent implements OnInit {
     title: 'Editar Cargo',
     btnStoreUpdate: 'Actualizar'
   }
-  initialState: any;
 
   constructor(private companyPositionService: CompanyPositionService,
               private validationsDirective: ValidationsNameDirective,
@@ -52,20 +52,10 @@ export class CompaniesPositionsStoreUpdateComponent implements OnInit {
     );
   }
 
-  getStore(): void {
-    this.formCompanyPosition.reset();
-    this.status.setValue(1);
-    this.initialState = this.stateStore;
-    this.selectRowIndexNull.emit();
-    this.companyPositionService.companyPositionEdit = new CompanyPosition;
-  }
-
-  assignValuesFormCompanyPosition(): void {
-    this.id.setValue(this.companyPosition.id);
-    this.name.setValue(this.companyPosition.name);
-    this.description.setValue(this.companyPosition.description);
-    this.status.setValue(this.companyPosition.status);
-  }
+  get id() { return this.formCompanyPosition.get('id'); }
+  get name() { return this.formCompanyPosition.get('name'); }
+  get description() { return this.formCompanyPosition.get('description') }
+  get status() { return this.formCompanyPosition.get('status'); }
 
   formGroupCompanyPosition(): FormGroup {
     return new FormGroup({
@@ -80,7 +70,22 @@ export class CompaniesPositionsStoreUpdateComponent implements OnInit {
       status: new FormControl(1)
     });
   }
-  
+
+  assignValuesFormCompanyPosition(): void {
+    this.id.setValue(this.companyPosition.id);
+    this.name.setValue(this.companyPosition.name);
+    this.description.setValue(this.companyPosition.description);
+    this.status.setValue(this.companyPosition.status);
+  }
+
+  getStore(): void {
+    this.initialState = this.stateStore;
+    this.companyPositionService.companyPositionEdit = new CompanyPosition;
+    this.formCompanyPosition.reset();
+    this.status.setValue(1);
+    this.selectRowIndexNull.emit();
+  }
+
   saveFormCompanyPosition():void {
     if(this.formCompanyPosition.valid) {
       this.loadPageStoreUpdate = false;
@@ -110,21 +115,16 @@ export class CompaniesPositionsStoreUpdateComponent implements OnInit {
     this.txtLoad = 'Actualizando Cargo';
     this.companyPositionService.updateCompanyPositions(this.formCompanyPosition.value).subscribe(
       resp => {
-        this.toastr.success(resp.name.toUpperCase(), 'CARGO Actualizado Correctamente');
         this.executeIndex.emit();
         this.selectRowIndexNull.emit();
         this.resetFormCompanyPosition();
+        this.toastr.success(resp.name.toUpperCase(), 'CARGO Actualizado Correctamente');
       },
       () => this.toastr.error('Consulte con el Administrador.', 'Error al actualizar: CARGO.'),
     ).add(
       () => this.loadPageStoreUpdate = true
     );
   }
-
-  get id() { return this.formCompanyPosition.get('id'); }
-  get name() { return this.formCompanyPosition.get('name'); }
-  get description() { return this.formCompanyPosition.get('description') }
-  get status() { return this.formCompanyPosition.get('status'); }
 
   resetFormCompanyPosition(): void {
     this.formCompanyPosition.reset();

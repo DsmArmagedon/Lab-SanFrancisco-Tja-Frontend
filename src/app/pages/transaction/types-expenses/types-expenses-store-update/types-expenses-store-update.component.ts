@@ -16,11 +16,13 @@ import { GeneralService } from 'src/app/services/common/general.service';
 export class TypesExpensesStoreUpdateComponent implements OnInit {
   @Output() executeIndex: EventEmitter<any> = new EventEmitter<any>();
   @Output() selectRowIndexNull: EventEmitter<any> = new EventEmitter<any>();
+  
   formTypeExpense: FormGroup;
   typeExpense: TypeExpense;
   txtLoad: string;
   loadPage: boolean = true;
   loadPageStoreUpdate: boolean = true;
+  initialState: any;
 
   stateStore: any = {
     title: 'Crear Tipo de Gasto',
@@ -32,7 +34,6 @@ export class TypesExpensesStoreUpdateComponent implements OnInit {
     btnStoreUpdate: 'Actualizar'
   }
 
-  initialState: any;
   constructor(private typeExpenseService: TypeExpenseService,
               private validationsDirective: ValidationsNameDirective,
               private toastr: ToastrService,
@@ -51,12 +52,10 @@ export class TypesExpensesStoreUpdateComponent implements OnInit {
     );
   }
 
-  assignValuesFormTypeExpense(): void {
-    this.id.setValue(this.typeExpense.id);
-    this.name.setValue(this.typeExpense.name);
-    this.description.setValue(this.typeExpense.description);
-    this.status.setValue(this.typeExpense.status);
-  }
+  get id() { return this.formTypeExpense.get('id'); }
+  get name() { return this.formTypeExpense.get('name'); }
+  get description() { return this.formTypeExpense.get('description') }
+  get status() { return this.formTypeExpense.get('status'); }
 
   formGroupTypeExpense(): FormGroup {
     return new FormGroup({
@@ -70,11 +69,21 @@ export class TypesExpensesStoreUpdateComponent implements OnInit {
     });
   }
 
-  get id() { return this.formTypeExpense.get('id'); }
-  get name() { return this.formTypeExpense.get('name'); }
-  get description() { return this.formTypeExpense.get('description') }
-  get status() { return this.formTypeExpense.get('status'); }
+  assignValuesFormTypeExpense(): void {
+    this.id.setValue(this.typeExpense.id);
+    this.name.setValue(this.typeExpense.name);
+    this.description.setValue(this.typeExpense.description);
+    this.status.setValue(this.typeExpense.status);
+  }
 
+  getStore(): void {
+    this.initialState = this.stateStore;
+    this.typeExpenseService.typeExpenseEdit = new TypeExpense;
+    this.formTypeExpense.reset();
+    this.status.setValue(1);
+    this.selectRowIndexNull.emit();
+  }
+  
   saveFormTypeExpense(): void {
     if(this.formTypeExpense.valid) {
       this.loadPageStoreUpdate = false;
@@ -119,8 +128,5 @@ export class TypesExpensesStoreUpdateComponent implements OnInit {
   resetFormTypeExpense(): void {
     this.formTypeExpense.reset();
     this.status.setValue(1);
-  }
-
-  getStore(): void {
   }
 }

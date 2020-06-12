@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { TestComposedService } from '../../../services/test-composed/test-composed.service';
 import { Router } from '@angular/router';
+import { GeneralService } from 'src/app/services/common/general.service';
+import { TestComposedService } from 'src/app/services/test-composed/test-composed.service';
 
 @Component({
   selector: 'app-tests-composeds',
@@ -15,12 +16,13 @@ export class TestsComposedsComponent implements OnInit {
   routeStore = 'test/tests-composeds/store';
   routeUpdate = 'test/tests-composeds/update';
 
-  constructor(private testComposedService: TestComposedService,
+  constructor(private gralService: GeneralService,
+              private testComposedService: TestComposedService, 
               private router: Router) {
-    this.testComposedService.disabledUpdateObservable.subscribe(
+    this.gralService.disabledUpdateObservable.subscribe(
       resp => setTimeout( () => this.disabledUpdate = resp, 0 )
     );
-    this.testComposedService.selectBtnActiveObservable.subscribe(
+    this.gralService.selectBtnActiveObservable.subscribe(
       resp => setTimeout( () => this.radioModel = resp, 0 )
     );
     this.testComposedService.disabledShowObservable.subscribe(

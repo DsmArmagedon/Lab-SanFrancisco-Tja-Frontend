@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ExpenseService } from '../../../services/expense/expense.service';
 import { Router } from '@angular/router';
+import { GeneralService } from 'src/app/services/common/general.service';
 
 @Component({
   selector: 'app-expenses',
@@ -12,12 +12,12 @@ export class ExpensesComponent implements OnInit {
   routeIndex = 'transaction/expenses/index';
   routeStore = 'transaction/expenses/store';
   routeUpdate = 'transaction/expenses/update';
-  constructor(private expenseService: ExpenseService,
+  constructor(private gralService: GeneralService,
               private router: Router) {
-    this.expenseService.disabledUpdateObservable.subscribe(
+    this.gralService.disabledUpdateObservable.subscribe(
       resp => setTimeout( () => this.disabled = resp,0)
     );
-    this.expenseService.selectBtnActiveObservable.subscribe(
+    this.gralService.selectBtnActiveObservable.subscribe(
       resp => setTimeout( () => this.radioModel = resp, 0 )
     );
   }

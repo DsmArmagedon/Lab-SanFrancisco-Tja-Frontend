@@ -1,4 +1,5 @@
 import { Permission } from './permission.model';
+import { BaseMetaLinks } from './base-meta-links.model';
 
 
 interface IRole {
@@ -9,6 +10,10 @@ interface IRole {
     status?: boolean,
     permissions?: Permission[];
     permissions_id?: number[];
+}
+
+interface IRoleMetaLinks {
+    roles: Role[];
 }
 
 export class Role implements IRole {
@@ -67,5 +72,16 @@ export class Role implements IRole {
     }
     get permissions_id(): number[] {
         return this._permissions_id;
+    }
+}
+
+export class RoleMetaLinks extends BaseMetaLinks implements IRoleMetaLinks {
+    private _roles: Role[];
+
+    set roles(roles: Role[]) {
+        this._roles = roles;
+    }
+    get roles(): Role[] {
+        return this._roles;
     }
 }

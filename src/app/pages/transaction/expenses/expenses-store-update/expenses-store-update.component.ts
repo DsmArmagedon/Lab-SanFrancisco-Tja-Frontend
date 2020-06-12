@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, OnDestroy, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { esLocale } from 'ngx-bootstrap/locale';
@@ -8,7 +8,7 @@ import { Expense } from 'src/app/models/expense.model';
 import { TypeExpense } from 'src/app/models/type-expense.model';
 import { DOCUMENTS, STORE, UPDATE } from '../../../../global-variables';
 import { ExpenseService } from '../../../../services/expense/expense.service';
-import { FunctionService } from '../../../../services/function/function.service';
+import { FunctionService } from '../../../../services/common/function.service';
 import { TypeExpenseService } from '../../../../services/type-expense/type-expense.service';
 import { ValidatorsGlobal } from '../../../../validators/validators-global';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -59,23 +59,21 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.formExpense = this.formGroupExpense();
-    this.route.data.subscribe(
-      resp => this.initialState = resp
-    );
+    this.initialState = this.gralService.getDataInitialState(this.route);
     this.txtLoad = this.initialState.txtLoad;
     this.loadTypeExpenseForm();
-    switch(this.initialState.type) {
-      case STORE:
-        this.expenseService.changeSelectBtn(STORE);
-        this.getStore();
-        break;
-      case UPDATE:
-        this.expenseService.changeDisabled(false);
-        this.expenseService.changeSelectBtn(UPDATE);
-        this.getUpdate();
-        break;
-    }
+    this.selectTypeFormStoreOrUpdate();
   }
+
+  get id() { return this.formExpense.get('id'); }
+  get code() { return this.formExpense.get('code'); }
+  get type_expense_id() { return this.formExpense.get('type_expense_id'); }
+  get description() { return this.formExpense.get('description'); }
+  get date_expense_notFormat() { return this.formExpense.get('date_expense_notFormat'); }
+  get amount() { return this.formExpense.get('amount'); }
+  get document() { return this.formExpense.get('document'); }
+  get serial_document() { return this.formExpense.get('serial_document'); }
+  get name_responsible() { return this.formExpense.get('name_responsible'); }
 
   formGroupExpense(): FormGroup {
     return new FormGroup({
@@ -94,26 +92,6 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadTypeExpenseForm(): void {
-    this.loadTypeExpense = false;
-    this.typeExpenseService.listTypeExpenses().subscribe(
-      resp => this.typeExpensesDB = resp,
-      ()  => this.toastr.error('Consulte con el Administrador', 'Error al Cargar los TIPOS DE GASTOS.')
-    ).add(
-      () => this.loadTypeExpense = true
-    );
-  }
-
-  get id() { return this.formExpense.get('id'); }
-  get code() { return this.formExpense.get('code'); }
-  get type_expense_id() { return this.formExpense.get('type_expense_id'); }
-  get description() { return this.formExpense.get('description'); }
-  get date_expense_notFormat() { return this.formExpense.get('date_expense_notFormat'); }
-  get amount() { return this.formExpense.get('amount'); }
-  get document() { return this.formExpense.get('document'); }
-  get serial_document() { return this.formExpense.get('serial_document'); }
-  get name_responsible() { return this.formExpense.get('name_responsible'); }
-
   assignValuesFormExpense(): void {
     this.id.setValue(this.expense.code);
     this.date_expense_notFormat.setValue(this.expenseService.convertStringToDate(this.expense.date_expense));
@@ -125,6 +103,34 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
     this.amount.setValue(this.expense.amount);
     this.description.setValue(this.expense.description);
     this.documentEnable();
+  }
+
+  getStore(): void {
+    this.loadCode = false;
+    this.date_expense_notFormat.setValue(new Date());
+    this.expenseService.codeExpenses().subscribe(
+      resp => this.code.setValue(resp),
+      () => this.toastr.error('Consulte con el Administrador', 'Error no se pudo obtener CODIGO para el formulario.')
+    ).add(
+      () => this.loadCode = true
+    );
+  }
+
+  getUpdate(): void {
+    this.loadPage = false;
+    this.getIdToParameterFromUrl();
+    this.expenseService.editExpenses(this.idExpense).subscribe(
+      resp => {
+        this.expense = resp;
+        this.assignValuesFormExpense();
+      },
+      () => {
+        this.toastr.error('Consulte con el Administrador.', 'Error al mostrar el formulario para Actualizar Rol.');
+        this.router.navigate(['administration/roles/index']);
+      }
+    ).add(
+      () => this.loadPage = true
+    );
   }
 
   saveFormExpense(): void{
@@ -140,40 +146,6 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
     }
   }
 
-  getStore(): void {
-    this.loadCode = false;
-    this.date_expense_notFormat.setValue(new Date());
-    this.expenseService.codeExpenses().subscribe(
-      resp => this.code.setValue(resp),
-      () => this.toastr.error('Consulte con el Administrador', 'Error no se pudo obtener CODIGO para el formulario.')
-    ).add(
-      () => this.loadCode = true
-    );
-  }
-
-  getUpdate(): void {
-    this.route.paramMap.subscribe(
-      params => this.idExpense = params.get('code')
-    );
-    this.loadPage = false;
-    this.expenseService.editExpenses(this.idExpense).subscribe(
-      resp => {
-        this.expense = resp;
-        this.assignValuesFormExpense();
-      },
-      () => {
-        this.toastr.error('Consulte con el Administrador.', 'Error al mostrar el formulario para Actualizar Rol.');
-        this.router.navigate(['administration/roles/index']);
-      }
-    ).add(
-      () => this.loadPage = true
-    );
-  }
-
-  /**
-   * Crear Gasto
-   * @param expenseData
-   */
   storeForm(): void {
     this.txtLoad = 'Guardando Gasto';
     this.expenseService.storeExpenses(this.formExpense.value).subscribe(
@@ -188,10 +160,6 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
     );
   }
 
-  /**
-   * Actualizar Gasto 
-   * @param expenseData 
-   */
   updateForm(): void{
     this.txtLoad = 'Actualizando Gasto';
     this.expenseService.updateExpenses(this.formExpense.value).subscribe(
@@ -202,6 +170,16 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
       () => this.toastr.error('Consulte con el Administrador.', 'Error al actualizar: GASTO.')
     ).add(
       () => this.loadPage = true
+    );
+  }
+
+  loadTypeExpenseForm(): void {
+    this.loadTypeExpense = false;
+    this.typeExpenseService.listTypeExpenses().subscribe(
+      resp => this.typeExpensesDB = resp,
+      ()  => this.toastr.error('Consulte con el Administrador', 'Error al Cargar los TIPOS DE GASTOS.')
+    ).add(
+      () => this.loadTypeExpense = true
     );
   }
 
@@ -216,15 +194,35 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
     }
   }
 
+  selectTypeFormStoreOrUpdate(): void {
+    switch(this.initialState.type) {
+      case STORE:
+        this.gralService.changeSelectBtn(STORE);
+        this.getStore();
+        break;
+      case UPDATE:
+        this.gralService.changeDisabled(false);
+        this.gralService.changeSelectBtn(UPDATE);
+        this.getUpdate();
+        break;
+    }
+  }
+
   documentEnable() {
     if(this.document.value) {
       this.serial_document.enable();
     }
   }
 
+  getIdToParameterFromUrl(): void {
+    this.route.paramMap.subscribe(
+      params => this.idExpense = params.get('code')
+    );
+  }
+
   ngOnDestroy() {
     if(this.initialState.type == UPDATE) {
-      this.expenseService.changeDisabled(true);
+      this.gralService.changeDisabled(true);
       this.expenseService.expense = null;
     }
   }

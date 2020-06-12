@@ -7,6 +7,15 @@
     vertical-align: middle;
 }
 
+.align-middle-load-page {
+    width: calc(100% - 205px);
+    position: absolute;
+    top: 45%;
+    transform: translateY(-50%);
+    text-align: center;
+    vertical-align: middle;
+}
+
 .sidebar {
     background: #fff;
 }
@@ -130,7 +139,7 @@ hr {
     color: rgb(78, 78, 78);
 }
 
-.ngx-dropdown-container>.ngx-dropdown-button {
+/* .ngx-dropdown-container>.ngx-dropdown-button {
     border: 1px solid #8ad4ee !important;
 }
 
@@ -150,7 +159,7 @@ hr {
     outline: 0;
     border: 1px solid #8ad4ee !important;
     box-shadow: 0 0 0 0.2rem rgba(32, 168, 216, .25);
-}
+} */
 
 .form-control.invalid {
     border-color: #f86c6b;

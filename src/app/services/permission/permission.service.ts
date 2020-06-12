@@ -13,39 +13,39 @@ export class PermissionService {
 
   constructor(private http: HttpClient) { }
 
-  listPermissions(): Observable<any> {
+  listPermissions(): Observable<Permission[]> {
     let url = `${URL_GLOBAL}/permissions`;
     const params: Params = {
       permission_select: 'name,description,slug',
       permission_status: 1,
       paginate: 'disabled'
     }
-    return this.http.get(url, { params }).pipe(
-      map( (resp: any) => {
-        let data = resp.data.map((e)=>{
-          let permission: Permission =  Object.assign(new Permission, e);
-            let type = permission.slug.split('.')[0];
-            switch(type) {
-              case 'users':
-              case 'roles':
-              case 'companies-positions':
-                permission.resource = 'administration';
+    return this.http.get<Permission[]>(url, { params }).pipe(
+      map((resp: any) => {
+        let data = resp.data.map((e) => {
+          let permission: Permission = Object.assign(new Permission, e);
+          let type = permission.slug.split('.')[0];
+          switch (type) {
+            case 'users':
+            case 'roles':
+            case 'companies-positions':
+              permission.resource = 'administration';
               break;
-              case 'expenses':
-              case 'types-expenses':
-                permission.resource = 'transactions';  
-              break; 
-              case 'tests':
-              case 'studies':
-                permission.resource = 'tests';
+            case 'expenses':
+            case 'types-expenses':
+              permission.resource = 'transactions';
               break;
-              case 'patients':
-                permission.resource = 'patients';
+            case 'tests':
+            case 'studies':
+              permission.resource = 'tests';
               break;
-              default:
-                permission.resource = 'specials';
+            case 'patients':
+              permission.resource = 'patients';
               break;
-            }
+            default:
+              permission.resource = 'specials';
+              break;
+          }
           return permission
         })
         return data;

@@ -26,10 +26,10 @@ export class ParametersIndexComponent implements OnInit {
 
   @Output() statusLoadParameteres: EventEmitter<boolean> = new EventEmitter<boolean>();
   constructor(private parameterService: ParameterService,
-              private titleService: TitleService,
-              private testComposedService: TestComposedService,
-              private toastr: ToastrService,
-              private modalService: BsModalService) {
+    private titleService: TitleService,
+    private testComposedService: TestComposedService,
+    private toastr: ToastrService,
+    private modalService: BsModalService) {
   }
 
   ngOnInit() {
@@ -41,6 +41,7 @@ export class ParametersIndexComponent implements OnInit {
     );
     this.testComposedService.idNameTestSelectedObservable.subscribe(resp => this.testSelected = resp.id);
   }
+
   updateParameter(parameter: Parameter) {
 
   }

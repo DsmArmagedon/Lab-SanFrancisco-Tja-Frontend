@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { RoleService } from '../../../services/role/role.service';
 import { Router } from '@angular/router';
+import { GeneralService } from 'src/app/services/common/general.service';
 
 @Component({
   selector: 'app-roles',
@@ -13,13 +13,13 @@ export class RolesComponent implements OnInit {
   routeUpdate = 'administration/roles/update';
   disabled: boolean = true;
 
-  constructor(private roleService: RoleService,
+  constructor(private gralService: GeneralService,
               private router: Router) {
-    this.roleService.disabledUpdateObservable.subscribe(
+    this.gralService.disabledUpdateObservable.subscribe(
       // setTimeOut => Error: ExpressionChangedAfterItHasBeenCheckedError
       resp => setTimeout( () => this.disabled = resp, 0 )
     );
-    this.roleService.selectBtnActiveObservable.subscribe(
+    this.gralService.selectBtnActiveObservable.subscribe(
       resp => setTimeout( () => this.radioModel = resp, 0 )
     );
   }

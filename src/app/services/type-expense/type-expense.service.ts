@@ -23,7 +23,7 @@ export class TypeExpenseService {
     this.updateTypeExpenseSubject.next(this.typeExpenseEdit);
   }
 
-  indexTypeExpenses(formFilter:any, per_page: number, page: number): Observable<any> {
+  indexTypeExpenses(formFilter: any, per_page: number, page: number): Observable<TypeExpense[]> {
     let url = `${URL_GLOBAL}/types-expenses`;
 
     const params: Params = {
@@ -34,8 +34,8 @@ export class TypeExpenseService {
       ...formFilter
     }
 
-    return this.http.get(url, { params }).pipe(
-      map( (resp: any)=> {
+    return this.http.get<TypeExpense[]>(url, { params }).pipe(
+      map((resp: any) => {
         resp.data = resp.data.map((e) => {
           return Object.assign(new TypeExpense, e);
         })
@@ -45,34 +45,34 @@ export class TypeExpenseService {
     );
   }
 
-  storeTypeExpenses(typeExpense: TypeExpense): Observable<any> {
+  storeTypeExpenses(typeExpense: TypeExpense): Observable<TypeExpense> {
     let url = `${URL_GLOBAL}/types-expenses`
-    return this.http.post(url, typeExpense).pipe(
-      map( (resp: any) => {
+    return this.http.post<TypeExpense>(url, typeExpense).pipe(
+      map((resp: any) => {
         return resp.data;
       })
     );
   }
 
-  updateTypeExpenses(typeExpense: TypeExpense): Observable<any> {
+  updateTypeExpenses(typeExpense: TypeExpense): Observable<TypeExpense> {
     let url = `${URL_GLOBAL}/types-expenses/${typeExpense.id}`;
-    return this.http.put(url, typeExpense).pipe(
-      map( (resp: any) => {
+    return this.http.put<TypeExpense>(url, typeExpense).pipe(
+      map((resp: any) => {
         return resp.data;
       })
     );
   }
 
-  destroyTypeExpenses(id: number): Observable<any> {
+  destroyTypeExpenses(id: number): Observable<TypeExpense> {
     let url = `${URL_GLOBAL}/types-expenses/${id}`;
-    return this.http.delete(url).pipe(
-      map ( (resp: any) => {
+    return this.http.delete<TypeExpense>(url).pipe(
+      map((resp: any) => {
         return resp.data;
       })
     );
   }
 
-  listTypeExpenses(): Observable<any> {
+  listTypeExpenses(): Observable<TypeExpense[]> {
     let url = `${URL_GLOBAL}/types-expenses`;
     const params: Params = {
       type_expense_select: 'name',
@@ -81,8 +81,8 @@ export class TypeExpenseService {
       type_expense_order_by: 'name',
       type_expense_order_option: 'ASC'
     }
-    return this.http.get(url, { params }).pipe(
-      map( (resp:any) => {
+    return this.http.get<TypeExpense[]>(url, { params }).pipe(
+      map((resp: any) => {
         let data = resp.data.map((e) => {
           return Object.assign(new TypeExpense, e);
         })

@@ -13,15 +13,15 @@ export class ParameterService {
 
   constructor(private http: HttpClient) { }
 
-  indexParameters(id: number): Observable<any> {
+  indexParameters(id: number): Observable<Parameter[]> {
     let url = `${URL_GLOBAL}/tests-composeds-titles/${id}/parameters`;
     const params: Params = {
       unit: 'load',
       unit_select: 'name,display'
     }
-    return this.http.get(url, { params }).pipe(
-      map( (resp: any) => {
-        return resp.data.map( (e) => {
+    return this.http.get<Parameter[]>(url, { params }).pipe(
+      map((resp: any) => {
+        return resp.data.map((e) => {
           return Object.assign(new Parameter, e);
         })
       })

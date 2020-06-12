@@ -22,27 +22,45 @@ export class TitleService {
   constructor(private http: HttpClient) { }
 
   changeIdNameTitleSelected(id: number, name: string) {
-    this.idNameTitleSelectedSubject.next({id: id, name: name});
+    this.idNameTitleSelectedSubject.next({ id: id, name: name });
   }
 
-  indexTitles(id: number): Observable<any> {
-    let url = `${URL_GLOBAL}/tests-composeds/${id}/titles`;
-    return this.http.get(url).pipe(
+  indexTitles(test_id: number): Observable<Title[]> {
+    let url = `${URL_GLOBAL}/tests-composeds/${test_id}/titles`;
+    return this.http.get<Title[]>(url).pipe(
       map((resp: any) => {
         return resp.data;
       })
     );
   }
 
-  listTitles(id: number): Observable<any> {
-    let url = `${URL_GLOBAL}/tests-composeds/${id}/titles`;
+  storeTitles(title: Title): Observable<Title> {
+    let url = `${URL_GLOBAL}/tests-composeds/${title.test_id}/titles`;
+    return this.http.post<Title>(url, title).pipe(
+      map((resp: any) => {
+        return resp.data;
+      })
+    );
+  }
+
+  updateTitles(title: Title): Observable<Title> {
+    let url = `${URL_GLOBAL}/tests-composeds/${title.test_id}/titles/${title.id}`;
+    return this.http.put<Title>(url, title).pipe(
+      map((resp: any) => {
+        return resp.data;
+      })
+    );
+  }
+
+  listTitles(test_id: number): Observable<Title> {
+    let url = `${URL_GLOBAL}/tests-composeds/${test_id}/titles`;
     const params: Params = {
       title_select: 'name',
       title_status: 1
     }
-    return this.http.get(url, { params }).pipe(
-      map( (resp: any) => {
-        let data = resp.data.map( (e) => {
+    return this.http.get<Title[]>(url, { params }).pipe(
+      map((resp: any) => {
+        let data = resp.data.map((e) => {
           return Object.assign(new Title, e);
         })
         return data;

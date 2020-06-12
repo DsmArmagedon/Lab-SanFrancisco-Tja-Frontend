@@ -11,14 +11,19 @@ import { GeneralService } from 'src/app/services/common/general.service';
   selector: 'app-health-centers-store-update',
   templateUrl: './health-centers-store-update.component.html',
   styles: [],
-  providers: [ ValidationsNameDirective ]
+  providers: [ValidationsNameDirective]
 })
 export class HealthCentersStoreUpdateComponent implements OnInit {
+  @Output() selectRowIndexNull: EventEmitter<any> = new EventEmitter<any>();
+  @Output() executeIndex: EventEmitter<any> = new EventEmitter<any>();
+
   loadPageStoreUpdate: boolean = true;
   loadPage: boolean = true;
   txtLoad: string;
   healthCenter: HealthCenter;
   formHealthCenter: FormGroup;
+  initialState: any;
+
   stateStore: any = {
     title: 'Crear Centro de Salud',
     btnStoreUpdate: 'Guardar'
@@ -27,15 +32,14 @@ export class HealthCentersStoreUpdateComponent implements OnInit {
     title: 'Editar Centro de Salud',
     btnStoreUpdate: 'Actualizar'
   }
-  @Output() selectRowIndexNull: EventEmitter<any> = new EventEmitter<any>();
-  @Output() executeIndex: EventEmitter<any> = new EventEmitter<any>();
-  initialState: any;
+
   constructor(private healthCenterService: HealthCenterService,
-              private validationsDirective: ValidationsNameDirective,
-              private toastr: ToastrService,
-              public gralService: GeneralService) {
+    private validationsDirective: ValidationsNameDirective,
+    private toastr: ToastrService,
+    public gralService: GeneralService) {
     this.initialState = this.stateStore;
-   }
+  }
+
   ngOnInit() {
     this.formHealthCenter = this.formGroupHealthCenter();
     this.healthCenterService.updateHealthCenterObservable.subscribe(
@@ -48,20 +52,28 @@ export class HealthCentersStoreUpdateComponent implements OnInit {
     );
   }
 
-  formGroupHealthCenter(): FormGroup{
+  get id() { return this.formHealthCenter.get('id'); }
+  get name() { return this.formHealthCenter.get('name'); }
+  get deduction() { return this.formHealthCenter.get('deduction'); }
+  get phone() { return this.formHealthCenter.get('phone'); }
+  get information() { return this.formHealthCenter.get('information'); }
+  get status() { return this.formHealthCenter.get('status'); }
+
+  formGroupHealthCenter(): FormGroup {
     return new FormGroup({
       id: new FormControl(null),
       name: new FormControl('', {
-        validators: [ Validators.required, Validators.maxLength(100), ValidatorsPattern.alphaNumericSpacePattern ],
-        asyncValidators: [ this.validationsDirective.validateUniqueHealthCenter.bind(this.validationsDirective) ]
+        validators: [Validators.required, Validators.maxLength(100), ValidatorsPattern.alphaNumericSpacePattern],
+        asyncValidators: [this.validationsDirective.validateUniqueHealthCenter.bind(this.validationsDirective)]
       }),
-      deduction: new FormControl(0, [ Validators.required, Validators.min(0), Validators.max(100) ]),
-      phone: new FormControl('', [ Validators.maxLength(50) ]),
-      information: new FormControl('', [ Validators.maxLength(180) ]),
+      deduction: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(100)]),
+      phone: new FormControl('', [Validators.maxLength(50)]),
+      information: new FormControl('', [Validators.maxLength(180)]),
       status: new FormControl(1)
     });
   }
-  assignValuesFormHealthCenter() {
+
+  assignValuesFormHealthCenter(): void {
     this.id.setValue(this.healthCenter.id);
     this.name.setValue(this.healthCenter.name);
     this.deduction.setValue(this.healthCenter.deduction);
@@ -70,17 +82,18 @@ export class HealthCentersStoreUpdateComponent implements OnInit {
     this.status.setValue(this.healthCenter.status);
   }
 
-  get id() { return this.formHealthCenter.get('id'); }
-  get name() { return this.formHealthCenter.get('name'); }
-  get deduction() { return this.formHealthCenter.get('deduction'); }
-  get phone() { return this.formHealthCenter.get('phone'); }
-  get information() { return this.formHealthCenter.get('information'); }
-  get status() { return this.formHealthCenter.get('status'); }
-  
+  getStore(): void {
+    this.initialState = this.stateStore;
+    this.healthCenterService.healthCenterEdit = new HealthCenter;
+    this.formHealthCenter.reset();
+    this.status.setValue(1);
+    this.selectRowIndexNull.emit();
+  }
+
   saveFormHealthCenter(): void {
-    if(this.formHealthCenter.valid) {
+    if (this.formHealthCenter.valid) {
       this.loadPageStoreUpdate = false;
-      if(!this.id.value) {
+      if (!this.id.value) {
         this.storeForm();
       } else {
         this.updateForm();
@@ -115,14 +128,6 @@ export class HealthCentersStoreUpdateComponent implements OnInit {
     ).add(
       () => this.loadPageStoreUpdate = true
     );
-  }
-
-  getStore(): void {
-    this.formHealthCenter.reset();
-    this.status.setValue(1);
-    this.initialState = this.stateStore;
-    this.selectRowIndexNull.emit();
-    this.healthCenterService.healthCenterEdit = new HealthCenter;
   }
 
   resetFormHealthCenter(): void {

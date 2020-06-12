@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { TYPE_DATA, OBJECT_TYPE_DATA } from '../../../../global-variables';
 import { UnitService } from '../../../../services/unit/unit.service';
@@ -46,7 +46,18 @@ export class ParametersStoreUpdateComponent implements OnInit {
     this.formParameter = this.formGroupParameter();
     this.loadUnitsForm();
     this.loadTitlesForm();
+    this.selectedTitleForShowForm();
   }
+
+  get id() { return this.formParameter.get('id'); }
+  get name() { return this.formParameter.get('name'); }
+  get unit_id() { return this.formParameter.get('unit_id'); }
+  get title_test_id() { return this.formParameter.get('title_test_id'); }
+  get type_data() { return this.formParameter.get('type_data'); }
+  get reference_values() { return this.formParameter.get('reference_values'); }
+  get options() { return this.formParameter.get('options'); }
+  get default_value() { return this.formParameter.get('default_value'); }
+  get status() { return this.formParameter.get('status'); }
 
   formGroupParameter() {
     return new FormGroup({
@@ -62,15 +73,11 @@ export class ParametersStoreUpdateComponent implements OnInit {
     })
   }
 
-  get id() { return this.formParameter.get('id'); }
-  get name() { return this.formParameter.get('name'); }
-  get unit_id() { return this.formParameter.get('unit_id'); }
-  get title_test_id() { return this.formParameter.get('title_test_id'); }
-  get type_data() { return this.formParameter.get('type_data'); }
-  get reference_values() { return this.formParameter.get('reference_values'); }
-  get options() { return this.formParameter.get('options'); }
-  get default_value() { return this.formParameter.get('default_value'); }
-  get status() { return this.formParameter.get('status'); }
+  selectedTitleForShowForm(): void {
+    if (this.idTitle !== undefined) {
+      this.title_test_id.setValue(this.idTitle);
+    }
+  }
 
   saveFormParameter(): void {
     console.log(this.default_value);

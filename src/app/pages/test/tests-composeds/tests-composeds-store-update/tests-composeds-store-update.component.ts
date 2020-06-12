@@ -5,6 +5,7 @@ import { STORE, UPDATE } from '../../../../global-variables';
 import { ActivatedRoute } from '@angular/router';
 import { TestsStoreUpdateComponent } from '../tests-store-update/tests-store-update.component';
 import { TitlesIndexComponent } from '../titles-index/titles-index.component';
+import { GeneralService } from 'src/app/services/common/general.service';
 
 @Component({
   selector: 'app-tests-composeds-store-update',
@@ -25,37 +26,33 @@ export class TestsComposedsStoreUpdateComponent implements OnInit, OnDestroy {
 
   idTestComposed: number;
   constructor(private testComposedService: TestComposedService,
-              private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    private gralService: GeneralService) {
   }
 
   ngOnInit() {
     this.route.data.subscribe(
       (resp: any) => this.initialState = resp
     );
-    
+
     this.testStoreUpdateComponent.initialState = this.initialState;
     this.titleIndexComponent.type = this.initialState.type;
 
     switch (this.initialState.type) {
       case STORE:
         this.tabsTestComposed.tabs[1].disabled = true;
-        this.testComposedService.changeSelectBtn(STORE);
+        this.gralService.changeSelectBtn(STORE);
         break;
       case UPDATE:
         this.tabsTestComposed.tabs[1].disabled = false;
-        this.testComposedService.changeDisabledUpdate(false);
-        this.testComposedService.changeSelectBtn(UPDATE);
+        this.gralService.changeDisabled(false);
+        this.gralService.changeSelectBtn(UPDATE);
         this.getUpdate();
         break;
     }
-    
+
   }
 
-  ngOnDestroy() {
-    if (this.initialState.type == UPDATE) {
-      this.testComposedService.changeDisabledUpdate(true);
-    }
-  }
 
   getUpdate(): void {
     this.route.paramMap.subscribe(
@@ -95,5 +92,10 @@ export class TestsComposedsStoreUpdateComponent implements OnInit, OnDestroy {
     this.tabsTestComposed.tabs[0].disabled = false;
     this.tabsTestComposed.tabs[0].active = true;
     this.testStoreUpdateComponent.resetFormTest();
+  }
+  ngOnDestroy() {
+    if (this.initialState.type == UPDATE) {
+      this.gralService.changeDisabled(true);
+    }
   }
 }

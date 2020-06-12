@@ -16,7 +16,7 @@ import { GeneralService } from 'src/app/services/common/general.service';
 @Component({
   selector: 'app-roles-store-update',
   templateUrl: './roles-store-update.component.html',
-  providers: [ ValidationsNameDirective ]
+  providers: [ValidationsNameDirective]
 })
 export class RolesStoreUpdateComponent implements OnInit, OnDestroy {
   formRole: FormGroup;
@@ -26,10 +26,13 @@ export class RolesStoreUpdateComponent implements OnInit, OnDestroy {
   role: Role;
   loadPage: boolean = true;
   loadPagePermission: boolean = true;
+
   txtLoad: string;
+  txtLoadPermissions: string;
+
   initialState: any;
 
-  isAccordionPermissionsOpen: boolean ;
+  isAccordionPermissionsOpen: boolean;
 
 
   constructor(private permissionService: PermissionService,
@@ -44,69 +47,22 @@ export class RolesStoreUpdateComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.formRole = this.formGroupRole();
-    this.route.data.subscribe(
-      resp => this.initialState = resp
-    );
-    this.txtLoad = this.initialState.txtLoad;
-
-    switch (this.initialState.type) {
-      case STORE:
-        this.roleService.changeSelectBtn(STORE);
-        this.getStore();
-        break;
-      case UPDATE:
-        this.roleService.changeDisabled(false);
-        this.roleService.changeSelectBtn(UPDATE);
-        this.getUpdate();
-        break;
-    }
-
-
+    this.initialState = this.gralService.getDataInitialState(this.route);
+    this.selectTypeFormStoreOrUpdate();
   }
 
-  getStore(): void {
-    this.loadPagePermission = false;
-    this.permissionService.listPermissions().subscribe(
-      resp => {
-        this.permissionsDB = resp;
-        this.addPermissions();
-      },
-      () => this.toastr.error('Consulte con el Administrador.', 'Error al mostrar el formulario para Crear Rol.')
-    ).add(
-      () => this.loadPagePermission = true
-    );
-  }
-
-  getUpdate(): void {
-    this.route.paramMap.subscribe(
-      params => this.idRole = parseInt(params.get('id'))
-    );
-    this.loadPage = false;
-    forkJoin({
-      permissions: this.permissionService.listPermissions(),
-      role: this.roleService.editShowRoles(this.idRole)
-    }).subscribe(
-      resp => {
-        this.permissionsDB = resp.permissions;
-        this.addPermissions();
-        this.role = resp.role;
-        this.assignValuesFormRole();
-      },
-      () =>{ 
-        this.toastr.error('Consulte con el Administrador.', 'Error al mostrar el formulario para Actualizar Rol.');
-        this.router.navigate(['administration/roles/index']);
-      }
-    ).add(
-      () => this.loadPage = true
-    );
-  }
+  get id() { return this.formRole.get('id'); }
+  get name() { return this.formRole.get('name'); }
+  get description() { return this.formRole.get('description'); }
+  get status() { return this.formRole.get('status'); }
+  get permissions() { return this.formRole.get('permissions') as FormArray; }
 
   formGroupRole(): FormGroup {
     return new FormGroup({
       id: new FormControl(null),
-      name: new FormControl('',{
-        validators: [ Validators.required, Validators.maxLength(100), ValidatorsPattern.alphaSpacePattern ],
-        asyncValidators: [ this.validationsDirective.validateUniqueRole.bind(this.validationsDirective) ]
+      name: new FormControl('', {
+        validators: [Validators.required, Validators.maxLength(100), ValidatorsPattern.alphaSpacePattern],
+        asyncValidators: [this.validationsDirective.validateUniqueRole.bind(this.validationsDirective)]
       }),
       description: new FormControl('', {
         validators: [Validators.maxLength(180)],
@@ -126,13 +82,7 @@ export class RolesStoreUpdateComponent implements OnInit, OnDestroy {
     this.setValuePermissions();
   }
 
-  get id() { return this.formRole.get('id'); }
-  get name() { return this.formRole.get('name'); }
-  get description() { return this.formRole.get('description'); }
-  get status() { return this.formRole.get('status'); }
-  get permissions() { return this.formRole.get('permissions') as FormArray; }
-
-  setValuePermissions() {
+  setValuePermissions(): void {
     this.role.permissions.map((e) => {
       // Buscamos el index en el permissionsDB de los permisos que se recibieron del backend del rol, seleccionado.
       const permissionSearch = this.permissionsDB.findIndex((element) => {
@@ -146,10 +96,41 @@ export class RolesStoreUpdateComponent implements OnInit, OnDestroy {
     })
   }
 
-  resetFormRole():void {
-    this.isAccordionPermissionsOpen = false;
-    this.formRole.reset();
-    this.status.setValue(1);
+  getStore(): void {
+    this.txtLoadPermissions = this.initialState.txtLoad;
+    this.loadPagePermission = false;
+    this.permissionService.listPermissions().subscribe(
+      resp => {
+        this.permissionsDB = resp;
+        this.addPermissions();
+      },
+      () => this.toastr.error('Consulte con el Administrador.', 'Error al mostrar el formulario para Crear Rol.')
+    ).add(
+      () => this.loadPagePermission = true
+    );
+  }
+
+  getUpdate(): void {
+    this.txtLoad = this.initialState.txtLoad;
+    this.getIdToParameterFromUrl();
+    this.loadPage = false;
+    forkJoin({
+      permissions: this.permissionService.listPermissions(),
+      role: this.roleService.editShowRoles(this.idRole)
+    }).subscribe(
+      resp => {
+        this.permissionsDB = resp.permissions;
+        this.addPermissions();
+        this.role = resp.role;
+        this.assignValuesFormRole();
+      },
+      () => {
+        this.toastr.error('Consulte con el Administrador.', 'Error al mostrar el formulario para Actualizar Rol.');
+        this.router.navigate(['administration/roles/index']);
+      }
+    ).add(
+      () => this.loadPage = true
+    );
   }
 
   saveFormRole(): void {
@@ -168,25 +149,6 @@ export class RolesStoreUpdateComponent implements OnInit, OnDestroy {
     }
   }
 
-  selectAll(): void {
-    this.permissions.value.map((checked, index) => {
-      if (!checked) {
-        this.permissions.controls[index].setValue(true);
-      }
-    });
-  }
-  deselectAll(): void {
-    this.permissions.value.map((checked, index) => {
-      if (checked) {
-        this.permissions.controls[index].setValue(false);
-      }
-    });
-  }
-
-  /**
-   * Crear Rol
-   * @param roleData 
-   */
   storeForm(roleData: Role): void {
     this.txtLoad = 'Guardando Rol';
     this.roleService.storeRoles(roleData).subscribe(
@@ -200,10 +162,6 @@ export class RolesStoreUpdateComponent implements OnInit, OnDestroy {
     );
   }
 
-  /**
-   * Actualizar Rol
-   * @param roleData 
-   */
   updateForm(roleData: Role): void {
     this.txtLoad = 'Actualizando Rol';
     this.roleService.updateRoles(roleData).subscribe(
@@ -211,22 +169,65 @@ export class RolesStoreUpdateComponent implements OnInit, OnDestroy {
         this.toastr.success(resp.name.toUpperCase(), 'ROL Actualizado Correctamente');
         this.router.navigate(['administration/roles/index']);
       },
-      () =>this.toastr.error('Consulte con el Administrador.', 'Error al actualizar: ROL.')
+      () => this.toastr.error('Consulte con el Administrador.', 'Error al actualizar: ROL.')
     ).add(
       () => this.loadPage = true
     );
   }
 
-  ngOnDestroy() {
-    if(this.initialState.type == UPDATE) {
-      this.roleService.changeDisabled(true);
+  selectTypeFormStoreOrUpdate(): void {
+    switch (this.initialState.type) {
+      case STORE:
+        this.gralService.changeSelectBtn(STORE);
+        this.getStore();
+        break;
+      case UPDATE:
+        this.gralService.changeDisabled(false);
+        this.gralService.changeSelectBtn(UPDATE);
+        this.getUpdate();
+        break;
     }
   }
+
+  resetFormRole(): void {
+    this.isAccordionPermissionsOpen = false;
+    this.formRole.reset();
+    this.status.setValue(1);
+  }
+
+  selectAll(): void {
+    this.permissions.value.map((checked, index) => {
+      if (!checked) {
+        this.permissions.controls[index].setValue(true);
+      }
+    });
+  }
+
+  deselectAll(): void {
+    this.permissions.value.map((checked, index) => {
+      if (checked) {
+        this.permissions.controls[index].setValue(false);
+      }
+    });
+  }
+
   addPermissions() {
     this.permissionsDB.map(() => {
       const formControl = new FormControl(false)
       this.permissions.push(formControl);
     });
+  }
+
+  getIdToParameterFromUrl(): void {
+    this.route.paramMap.subscribe(
+      params => this.idRole = parseInt(params.get('id'))
+    );
+  }
+
+  ngOnDestroy() {
+    if (this.initialState.type == UPDATE) {
+      this.gralService.changeDisabled(true);
+    }
   }
 
 }

@@ -1,8 +1,8 @@
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { URL_GLOBAL } from '../../config';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from 'src/app/models/user.model';
+import { User, UserMetaLinks } from 'src/app/models/user.model';
 import { map } from 'rxjs/operators';
 import { Meta } from 'src/app/models/meta.model';
 import { Params } from '@angular/router';
@@ -11,29 +11,10 @@ import { Params } from '@angular/router';
   providedIn: 'root'
 })
 export class UserService {
-  /**
-   * Activar y desactivar el boton de editar
-   */
-  private disabledUpdateSubject = new Subject<boolean>();
-  public disabledUpdateObservable = this.disabledUpdateSubject.asObservable();
-  
-  private selectBtnActiveSubject = new Subject<string>();
-  public selectBtnActiveObservable = this.selectBtnActiveSubject.asObservable();
-  
-  constructor(private http: HttpClient) { }
-  /**
-   * Observable para activar y desactivar el boton editar
-   * @param disabled 
-   */
-  changeDisabled(disabled: boolean){
-    this.disabledUpdateSubject.next(disabled);
-  }
 
-  changeSelectBtn(text: string) {
-    this.selectBtnActiveSubject.next(text);
-  }
-  
-  indexUsers(formFilter: any, per_page: number, page: number = 1): Observable<any> {
+  constructor(private http: HttpClient) { }
+
+  indexUsers(formFilter: any, per_page: number, page: number = 1): Observable<UserMetaLinks> {
     let url = `${URL_GLOBAL}/users`;
     const params: Params = {
       role: 'load',
@@ -46,7 +27,7 @@ export class UserService {
       user_order_option: 'DESC',
       ...formFilter
     }
-    return this.http.get(url, { params }).pipe(
+    return this.http.get<UserMetaLinks>(url, { params }).pipe(
       map((resp: any) => {
         resp.data = resp.data.map(function (e) {
           return Object.assign(new User, e);
@@ -58,7 +39,7 @@ export class UserService {
     );
   }
 
-  editShowUsers(ci: string): Observable<any> {
+  editShowUsers(ci: string): Observable<User> {
     let url = `${URL_GLOBAL}/users/${ci}`;
     const params: Params = {
       role: 'load',
@@ -66,37 +47,37 @@ export class UserService {
       company_position: 'load',
       company_position_select: 'name'
     }
-    return this.http.get(url, { params }).pipe(
+    return this.http.get<User>(url, { params }).pipe(
       map((resp: any) => {
         return Object.assign(new User, resp.data);
       })
     );
   }
 
-  storeUsers(user: User): Observable<any> {
+  storeUsers(user: User): Observable<User> {
     let url = `${URL_GLOBAL}/users`;
-    return this.http.post(url, this.toFormData(user)).pipe(
+    return this.http.post<User>(url, this.toFormData(user)).pipe(
       map((resp: any) => {
         return resp.data;
       })
     );
   }
 
-  updateUsers(user: User): Observable<any> {
+  updateUsers(user: User): Observable<User> {
     let url = `${URL_GLOBAL}/users/${user.id}`;
     let formDataUser = this.toFormData(user);
-    formDataUser.append('_method','PUT');
-    return this.http.post(url, formDataUser).pipe(
+    formDataUser.append('_method', 'PUT');
+    return this.http.post<User>(url, formDataUser).pipe(
       map((resp: any) => {
         return resp.data;
       })
     );
   }
 
-  destroyUsers(ci: string): Observable<any> {
+  destroyUsers(ci: string): Observable<User> {
     let url = `${URL_GLOBAL}/users/${ci}`;
-    return this.http.delete(url).pipe(
-      map( (resp:any) =>{
+    return this.http.delete<User>(url).pipe(
+      map((resp: any) => {
         return resp.data;
       })
     );
@@ -104,7 +85,7 @@ export class UserService {
 
   toFormData<T>(formValue: T) {
     let formData = new FormData();
-  
+
     for (const key of Object.keys(formValue)) {
       const value = formValue[key];
       formData.append(key, value);

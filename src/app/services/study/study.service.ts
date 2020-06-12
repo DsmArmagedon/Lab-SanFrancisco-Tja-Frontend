@@ -23,7 +23,7 @@ export class StudyService {
     this.updateStudySubject.next(this.studyEdit);
   }
 
-  indexStudies(formFilter: any, per_page: number, page: number): Observable<any> {
+  indexStudies(formFilter: any, per_page: number, page: number): Observable<Study[]> {
     let url = `${URL_GLOBAL}/studies`;
 
     const params: Params = {
@@ -33,9 +33,9 @@ export class StudyService {
       study_order_option: 'ASC',
       ...formFilter
     }
-    return this.http.get(url, { params }).pipe(
-      map( (resp: any) => {
-        resp.data = resp.data.map( (e) => {
+    return this.http.get<Study[]>(url, { params }).pipe(
+      map((resp: any) => {
+        resp.data = resp.data.map((e) => {
           return Object.assign(new Study, e);
         })
         resp.meta = Object.assign(new Meta, resp.meta);
@@ -44,34 +44,34 @@ export class StudyService {
     );
   }
 
-  storeStudies(study: Study): Observable<any> {
+  storeStudies(study: Study): Observable<Study> {
     let url = `${URL_GLOBAL}/studies`;
-    return this.http.post(url, study).pipe(
-      map( (resp: any) => {
+    return this.http.post<Study>(url, study).pipe(
+      map((resp: any) => {
         return resp.data;
       })
     );
   }
 
-  updateStudies(study: Study): Observable<any> {
+  updateStudies(study: Study): Observable<Study> {
     let url = `${URL_GLOBAL}/studies/${study.id}`;
-    return this.http.put(url, study).pipe(
-      map( (resp: any) => {
+    return this.http.put<Study>(url, study).pipe(
+      map((resp: any) => {
         return resp.data;
       })
     );
   }
 
-  destroyStudies(id: number): Observable<any> {
+  destroyStudies(id: number): Observable<Study> {
     let url = `${URL_GLOBAL}/studies/${id}`;
-    return this.http.delete(url).pipe(
-      map( (resp: any) => {
+    return this.http.delete<Study>(url).pipe(
+      map((resp: any) => {
         return resp.data;
       })
     );
   }
 
-  listStudies(): Observable<any> {
+  listStudies(): Observable<Study[]> {
     let url = `${URL_GLOBAL}/studies`;
 
     const params: Params = {
@@ -82,8 +82,8 @@ export class StudyService {
       study_order_option: 'DESC'
     }
 
-    return this.http.get(url, { params }).pipe(
-      map( (resp: any) => {
+    return this.http.get<Study[]>(url, { params }).pipe(
+      map((resp: any) => {
         let data = resp.data.map((e) => {
           return Object.assign(new Study, e);
         })

@@ -24,7 +24,7 @@ export class UnitService {
     this.updateUnitSubject.next(this.unitEdit);
   }
 
-  indexUnits(formFilter: any, per_page: number, page: number): Observable<any> {
+  indexUnits(formFilter: any, per_page: number, page: number): Observable<Unit[]> {
     let url = `${URL_GLOBAL}/units`;
 
     const params: Params = {
@@ -33,9 +33,9 @@ export class UnitService {
       ...formFilter
     }
 
-    return this.http.get(url, { params }).pipe(
-      map( (resp: any) => {
-        resp.data = resp.data.map( (e) => {
+    return this.http.get<Unit[]>(url, { params }).pipe(
+      map((resp: any) => {
+        resp.data = resp.data.map((e) => {
           return Object.assign(new Unit, e);
         });
         resp.meta = Object.assign(new Meta, resp.meta);
@@ -44,34 +44,34 @@ export class UnitService {
     );
   }
 
-  storeUnits(unit: Unit): Observable<any> {
+  storeUnits(unit: Unit): Observable<Unit> {
     let url = `${URL_GLOBAL}/units`;
-    return this.http.post(url, unit).pipe(
-      map( (resp: any) => {
+    return this.http.post<Unit>(url, unit).pipe(
+      map((resp: any) => {
         return resp.data;
       })
     );
   }
 
-  updateUnits(unit: Unit): Observable<any> {
+  updateUnits(unit: Unit): Observable<Unit> {
     let url = `${URL_GLOBAL}/units/${unit.id}`;
-    return this.http.put(url, unit).pipe(
-      map( (resp: any) => {
+    return this.http.put<Unit>(url, unit).pipe(
+      map((resp: any) => {
         return resp.data;
       })
     );
   }
 
-  destroyUnits(id: number): Observable<any> {
+  destroyUnits(id: number): Observable<Unit> {
     let url = `${URL_GLOBAL}/units/${id}`;
-    return this.http.delete(url).pipe(
-      map( (resp: any) => {
+    return this.http.delete<Unit>(url).pipe(
+      map((resp: any) => {
         return resp.data;
       })
     );
   }
 
-  listUnits(): Observable<any> {
+  listUnits(): Observable<Unit[]> {
     let url = `${URL_GLOBAL}/units`;
     const params: Params = {
       unit_select: 'name,display',
@@ -80,9 +80,9 @@ export class UnitService {
       unit_order_by: 'name',
       unit_order_option: 'ASC'
     }
-    return this.http.get(url, { params }).pipe(
-      map( (resp: any) => {
-        let data = resp.data.map( (e) => {
+    return this.http.get<Unit[]>(url, { params }).pipe(
+      map((resp: any) => {
+        let data = resp.data.map((e) => {
           return Object.assign(new Unit, e);
         })
         return data;

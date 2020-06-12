@@ -5,8 +5,11 @@
                 <h5>Parámetros</h5>
             </div>
             <div class="col-md-4 text-right">
-                <button type="button" class="btn btn-outline-info btn-sm" [disabled]="titleSelected === undefined" (click)="toUpdateParameters()"><i class="fa fa-fw fa-refresh"></i>Actualizar</button>
-                <button type="button" class="btn btn-outline-success btn-sm ml-2" [disabled]="testSelected === undefined" (click)="storeParameters()"><i class="fa fa-fw fa-plus" ></i>Añadir</button>
+                <button type="button" class="btn btn-outline-info btn-sm" [disabled]="titleSelected === undefined"
+                    (click)="toUpdateParameters()"><i class="fa fa-fw fa-refresh"></i>Actualizar</button>
+                <button type="button" class="btn btn-outline-success btn-sm ml-2"
+                    [disabled]="testSelected === undefined" (click)="storeParameters()"><i
+                        class="fa fa-fw fa-plus"></i>Añadir</button>
             </div>
         </div>
         <hr>
@@ -63,10 +66,15 @@
                                 </ng-template>
                             </td>
                             <td class="text-right">
-                                <button type="button" class="btn btn-success btn-sm mr-1" title="Mostrar"><i class="fa fa-fw fa-eye fa-xs"></i></button>
-                                <button type="button" class="btn btn-info btn-sm mr-1" (click)="updateParameter(parameter)" title="Editar"><i class="fa fa-fw fa-edit fa-xs"></i></button>
-                                <button type="button" class="btn btn-dark btn-sm mr-1" title="Agregar Valores Normales"><i class="fa fa-fw fa-cog fa-xs"></i></button>
-                                <button type="button" class="btn btn-danger btn-sm mr-0" title="Eliminar"><i class="fa fa-fw fa-trash fa-xs"></i></button>
+                                <button type="button" class="btn btn-dark btn-sm mr-1"
+                                    title="Agregar Valores Normales"><i class="fa fa-fw fa-cog fa-xs"></i></button>
+                                <button type="button" class="btn btn-success btn-sm mr-1" title="Mostrar"><i
+                                        class="fa fa-fw fa-eye fa-xs"></i></button>
+                                <button type="button" class="btn btn-info btn-sm mr-1"
+                                    (click)="updateParameter(parameter)" title="Editar"><i
+                                        class="fa fa-fw fa-edit fa-xs"></i></button>
+                                <button type="button" class="btn btn-danger btn-sm mr-0" title="Eliminar"><i
+                                        class="fa fa-fw fa-trash fa-xs"></i></button>
                             </td>
                         </tr>
                     </tbody>

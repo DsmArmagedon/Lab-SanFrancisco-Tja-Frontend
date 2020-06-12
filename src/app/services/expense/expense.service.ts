@@ -14,35 +14,13 @@ import { BaseService } from '../base/base.service';
 })
 export class ExpenseService extends BaseService {
 
-
-  /**
-   * Activar y desactivar el boton de editar
-   */
-  private disabledUpdateSubject = new Subject<boolean>();
-  public disabledUpdateObservable = this.disabledUpdateSubject.asObservable();
-  
-  private selectBtnActiveSubject = new Subject<string>();
-  public selectBtnActiveObservable = this.selectBtnActiveSubject.asObservable();
-
   expense: Expense = new Expense;
 
   constructor(private http: HttpClient) {
     super();
   }
 
-  /**
-   * Observable para activar y desactivar el boton editar
-   * @param disabled 
-   */
-  changeDisabled(disabled: boolean) {
-    this.disabledUpdateSubject.next(disabled);
-  }
-
-  changeSelectBtn(text: string) {
-    this.selectBtnActiveSubject.next(text);
-  }
-
-  indexExpenses(formFilter: FormGroup, per_page: number, page: number): Observable<any> {
+  indexExpenses(formFilter: FormGroup, per_page: number, page: number): Observable<Expense[]> {
     let url = `${URL_GLOBAL}/expenses`;
     let paramsFormFilter: any = formFilter.value;
     let dateInitialFormat: string = null;
@@ -50,10 +28,10 @@ export class ExpenseService extends BaseService {
     delete paramsFormFilter.expense_date;
     let dateInitial = formFilter.get('expense_date').value[0];
     let dateFinal = formFilter.get('expense_date').value[1];
-    if(dateInitial) {
-     dateInitialFormat = this.convertDateToString(dateInitial);
+    if (dateInitial) {
+      dateInitialFormat = this.convertDateToString(dateInitial);
     }
-    if(dateFinal) {
+    if (dateFinal) {
       dateFinalFormat = this.convertDateToString(dateFinal);
     }
     const params: Params = {
@@ -67,8 +45,8 @@ export class ExpenseService extends BaseService {
       expense_order_option: 'DESC',
       ...paramsFormFilter
     }
-    return this.http.get(url,  { params} ).pipe(
-      map( (resp: any) => {
+    return this.http.get<Expense[]>(url, { params }).pipe(
+      map((resp: any) => {
         resp.data = resp.data.map((e) => {
           return Object.assign(new Expense, e);
         })
@@ -78,50 +56,50 @@ export class ExpenseService extends BaseService {
     );
   }
 
-  codeExpenses(): Observable<any> {
+  codeExpenses(): Observable<Expense> {
     let url = `${URL_GLOBAL}/expenses-code`;
     return this.http.get(url).pipe(
-      map( (resp: any) => {
+      map((resp: any) => {
         return resp.data;
       })
     );
   }
-  
-  editExpenses(code: string): Observable<any> {
+
+  editExpenses(code: string): Observable<Expense> {
     let url = `${URL_GLOBAL}/expenses/${code}`;
     const params: Params = {
       type_expense: 'load',
       type_expense_select: 'name',
     }
-    return this.http.get(url, { params }).pipe(
-      map( (resp: any) => {
+    return this.http.get<Expense>(url, { params }).pipe(
+      map((resp: any) => {
         return Object.assign(new Expense, resp.data);
       })
     );
   }
 
-  storeExpenses(expense: Expense): Observable<any> {
+  storeExpenses(expense: Expense): Observable<Expense> {
     let url = `${URL_GLOBAL}/expenses`;
-    return this.http.post(url, expense).pipe(
-      map( (resp: any) => {
+    return this.http.post<Expense>(url, expense).pipe(
+      map((resp: any) => {
         return resp.data;
       })
     );
   }
 
-  updateExpenses(expense: Expense): Observable<any> {
+  updateExpenses(expense: Expense): Observable<Expense> {
     let url = `${URL_GLOBAL}/expenses/${expense.code}`;
-    return this.http.put(url, expense).pipe(
-      map( (resp: any) => {
+    return this.http.put<Expense>(url, expense).pipe(
+      map((resp: any) => {
         return resp.data;
       })
     );
   }
 
-  revokeRestoreExpenses(code: string, type: string): Observable<any> {
+  revokeRestoreExpenses(code: string, type: string): Observable<Expense> {
     let url = `${URL_GLOBAL}/expenses/${code}/${type}`;
-    return this.http.get(url).pipe(
-      map( (resp:any) => {
+    return this.http.get<Expense>(url).pipe(
+      map((resp: any) => {
         return resp.data;
       })
     );
