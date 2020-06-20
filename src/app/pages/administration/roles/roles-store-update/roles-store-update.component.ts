@@ -228,7 +228,8 @@ export class RolesStoreUpdateComponent implements OnInit, OnDestroy {
   }
 
   addPermissions() {
-    for (var i = 0; i <= 47; i++) {
+    let quantityPermissions: number = this.permissionService.index - 1;
+    for (var i = 0; i <= quantityPermissions; i++) {
       const formControl = new FormControl(false)
       this.permissions.push(formControl);
     }
