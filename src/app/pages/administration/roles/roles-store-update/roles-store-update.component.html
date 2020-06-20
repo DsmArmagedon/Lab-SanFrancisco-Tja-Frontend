@@ -96,7 +96,8 @@
                                 <accordion-group [isOpen]="isAccordionPermissionsOpen"
                                     *ngFor="let permissions of permissionsDB">
                                     <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
-                                        <div class="pull-left float-left">{{ permissions.resource }}</div>
+                                        <div class="pull-left float-left">{{ permissions.display }} <span
+                                                class="badge badge-secondary">New</span></div>
                                     </button>
                                     <div *ngFor="let permission of permissions.permissions">
                                         <div class="custom-control custom-checkbox" formArrayName="permissions">

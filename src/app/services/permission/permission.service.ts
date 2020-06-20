@@ -13,22 +13,27 @@ export class PermissionService {
   objectListPermissions: any = [
     {
       resource: 'administration',
+      display: 'Administración',
       permissions: []
     },
     {
       resource: 'transaction',
+      display: 'Transacciones',
       permissions: []
     },
     {
       resource: 'test',
+      display: 'Pruebas',
       permissions: []
     },
     {
       resource: 'patient',
+      display: 'Pacientes',
       permissions: []
     },
     {
       resource: 'special',
+      display: 'Especiales',
       permissions: []
     }
   ]
