@@ -6,6 +6,8 @@ import { ToastrService } from 'ngx-toastr';
 import { ValidatorsPattern } from '../../../../validators/validators-pattern';
 import { ValidationsNameDirective } from '../../../../directives/validations-name.directive';
 import { GeneralService } from 'src/app/services/common/general.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { STORE, UPDATE } from 'src/app/global-variables';
 
 @Component({
   selector: 'app-health-centers-store-update',
@@ -14,42 +16,25 @@ import { GeneralService } from 'src/app/services/common/general.service';
   providers: [ValidationsNameDirective]
 })
 export class HealthCentersStoreUpdateComponent implements OnInit {
-  @Output() selectRowIndexNull: EventEmitter<any> = new EventEmitter<any>();
-  @Output() executeIndex: EventEmitter<any> = new EventEmitter<any>();
-
-  loadPageStoreUpdate: boolean = true;
   loadPage: boolean = true;
   txtLoad: string;
   healthCenter: HealthCenter;
   formHealthCenter: FormGroup;
+  idHealthCenter: number;
   initialState: any;
-
-  stateStore: any = {
-    title: 'Crear Centro de Salud',
-    btnStoreUpdate: 'Guardar'
-  };
-  stateUpdate: any = {
-    title: 'Editar Centro de Salud',
-    btnStoreUpdate: 'Actualizar'
-  }
 
   constructor(private healthCenterService: HealthCenterService,
     private validationsDirective: ValidationsNameDirective,
     private toastr: ToastrService,
-    public gralService: GeneralService) {
-    this.initialState = this.stateStore;
+    public gralService: GeneralService,
+    private route: ActivatedRoute,
+    private router: Router) {
   }
 
   ngOnInit() {
     this.formHealthCenter = this.formGroupHealthCenter();
-    this.healthCenterService.updateHealthCenterObservable.subscribe(
-      resp => {
-        this.formHealthCenter.reset();
-        this.initialState = this.stateUpdate;
-        this.healthCenter = resp;
-        this.assignValuesFormHealthCenter();
-      }
-    );
+    this.initialState = this.gralService.getDataInitialState(this.route);
+    this.selectTypeFormStoreOrUpdate();
   }
 
   get id() { return this.formHealthCenter.get('id'); }
@@ -67,8 +52,8 @@ export class HealthCentersStoreUpdateComponent implements OnInit {
         asyncValidators: [this.validationsDirective.validateUniqueHealthCenter.bind(this.validationsDirective)]
       }),
       deduction: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(100)]),
-      phone: new FormControl('', [Validators.maxLength(50)]),
-      information: new FormControl('', [Validators.maxLength(180)]),
+      phone: new FormControl('', [Validators.maxLength(100)]),
+      information: new FormControl('', [Validators.maxLength(255)]),
       status: new FormControl(1)
     });
   }
@@ -82,17 +67,27 @@ export class HealthCentersStoreUpdateComponent implements OnInit {
     this.status.setValue(this.healthCenter.status);
   }
 
-  getStore(): void {
-    this.initialState = this.stateStore;
-    this.healthCenterService.healthCenterEdit = new HealthCenter;
-    this.formHealthCenter.reset();
-    this.status.setValue(1);
-    this.selectRowIndexNull.emit();
+  getUpdate(): void {
+    this.txtLoad = this.initialState.txtLoad;
+    this.getIdToParameterFromUrl();
+    this.loadPage = false;
+    this.healthCenterService.editShowHealthCenters(this.idHealthCenter).subscribe(
+      resp => {
+        this.healthCenter = resp;
+        this.assignValuesFormHealthCenter();
+      },
+      () => {
+        this.toastr.error('Consulte con el Administrador', 'Error al mostrar el formulario para Actualizar el CENTRO DE SALUD');
+        this.router.navigate(['administration/health-centers/index']);
+      }
+    ).add(
+      () => this.loadPage = true
+    );
   }
 
   saveFormHealthCenter(): void {
     if (this.formHealthCenter.valid) {
-      this.loadPageStoreUpdate = false;
+      this.loadPage = false;
       if (!this.id.value) {
         this.storeForm();
       } else {
@@ -106,12 +101,11 @@ export class HealthCentersStoreUpdateComponent implements OnInit {
     this.healthCenterService.storeHealthCenters(this.formHealthCenter.value).subscribe(
       resp => {
         this.toastr.success(resp.name.toUpperCase(), 'CENTRO DE SALUD Creado Correctamente');
-        this.executeIndex.emit();
         this.resetFormHealthCenter();
       },
       () => this.toastr.error('Consulte con el Administrador.', 'Error al crear: CENTRO DE SALUD.')
     ).add(
-      () => this.loadPageStoreUpdate = true
+      () => this.loadPage = true
     );
   }
 
@@ -120,18 +114,43 @@ export class HealthCentersStoreUpdateComponent implements OnInit {
     this.healthCenterService.updateHealthCenters(this.formHealthCenter.value).subscribe(
       resp => {
         this.toastr.success(resp.name.toUpperCase(), 'CENTRO DE SALUD Actualizado Correctamente');
-        this.executeIndex.emit();
-        this.selectRowIndexNull.emit();
-        this.resetFormHealthCenter();
+        this.router.navigate(['administration/health-centers/index']);
       },
       () => this.toastr.error('Consulte con el Administrador.', 'Error al actualizar: CENTRO DE SALUD.')
     ).add(
-      () => this.loadPageStoreUpdate = true
+      () => this.loadPage = true
     );
+  }
+
+  selectTypeFormStoreOrUpdate(): void {
+    switch (this.initialState.type) {
+      case STORE:
+        this.gralService.changeSelectBtn(STORE);
+        break;
+      case UPDATE:
+        this.gralService.changeDisabled(false);
+        this.gralService.changeSelectBtn(UPDATE);
+        this.getUpdate();
+        break;
+    }
+  }
+
+  getIdToParameterFromUrl(): void {
+    this.route.paramMap.subscribe(
+      params => this.idHealthCenter = parseInt(params.get('id'))
+    );
+
   }
 
   resetFormHealthCenter(): void {
     this.formHealthCenter.reset();
+    this.deduction.setValue(0);
     this.status.setValue(1);
+  }
+
+  ngOnDestroy() {
+    if (this.initialState.type == Date) {
+      this.gralService.changeDisabled(true);
+    }
   }
 }

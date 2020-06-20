@@ -22,8 +22,8 @@ interface IUser {
     status?: boolean;
 }
 
-interface IUserMetaLinks {
-    users: User[];
+interface IUserCollection {
+    users: Array<User>;
 }
 
 export class User implements IUser {
@@ -174,13 +174,14 @@ export class User implements IUser {
     }
 }
 
-export class UserMetaLinks extends BaseMetaLinks implements IUserMetaLinks {
-    private _users: User[];
-
-    set users(users: User[]) {
-        this._users = users;
+export class UserCollection extends BaseMetaLinks implements IUserCollection {
+    private _users: Array<User>;
+    set data(users: Array<User>) {
+        this._users = users.map((e) => {
+            return Object.assign(new User, e);
+        })
     }
-    get users(): User[] {
+    get users(): Array<User> {
         return this._users;
     }
 }

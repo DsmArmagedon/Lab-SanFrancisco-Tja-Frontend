@@ -4,12 +4,17 @@
             CENTROS DE SALUD
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-4">
-            <app-health-centers-store-update (executeIndex)="executeIndex()" (selectRowIndexNull)="selectRowIndexNull()"></app-health-centers-store-update>
-        </div>
-        <div class="col-md-8">
-            <app-health-centers-index></app-health-centers-index>
+    <div class="row title-plus">
+        <div class="btn-group btn-group-sm ml-3">
+            <button class="btn btn-outline-success" [(ngModel)]="radioModel" btnRadio="store" (click)="routerStore()"><i
+                    class="fa fa-fw fa-plus"></i>Agregar</button>
+            <button class="btn btn-outline-success" [(ngModel)]="radioModel" btnRadio="index" (click)="routerIndex()"><i
+                    class="fa fa-fw fa-list"></i>Listar</button>
+            <button class="btn btn-outline-success" [(ngModel)]="radioModel" btnRadio="update" [disabled]="disabled"><i
+                    class="fa fa-fw fa-edit"></i>Editar</button>
+
         </div>
     </div>
+    <hr>
+    <router-outlet></router-outlet>
 </div>

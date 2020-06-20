@@ -12,6 +12,10 @@ import { RolesStoreUpdateComponent } from './roles/roles-store-update/roles-stor
 import { STORE, UPDATE } from 'src/app/global-variables';
 import { UsersIndexComponent } from './users/users-index/users-index.component';
 import { UsersStoreUpdateComponent } from './users/users-store-update/users-store-update.component';
+import { CompaniesPositionsIndexComponent } from './companies-positions/companies-positions-index/companies-positions-index.component';
+import { CompaniesPositionsStoreUpdateComponent } from './companies-positions/companies-positions-store-update/companies-positions-store-update.component';
+import { HealthCentersIndexComponent } from './health-centers/health-centers-index/health-centers-index.component';
+import { HealthCentersStoreUpdateComponent } from './health-centers/health-centers-store-update/health-centers-store-update.component';
 
 const routes: Routes = [
   {
@@ -36,7 +40,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            redirectTo: 'store'
+            redirectTo: 'index'
           },
           {
             path: 'index',
@@ -84,7 +88,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            redirectTo: 'store'
+            redirectTo: 'index'
           },
           {
             path: 'index',
@@ -129,7 +133,45 @@ const routes: Routes = [
         ],
         data: {
           title: 'Cargos'
-        }
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'index'
+          },
+          {
+            path: 'index',
+            component: CompaniesPositionsIndexComponent,
+            canActivate: [
+              LoginGuard
+            ]
+          },
+          {
+            path: 'store',
+            component: CompaniesPositionsStoreUpdateComponent,
+            canActivate: [
+              LoginGuard
+            ],
+            data: {
+              title: 'Crear Cargo',
+              type: STORE,
+              btnStoreUpdate: 'Guardar'
+            }
+          },
+          {
+            path: 'update/:id',
+            component: CompaniesPositionsStoreUpdateComponent,
+            canActivate: [
+              LoginGuard
+            ],
+            data: {
+              title: 'Actualizar Cargo',
+              type: UPDATE,
+              btnStoreUpdate: 'Actualizar',
+              txtLoad: 'Cargando Cargo'
+            }
+          }
+        ]
       },
       {
         path: 'health-centers',
@@ -139,7 +181,45 @@ const routes: Routes = [
         ],
         data: {
           title: 'Centros de Salud'
-        }
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'index'
+          },
+          {
+            path: 'index',
+            component: HealthCentersIndexComponent,
+            canActivate: [
+              LoginGuard
+            ]
+          },
+          {
+            path: 'store',
+            component: HealthCentersStoreUpdateComponent,
+            canActivate: [
+              LoginGuard
+            ],
+            data: {
+              title: 'Crear Centro de Salud',
+              type: STORE,
+              btnStoreUpdate: 'Guardar'
+            }
+          },
+          {
+            path: 'update/:id',
+            component: HealthCentersStoreUpdateComponent,
+            canActivate: [
+              LoginGuard
+            ],
+            data: {
+              title: 'Actualizar Centro de Salud',
+              type: UPDATE,
+              btnStoreUpdate: 'Actualizar',
+              txtLoad: 'Cargando Centro de Salud'
+            }
+          }
+        ]
       },
     ]
   }

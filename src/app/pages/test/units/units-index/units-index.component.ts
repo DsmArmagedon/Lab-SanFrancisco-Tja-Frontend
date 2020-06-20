@@ -7,6 +7,9 @@ import { SwalService } from '../../../../services/common/swal.service';
 import { UnitsFilterComponent } from '../units-filter/units-filter.component';
 import { UnitService } from 'src/app/services/unit/unit.service';
 import Swal from 'sweetalert2';
+import { GeneralService } from 'src/app/services/common/general.service';
+import { INDEX } from 'src/app/global-variables';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-units-index',
@@ -15,7 +18,7 @@ import Swal from 'sweetalert2';
 })
 export class UnitsIndexComponent implements OnInit {
 
-  public isCollapsed: boolean = true;
+  public isCollapsed: boolean = false;
   public currentPage: number;
   selectedRowIndex: number;
   formFilter: FormGroup;
@@ -24,13 +27,16 @@ export class UnitsIndexComponent implements OnInit {
   maxSize: number = 3;
   loadPage: boolean;
   meta: Meta;
-  
+
   @ViewChild(UnitsFilterComponent, { static: true }) unitFilter: UnitsFilterComponent;
 
   constructor(private unitService: UnitService,
-              private toastr: ToastrService,
-              private swalService: SwalService) {
+    private toastr: ToastrService,
+    private swalService: SwalService,
+    public gralService: GeneralService,
+    private router: Router) {
     this.meta = new Meta;
+    this.gralService.changeSelectBtn(INDEX);
   }
 
   ngOnInit() {
@@ -42,7 +48,7 @@ export class UnitsIndexComponent implements OnInit {
     this.loadPage = false;
     this.unitService.indexUnits(this.formFilter.value, this.perPage, this.currentPage).subscribe(
       resp => {
-        this.units = resp.data;
+        this.units = resp.units;
         this.meta = resp.meta;
       },
       () => this.toastr.error('Consulte con el administrador.', 'Error al listar las UNIDADES.')
@@ -71,17 +77,12 @@ export class UnitsIndexComponent implements OnInit {
     this.indexUnits();
   }
 
-  updateUnits(unit: Unit): void {
-    this.selectedRowIndex = unit.id;
-    this.unitService.updateUnitObs(unit);
+  updateUnits(id: number): void {
+    this.router.navigate(['test/units/update', id]);
   }
 
   destroyUnits(id: number, name: string): void {
     let title: string = 'Unidad de Medida';
-    if(id == this.unitService.unitEdit.id) {
-      this.toastr.error('Prohibido eliminar la UNIDAD DE MEDIDA, mientras se encuentre en edición, para continuar seleccione Nuevo.', 'Error al eliminar la UNIDAD DE MEDIDA');
-      return;
-    }
     Swal.fire(
       this.swalService.deleteOptions(name, title)
     ).then((result) => {
@@ -94,7 +95,7 @@ export class UnitsIndexComponent implements OnInit {
             this.indexUnits();
           },
           err => {
-            this.swalService.deleteError(err.status,title);
+            this.swalService.deleteError(err.status, title);
           }
         );
       }

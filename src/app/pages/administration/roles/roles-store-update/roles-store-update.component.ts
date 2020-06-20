@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, FormArray, Validators, Form, AbstractControl } from '@angular/forms';
+import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { PermissionService } from '../../../../services/permission/permission.service';
-import { Permission } from 'src/app/models/permission.model';
 import { RoleService } from '../../../../services/role/role.service';
 import { forkJoin } from 'rxjs';
 import { Role } from 'src/app/models/role.model';
@@ -22,10 +21,12 @@ export class RolesStoreUpdateComponent implements OnInit, OnDestroy {
   formRole: FormGroup;
   formPermission: FormGroup;
   idRole: number;
-  permissionsDB: Permission[];
+  permissionsDB: any = [];
   role: Role;
   loadPage: boolean = true;
   loadPagePermission: boolean = true;
+
+  savePermissions: Array<number> = [];
 
   txtLoad: string;
   txtLoadPermissions: string;
@@ -65,7 +66,7 @@ export class RolesStoreUpdateComponent implements OnInit, OnDestroy {
         asyncValidators: [this.validationsDirective.validateUniqueRole.bind(this.validationsDirective)]
       }),
       description: new FormControl('', {
-        validators: [Validators.maxLength(180)],
+        validators: [Validators.maxLength(255)],
       }),
       status: new FormControl(1),
       permissions: new FormArray([], {
@@ -85,14 +86,16 @@ export class RolesStoreUpdateComponent implements OnInit, OnDestroy {
   setValuePermissions(): void {
     this.role.permissions.map((e) => {
       // Buscamos el index en el permissionsDB de los permisos que se recibieron del backend del rol, seleccionado.
-      const permissionSearch = this.permissionsDB.findIndex((element) => {
-        return element.slug === e.slug;
-      })
-
-      if (permissionSearch >= 0) {
-        // En base al index obtenido, le damos un valor de checked al controls permissions
-        this.permissions.controls[permissionSearch].setValue(true);
-      }
+      // const permissionSearch = this.permissionsDB.findIndex((element) => {
+      //   return element.slug === e.slug;
+      // })
+      this.permissionsDB.map(resource => {
+        const permissionSearch = resource.permissions.find(permission => permission.slug === e.slug)
+        if (permissionSearch) {
+          // En base al index obtenido, le damos un valor de checked al controls permissions
+          this.permissions.controls[permissionSearch.index].setValue(true);
+        }
+      });
     })
   }
 
@@ -134,12 +137,11 @@ export class RolesStoreUpdateComponent implements OnInit, OnDestroy {
   }
 
   saveFormRole(): void {
-    const savePermissions = this.permissions.value.map((checked, index) => checked ? this.permissionsDB[index].id : null)
-      .filter(value => value !== null);
+    this.getIdPermissionsForSave();
     if (this.formRole.valid) {
       let roleData: Role = this.formRole.value;
       roleData.permissions = undefined; // Elimina enviar datos innecesarios al backend
-      roleData.permissions_id = savePermissions;
+      roleData.permissions_id = this.savePermissions;
       this.loadPage = false;
       if (!this.formRole.value.id && this.initialState.type == STORE) {
         this.storeForm(roleData);
@@ -147,6 +149,20 @@ export class RolesStoreUpdateComponent implements OnInit, OnDestroy {
         this.updateForm(roleData);
       }
     }
+  }
+
+  getIdPermissionsForSave(): void {
+    this.permissions.value.map((checked, index) => {
+      if (checked) {
+        this.permissionsDB.map(resource => {
+          resource.permissions.map(permission => {
+            if (permission.index === index) {
+              this.savePermissions.push(permission.id);
+            }
+          })
+        })
+      }
+    });
   }
 
   storeForm(roleData: Role): void {
@@ -212,12 +228,14 @@ export class RolesStoreUpdateComponent implements OnInit, OnDestroy {
   }
 
   addPermissions() {
-    this.permissionsDB.map(() => {
+    for (var i = 0; i <= 47; i++) {
       const formControl = new FormControl(false)
       this.permissions.push(formControl);
-    });
+    }
   }
-
+  addPermission(i: number) {
+    console.log(i);
+  }
   getIdToParameterFromUrl(): void {
     this.route.paramMap.subscribe(
       params => this.idRole = parseInt(params.get('id'))
@@ -228,6 +246,10 @@ export class RolesStoreUpdateComponent implements OnInit, OnDestroy {
     if (this.initialState.type == UPDATE) {
       this.gralService.changeDisabled(true);
     }
+  }
+
+  verificar(value: any) {
+    console.log(value);
   }
 
 }

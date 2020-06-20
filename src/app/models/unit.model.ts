@@ -1,9 +1,15 @@
+import { BaseMetaLinks } from './base-meta-links.model';
+
 interface IUnit {
     id?: number;
     name?: string;
     display?: string;
     note?: string;
     status?: boolean;
+}
+
+interface IUnitCollection {
+    units: Array<Unit>;
 }
 
 export class Unit implements IUnit {
@@ -13,10 +19,10 @@ export class Unit implements IUnit {
     private _note?: string;
     private _status?: boolean;
 
-    set id(id:number) {
+    set id(id: number) {
         this._id = id;
     }
-    get id():number {
+    get id(): number {
         return this._id;
     }
 
@@ -25,7 +31,7 @@ export class Unit implements IUnit {
     }
     get name(): string {
         return this._name;
-    } 
+    }
 
     set display(display: string) {
         this._display = display;
@@ -46,5 +52,18 @@ export class Unit implements IUnit {
     }
     get status(): boolean {
         return this._status;
+    }
+}
+
+export class UnitCollection extends BaseMetaLinks implements IUnitCollection {
+    private _units: Array<Unit>;
+
+    set data(units: Array<Unit>) {
+        this._units = units.map((e) => {
+            return Object.assign(new Unit, e);
+        })
+    }
+    get units(): Array<Unit> {
+        return this._units;
     }
 }

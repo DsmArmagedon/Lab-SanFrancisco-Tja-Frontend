@@ -1,10 +1,9 @@
 import { URL_GLOBAL } from './../../config';
 import { Injectable } from '@angular/core';
-import { Subject, Observable } from 'rxjs';
-import { Unit } from 'src/app/models/unit.model';
+import { Observable } from 'rxjs';
+import { Unit, UnitCollection } from 'src/app/models/unit.model';
 import { HttpClient } from '@angular/common/http';
 import { Params } from '@angular/router';
-import { Meta } from 'src/app/models/meta.model';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -12,19 +11,9 @@ import { map } from 'rxjs/operators';
 })
 export class UnitService {
 
-  private updateUnitSubject = new Subject<Unit>();
-  public updateUnitObservable = this.updateUnitSubject.asObservable();
-
-  unitEdit: Unit = new Unit;
-
   constructor(private http: HttpClient) { }
 
-  updateUnitObs(unit: Unit) {
-    this.unitEdit = unit;
-    this.updateUnitSubject.next(this.unitEdit);
-  }
-
-  indexUnits(formFilter: any, per_page: number, page: number): Observable<Unit[]> {
+  indexUnits(formFilter: any, per_page: number, page: number): Observable<UnitCollection> {
     let url = `${URL_GLOBAL}/units`;
 
     const params: Params = {
@@ -33,13 +22,9 @@ export class UnitService {
       ...formFilter
     }
 
-    return this.http.get<Unit[]>(url, { params }).pipe(
+    return this.http.get<UnitCollection>(url, { params }).pipe(
       map((resp: any) => {
-        resp.data = resp.data.map((e) => {
-          return Object.assign(new Unit, e);
-        });
-        resp.meta = Object.assign(new Meta, resp.meta);
-        return resp;
+        return Object.assign(new UnitCollection, resp);
       })
     );
   }
@@ -48,7 +33,17 @@ export class UnitService {
     let url = `${URL_GLOBAL}/units`;
     return this.http.post<Unit>(url, unit).pipe(
       map((resp: any) => {
-        return resp.data;
+        return Object.assign(new Unit, resp.data);
+      })
+    );
+  }
+
+  editShowUnits(id: number): Observable<Unit> {
+    let url = `${URL_GLOBAL}/units/${id}`;
+    console.log(url);
+    return this.http.get<Unit>(url).pipe(
+      map((resp: any) => {
+        return Object.assign(new Unit, resp.data);
       })
     );
   }
@@ -57,7 +52,7 @@ export class UnitService {
     let url = `${URL_GLOBAL}/units/${unit.id}`;
     return this.http.put<Unit>(url, unit).pipe(
       map((resp: any) => {
-        return resp.data;
+        return Object.assign(new Unit, resp.data);
       })
     );
   }
@@ -66,12 +61,12 @@ export class UnitService {
     let url = `${URL_GLOBAL}/units/${id}`;
     return this.http.delete<Unit>(url).pipe(
       map((resp: any) => {
-        return resp.data;
+        return Object.assign(new Unit, resp.data);
       })
     );
   }
 
-  listUnits(): Observable<Unit[]> {
+  listUnits(): Observable<UnitCollection> {
     let url = `${URL_GLOBAL}/units`;
     const params: Params = {
       unit_select: 'name,display',
@@ -80,12 +75,9 @@ export class UnitService {
       unit_order_by: 'name',
       unit_order_option: 'ASC'
     }
-    return this.http.get<Unit[]>(url, { params }).pipe(
+    return this.http.get<UnitCollection>(url, { params }).pipe(
       map((resp: any) => {
-        let data = resp.data.map((e) => {
-          return Object.assign(new Unit, e);
-        })
-        return data;
+        return Object.assign(new UnitCollection, resp);
       })
     );
   }

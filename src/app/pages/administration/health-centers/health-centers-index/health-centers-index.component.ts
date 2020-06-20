@@ -8,6 +8,9 @@ import { HealthCenterService } from '../../../../services/health-center/health-c
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 import { SwalService } from '../../../../services/common/swal.service';
+import { GeneralService } from 'src/app/services/common/general.service';
+import { INDEX } from 'src/app/global-variables';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-health-centers-index',
@@ -15,7 +18,8 @@ import { SwalService } from '../../../../services/common/swal.service';
   styles: []
 })
 export class HealthCentersIndexComponent implements OnInit {
-  public isCollapsed: boolean = true;
+  @ViewChild(HealthCentersFilterComponent, { static: true }) healthCenterFilter: HealthCentersFilterComponent;
+  public isCollapsed: boolean = false;
   public currentPage: number;
   selectedRowIndex: number;
   formFilter: FormGroup;
@@ -24,11 +28,13 @@ export class HealthCentersIndexComponent implements OnInit {
   maxSize: number = 3;
   loadPage: boolean;
   meta: Meta;
-  @ViewChild(HealthCentersFilterComponent, { static: true }) healthCenterFilter: HealthCentersFilterComponent;
   constructor(private healthCenterService: HealthCenterService,
-              private toastr: ToastrService,
-              private swalService: SwalService) {
-    this.meta = new Meta();
+    private toastr: ToastrService,
+    private swalService: SwalService,
+    public gralService: GeneralService,
+    private router: Router) {
+    this.meta = new Meta;
+    this.gralService.changeSelectBtn(INDEX);
   }
 
   ngOnInit() {
@@ -40,7 +46,7 @@ export class HealthCentersIndexComponent implements OnInit {
     this.loadPage = false;
     this.healthCenterService.indexHealthCenters(this.formFilter.value, this.perPage, this.currentPage).subscribe(
       resp => {
-        this.healthCenters = resp.data;
+        this.healthCenters = resp.healthCenters;
         this.meta = resp.meta;
       },
       () => this.toastr.error('Consulte con el Administrador.', 'Error al listar los CENTROS DE SALUD.')
@@ -49,9 +55,8 @@ export class HealthCentersIndexComponent implements OnInit {
     );
   }
 
-  updateHealthCenters(healthCenter: HealthCenter) {
-    this.selectedRowIndex = healthCenter.id;
-    this.healthCenterService.updateHealthCenterObs(healthCenter);
+  updateHealthCenters(id: number) {
+    this.router.navigate(['administration/health-centers/index', id]);
   }
 
   changePerPage(): void {
@@ -76,10 +81,6 @@ export class HealthCentersIndexComponent implements OnInit {
 
   destroyHealthCenters(id: number, name: string): void {
     let title: string = 'Centro de Salud';
-    if (id === this.healthCenterService.healthCenterEdit.id) {
-      this.toastr.error('Prohibido eliminar el CENTRO DE SALUD, mientras se encuentre en edición, para continuar seleccione Nuevo.', 'Error al eliminar el CENTRO DE SALUD');
-      return;
-    }
     Swal.fire(
       this.swalService.deleteOptions(name, title)
     ).then((result) => {
@@ -92,7 +93,7 @@ export class HealthCentersIndexComponent implements OnInit {
             this.indexHealthCenters();
           },
           err => {
-            this.swalService.deleteError(err.status,title);
+            this.swalService.deleteError(err.status, title);
           }
         );
       }

@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { StudiesIndexComponent } from './studies-index/studies-index.component';
+import { Component, OnInit } from '@angular/core';
+import { GeneralService } from 'src/app/services/common/general.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-studies',
@@ -7,18 +8,30 @@ import { StudiesIndexComponent } from './studies-index/studies-index.component';
 })
 export class StudiesComponent implements OnInit {
 
-  @ViewChild(StudiesIndexComponent, { static: true }) studyIndex: StudiesIndexComponent;
-  
-  constructor() { }
+  radioModel: string;
+  disabled: boolean = true;
+  routeIndex = 'test/studies/index';
+  routeStore = 'test/studies/store';
+  routeUpdate = 'test/studies/update';
 
+  constructor(private gralService: GeneralService,
+    private router: Router) {
+    this.gralService.disabledUpdateObservable.subscribe(
+      // setTimeOut => Error: ExpressionChangedAfterItHasBeenCheckedError
+      resp => setTimeout(() => this.disabled = resp, 0)
+    );
+    this.gralService.selectBtnActiveObservable.subscribe(
+      resp => setTimeout(() => this.radioModel = resp, 0)
+    );
+  }
   ngOnInit() {
   }
 
-  executeIndex(): void {
-    this.studyIndex.indexStudies();
+  routerIndex(): void {
+    this.router.navigate([this.routeIndex]);
   }
 
-  selectRowIndexNull(): void {
-    this.studyIndex.selectedRowIndex = null;
+  routerStore(): void {
+    this.router.navigate([this.routeStore]);
   }
 }

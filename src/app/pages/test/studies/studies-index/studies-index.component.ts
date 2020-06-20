@@ -7,6 +7,9 @@ import { StudyService } from '../../../../services/study/study.service';
 import { ToastrService } from 'ngx-toastr';
 import { SwalService } from '../../../../services/common/swal.service';
 import Swal from 'sweetalert2';
+import { GeneralService } from 'src/app/services/common/general.service';
+import { INDEX } from 'src/app/global-variables';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-studies-index',
@@ -14,7 +17,7 @@ import Swal from 'sweetalert2';
   styles: []
 })
 export class StudiesIndexComponent implements OnInit {
-  public isCollapsed: boolean = true;
+  public isCollapsed: boolean = false;
   public currentPage: number;
   selectedRowIndex: number;
   formFilter: FormGroup;
@@ -23,13 +26,16 @@ export class StudiesIndexComponent implements OnInit {
   maxSize: number = 3;
   loadPage: boolean;
   meta: Meta;
-  
+
   @ViewChild(StudiesFilterComponent, { static: true }) studyFilter: StudiesFilterComponent;
 
   constructor(private studyService: StudyService,
-              private toastr: ToastrService,
-              private swalService: SwalService) {
+    private toastr: ToastrService,
+    private swalService: SwalService,
+    private gralService: GeneralService,
+    private router: Router) {
     this.meta = new Meta;
+    this.gralService.changeSelectBtn(INDEX);
   }
 
   ngOnInit() {
@@ -41,7 +47,7 @@ export class StudiesIndexComponent implements OnInit {
     this.loadPage = false;
     this.studyService.indexStudies(this.formFilter.value, this.perPage, this.currentPage).subscribe(
       resp => {
-        this.studies = resp.data;
+        this.studies = resp.studies;
         this.meta = resp.meta;
       },
       () => this.toastr.error('Consulte con el administrador.', 'Error al listar los ESTUDIOS.')
@@ -70,17 +76,12 @@ export class StudiesIndexComponent implements OnInit {
     this.indexStudies();
   }
 
-  updateStudies(study: Study): void {
-    this.selectedRowIndex = study.id;
-    this.studyService.updateStudyObs(study);
+  updateStudies(id: number): void {
+    this.router.navigate(['test/studies/update', id]);
   }
 
   destroyStudies(id: number, name: string): void {
     let title: string = 'Estudio';
-    if(id == this.studyService.studyEdit.id) {
-      this.toastr.error('Prohibido eliminar el ESTUDIO, mientras se encuentre en edición, para continuar seleccione Nuevo.', 'Error al eliminar el ESTUDIO');
-      return;
-    }
     Swal.fire(
       this.swalService.deleteOptions(name, title)
     ).then((result) => {
@@ -93,7 +94,7 @@ export class StudiesIndexComponent implements OnInit {
             this.indexStudies();
           },
           err => {
-            this.swalService.deleteError(err.status,title);
+            this.swalService.deleteError(err.status, title);
           }
         );
       }

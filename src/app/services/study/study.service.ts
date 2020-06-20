@@ -1,29 +1,19 @@
 import { Injectable } from '@angular/core';
-import { Subject, Observable } from 'rxjs';
-import { Study } from 'src/app/models/study.model';
+import { Observable } from 'rxjs';
+import { Study, StudyCollection } from 'src/app/models/study.model';
 import { URL_GLOBAL } from './../../config';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { Meta } from 'src/app/models/meta.model';
 import { Params } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StudyService {
-  private updateStudySubject = new Subject<Study>();
-  public updateStudyObservable = this.updateStudySubject.asObservable();
-
-  studyEdit: Study = new Study;
 
   constructor(private http: HttpClient) { }
 
-  updateStudyObs(study: Study): void {
-    this.studyEdit = study;
-    this.updateStudySubject.next(this.studyEdit);
-  }
-
-  indexStudies(formFilter: any, per_page: number, page: number): Observable<Study[]> {
+  indexStudies(formFilter: any, per_page: number, page: number): Observable<StudyCollection> {
     let url = `${URL_GLOBAL}/studies`;
 
     const params: Params = {
@@ -33,13 +23,9 @@ export class StudyService {
       study_order_option: 'ASC',
       ...formFilter
     }
-    return this.http.get<Study[]>(url, { params }).pipe(
+    return this.http.get<StudyCollection>(url, { params }).pipe(
       map((resp: any) => {
-        resp.data = resp.data.map((e) => {
-          return Object.assign(new Study, e);
-        })
-        resp.meta = Object.assign(new Meta, resp.meta);
-        return resp;
+        return Object.assign(new StudyCollection, resp);
       })
     );
   }
@@ -48,7 +34,17 @@ export class StudyService {
     let url = `${URL_GLOBAL}/studies`;
     return this.http.post<Study>(url, study).pipe(
       map((resp: any) => {
-        return resp.data;
+        return Object.assign(new Study, resp.data);
+      })
+    );
+  }
+
+  editShowStudies(id: number): Observable<Study> {
+    let url = `${URL_GLOBAL}/studies/${id}`;
+    console.log(url);
+    return this.http.get<Study>(url).pipe(
+      map((resp: any) => {
+        return Object.assign(new Study, resp.data);
       })
     );
   }
@@ -57,7 +53,7 @@ export class StudyService {
     let url = `${URL_GLOBAL}/studies/${study.id}`;
     return this.http.put<Study>(url, study).pipe(
       map((resp: any) => {
-        return resp.data;
+        return Object.assign(new Study, resp.data);
       })
     );
   }
@@ -66,12 +62,12 @@ export class StudyService {
     let url = `${URL_GLOBAL}/studies/${id}`;
     return this.http.delete<Study>(url).pipe(
       map((resp: any) => {
-        return resp.data;
+        return Object.assign(new Study, resp.data);
       })
     );
   }
 
-  listStudies(): Observable<Study[]> {
+  listStudies(): Observable<StudyCollection> {
     let url = `${URL_GLOBAL}/studies`;
 
     const params: Params = {
@@ -82,12 +78,9 @@ export class StudyService {
       study_order_option: 'DESC'
     }
 
-    return this.http.get<Study[]>(url, { params }).pipe(
+    return this.http.get<StudyCollection>(url, { params }).pipe(
       map((resp: any) => {
-        let data = resp.data.map((e) => {
-          return Object.assign(new Study, e);
-        })
-        return data;
+        return Object.assign(new StudyCollection, resp);
       })
     );
   }

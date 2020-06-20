@@ -5,230 +5,268 @@
 </div>
 <hr>
 <form [formGroup]="formUser" (ngSubmit)="saveFormUser()" autocomplete="off">
-    <div class="row" [ngClass]="{'load-page-visibility':!loadPage}">
-            <div class="col-md-8">
-                <div class="row">
-                    <div class="col-sm-6 ">
-                        <div class="form-group">
-                            <label for="ci">Cédula de Identidad *</label>
-                            <input class="form-control" [ngClass]="{'invalid': gralService.validation(ci)}" formControlName="ci" id="ci" type="text">
-                            <input type="hidden" formControlName="id">
-                            <div class="text-validation" *ngIf="ci.pending">
-                                <i class="fa fa-spinner fa-spin"></i> Disponibilidad de la Cédula de Identidad
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-accent-info" [ngClass]="{'load-page-visibility':!loadPage}">
+                <div class="card-body card-personality">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-sm-6 ">
+                                    <div class="form-group">
+                                        <label for="ci">Cédula de Identidad *</label>
+                                        <input class="form-control" [ngClass]="{'invalid': gralService.validation(ci)}"
+                                            formControlName="ci" id="ci" type="text">
+                                        <input type="hidden" formControlName="id">
+                                        <div class="text-validation" *ngIf="ci.pending">
+                                            <i class="fa fa-spinner fa-spin"></i> Disponibilidad de la Cédula de
+                                            Identidad
+                                        </div>
+                                        <div class="text-invalid" *ngIf="gralService.validation(ci)">
+                                            <div *ngIf="ci.hasError('required')">
+                                                <i>El <b>Cédula de Identidad</b> es obligatorio.</i>
+                                            </div>
+                                            <div *ngIf="ci.hasError('minlength')">
+                                                <i>El <b>Cédula de Identidad</b> debe contener menos de 7 caracteres</i>
+                                            </div>
+                                            <div *ngIf="ci.hasError('maxlength')">
+                                                <i>El <b>Cédula de Identidad</b> no debe contener más de 20
+                                                    caracteres.</i>
+                                            </div>
+                                            <div *ngIf="ci.hasError('validateUnique')">
+                                                <i>El valor de la <b>Cédula de Identidad</b> ya está en uso.</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 ">
+                                    <div class="form-group">
+                                        <label for="username">Username *</label>
+                                        <div class="input-group">
+                                            <input class="form-control"
+                                                [ngClass]="{'invalid': gralService.validation(username)}"
+                                                formControlName="username" id="username" type="text">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-info" type="button" triggers="focus"
+                                                    popover="Formato: El Username debe contener entre 7 y 12 carácteres alfabeticos en mayúsculas y terminar con 3 carácteres numéricos.">?</button>
+                                            </div>
+                                        </div>
+                                        <div class="text-validation" *ngIf="username.pending">
+                                            <i class="fa fa-spinner fa-spin"></i> Disponibilidad del Username
+                                        </div>
+                                        <div class="text-invalid" *ngIf="gralService.validation(username)">
+                                            <div *ngIf="username.hasError('required')">
+                                                <i>El <b>Username</b> es obligatorio.</i>
+                                            </div>
+                                            <div *ngIf="username.hasError('minlength')">
+                                                <i>El <b>Username</b> debe contener menos de 10 caracteres</i>
+                                            </div>
+                                            <div *ngIf="username.hasError('maxlength')">
+                                                <i>El <b>Username</b> no debe contener más de 15 caracteres.</i>
+                                            </div>
+                                            <div *ngIf="username.hasError('validateUnique')">
+                                                <i>El valor del <b>Username</b> ya está en uso.</i>
+                                            </div>
+                                            <div *ngIf="username.hasError('usernameFormat')">
+                                                <i>El <b>Username</b> no posee el formato correcto.</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="text-invalid" *ngIf="gralService.validation(ci)">
-                                <div *ngIf="ci.hasError('required')">
-                                    <i>El <b>Cédula de Identidad</b> es obligatorio.</i>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="first_name">Nombres *</label>
+                                        <input class="form-control"
+                                            [ngClass]="{'invalid': gralService.validation(first_name)}"
+                                            formControlName="first_name" id="first_name" type="text">
+                                        <div class="text-invalid" *ngIf="gralService.validation(first_name)">
+                                            <div *ngIf="first_name.hasError('required')">
+                                                <i>El <b>Nombres</b> es obligatorio.</i>
+                                            </div>
+                                            <div *ngIf="first_name.hasError('minlength')">
+                                                <i>El <b>Nombres</b> no debe contener más de 180 caracteres.</i>
+                                            </div>
+                                            <div *ngIf="first_name.hasError('alphaSpace')">
+                                                <i>El <b>Nombres</b> solo permite letras.</i>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div *ngIf="ci.hasError('minlength')">
-                                    <i>El <b>Cédula de Identidad</b> debe contener menos de 7 caracteres</i>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="last_name">Apellidos *</label>
+                                        <input class="form-control"
+                                            [ngClass]="{'invalid': gralService.validation(last_name)}"
+                                            formControlName="last_name" id="last_name" type="text">
+                                        <div class="text-invalid" *ngIf="gralService.validation(last_name)">
+                                            <div *ngIf="last_name.hasError('required')">
+                                                <i>El <b>Apellidos</b> es obligatorio.</i>
+                                            </div>
+                                            <div *ngIf="last_name.hasError('maxlength')">
+                                                <i>El <b>Apellidos</b> no debe contener más de 180 caracteres.</i>
+                                            </div>
+                                            <div *ngIf="last_name.hasError('alphaSpace')">
+                                                <i>El <b>Apellidos</b> solo permite letras.</i>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div *ngIf="ci.hasError('maxlength')">
-                                    <i>El <b>Cédula de Identidad</b> no debe contener más de 20 caracteres.</i>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="email">Email *</label>
+                                        <input class="form-control"
+                                            [ngClass]="{'invalid': gralService.validation(email)}"
+                                            formControlName="email" id="email" type="text">
+                                        <div class="text-validation" *ngIf="email.pending">
+                                            <i class="fa fa-spinner fa-spin"></i> Disponibilidad del Email
+                                        </div>
+                                        <div class="text-invalid" *ngIf="gralService.validation(email)">
+                                            <div *ngIf="email.hasError('required')">
+                                                <i>El <b>Email</b> es obligatorio.</i>
+                                            </div>
+                                            <div *ngIf="email.hasError('email')">
+                                                <i>El <b>Email</b> debe ser una dirección de correo válida.</i>
+                                            </div>
+                                            <div *ngIf="email.hasError('maxlength')">
+                                                <i>El <b>Email</b> no debe contener más de 180 caracteres.</i>
+                                            </div>
+                                            <div *ngIf="email.hasError('validateUnique')">
+                                                <i>El valor del <b>Email</b> ya está en uso.</i>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div *ngIf="ci.hasError('validateUnique')">
-                                    <i>El valor de la <b>Cédula de Identidad</b> ya está en uso.</i>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="job_title">Título Profesional <i>(Opcional)</i></label>
+                                        <input class="form-control"
+                                            [ngClass]="{'invalid': gralService.validation(job_title)}"
+                                            formControlName="job_title" id="job_title" type="text">
+                                        <div class="text-invalid" *ngIf="gralService.validation(job_title)">
+                                            <div *ngIf="job_title.hasError('maxlength')">
+                                                <i>El <b>Título Profesional</b> no debe contener más de 150
+                                                    caracteres.</i>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="address">Dirección *</label>
+                                        <input class="form-control"
+                                            [ngClass]="{'invalid': gralService.validation(address)}"
+                                            formControlName="address" id="address" type="text">
+                                        <div class="text-invalid" *ngIf="gralService.validation(address)">
+                                            <div *ngIf="address.hasError('required')">
+                                                <i>El <b>Dirección</b> es obligatorio.</i>
+                                            </div>
+                                            <div *ngIf="address.hasError('maxlength')">
+                                                <i>El <b>Dirección</b> no debe contener más de 180 caracteres.</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="role">Rol *</label>
+                                        <app-load-input [loadInput]="loadRoles"></app-load-input>
+                                        <ng-select formControlName="role_id" placeholder="Seleccione un Rol"
+                                            bindLabel="name" bindValue="id" *ngIf="loadRoles"
+                                            [ngClass]="{'invalid': gralService.validation(role_id)}" [items]="rolesDB"
+                                            [clearable]="false"></ng-select>
+                                        <div class="text-invalid" *ngIf="gralService.validation(role_id)">
+                                            <div *ngIf="role_id.hasError('required')">
+                                                <i>El <b>Rol</b> es obligatorio.</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="company_position">Cargo *</label>
+                                        <app-load-input [loadInput]="loadCompanyPositions"></app-load-input>
+                                        <ng-select formControlName="company_position_id" *ngIf="loadCompanyPositions"
+                                            placeholder="Seleccione un Cargo" bindLabel="name" bindValue="id"
+                                            [ngClass]="{'invalid': gralService.validation(company_position_id)}"
+                                            [items]="companyPositionsDB" [clearable]="false"></ng-select>
+                                        <div class="text-invalid" *ngIf="gralService.validation(company_position_id)">
+                                            <div *ngIf="company_position_id.hasError('required')">
+                                                <i>El <b>Cargo</b> es obligatorio.</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="phone">Teléfono *</label>
+                                        <input class="form-control"
+                                            [ngClass]="{'invalid': gralService.validation(phone)}"
+                                            formControlName="phone" id="phone" type="text">
+                                        <div class="text-invalid" *ngIf="gralService.validation(phone)">
+                                            <div *ngIf="phone.hasError('required')">
+                                                <i>El <b>Teléfono</b> es obligatorio.</i>
+                                            </div>
+                                            <div *ngIf="phone.hasError('maxlength')">
+                                                <i>El <b>Teléfono</b> no debe contener más de 50 caracteres.</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="status">Estado *</label>
+                                        <br>
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" class="custom-control-input" formControlName="status"
+                                                [value]="1" id="statusH" name="status">
+                                            <label class="custom-control-label" for="statusH">Habilitado</label>
+                                        </div>
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" class="custom-control-input" formControlName="status"
+                                                [value]="0" id="statusD" name="status">
+                                            <label class="custom-control-label" for="statusD">Deshabilitado</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card" style="width: 350px; height: 350px;">
+                                <img *ngIf="!tmpImage" [src]="urlImage" class="card-img-top">
+                                <img *ngIf="tmpImage" [src]="tmpImage" class="card-img-top">
+                            </div>
+                            <div class="custom-file" style="width: 350px;">
+                                <input id="imagen" (change)="selectImage($event.target.files[0])" type="file"
+                                    class="custom-file-input" accept="image/jpeg">
+                                <label class="custom-file-label" for="imagen" data-browse="Foto">Seleccionar
+                                    Imagen</label>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 ">
-                        <div class="form-group">
-                            <label for="username">Username *</label>
-                            <div class="input-group">
-                                <input class="form-control" [ngClass]="{'invalid': gralService.validation(username)}" formControlName="username" id="username" type="text">
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-info" type="button" triggers="focus" popover="Formato: El Username debe contener entre 7 y 12 carácteres alfabeticos en mayúsculas y terminar con 3 carácteres numéricos.">?</button>
-                                </div>
-                            </div>
-                            <div class="text-validation" *ngIf="username.pending">
-                                <i class="fa fa-spinner fa-spin"></i> Disponibilidad del Username
-                            </div>
-                            <div class="text-invalid" *ngIf="gralService.validation(username)">
-                                <div *ngIf="username.hasError('required')">
-                                    <i>El <b>Username</b> es obligatorio.</i>
-                                </div>
-                                <div *ngIf="username.hasError('minlength')">
-                                    <i>El <b>Username</b> debe contener menos de 10 caracteres</i>
-                                </div>
-                                <div *ngIf="username.hasError('maxlength')">
-                                    <i>El <b>Username</b> no debe contener más de 15 caracteres.</i>
-                                </div>
-                                <div *ngIf="username.hasError('validateUnique')">
-                                    <i>El valor del <b>Username</b> ya está en uso.</i>
-                                </div>
-                                <div *ngIf="username.hasError('usernameFormat')">
-                                    <i>El <b>Username</b> no posee el formato correcto.</i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="first_name">Nombres *</label>
-                            <input class="form-control" [ngClass]="{'invalid': gralService.validation(first_name)}" formControlName="first_name" id="first_name" type="text">
-                            <div class="text-invalid" *ngIf="gralService.validation(first_name)">
-                                <div *ngIf="first_name.hasError('required')">
-                                    <i>El <b>Nombres</b> es obligatorio.</i>
-                                </div>
-                                <div *ngIf="first_name.hasError('minlength')">
-                                    <i>El <b>Nombres</b> no debe contener más de 180 caracteres.</i>
-                                </div>
-                                <div *ngIf="first_name.hasError('alphaSpace')">
-                                    <i>El <b>Nombres</b> solo permite letras.</i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="last_name">Apellidos *</label>
-                            <input class="form-control" [ngClass]="{'invalid': gralService.validation(last_name)}" formControlName="last_name" id="last_name" type="text">
-                            <div class="text-invalid" *ngIf="gralService.validation(last_name)">
-                                <div *ngIf="last_name.hasError('required')">
-                                    <i>El <b>Apellidos</b> es obligatorio.</i>
-                                </div>
-                                <div *ngIf="last_name.hasError('maxlength')">
-                                    <i>El <b>Apellidos</b> no debe contener más de 180 caracteres.</i>
-                                </div>
-                                <div *ngIf="last_name.hasError('alphaSpace')">
-                                    <i>El <b>Apellidos</b> solo permite letras.</i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label for="email">Email *</label>
-                            <input class="form-control" [ngClass]="{'invalid': gralService.validation(email)}" formControlName="email" id="email" type="text">
-                            <div class="text-validation" *ngIf="email.pending">
-                                <i class="fa fa-spinner fa-spin"></i> Disponibilidad del Email
-                            </div>
-                            <div class="text-invalid" *ngIf="gralService.validation(email)">
-                                <div *ngIf="email.hasError('required')">
-                                    <i>El <b>Email</b> es obligatorio.</i>
-                                </div>
-                                <div *ngIf="email.hasError('email')">
-                                    <i>El <b>Email</b> debe ser una dirección de correo válida.</i>
-                                </div>
-                                <div *ngIf="email.hasError('maxlength')">
-                                    <i>El <b>Email</b> no debe contener más de 180 caracteres.</i>
-                                </div>
-                                <div *ngIf="email.hasError('validateUnique')">
-                                    <i>El valor del <b>Email</b> ya está en uso.</i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="job_title">Título Profesional <i>(Opcional)</i></label>
-                            <input class="form-control" [ngClass]="{'invalid': gralService.validation(job_title)}" formControlName="job_title" id="job_title" type="text">
-                            <div class="text-invalid" *ngIf="gralService.validation(job_title)">
-                                <div *ngIf="job_title.hasError('maxlength')">
-                                    <i>El <b>Título Profesional</b> no debe contener más de 150 caracteres.</i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="address">Dirección *</label>
-                            <input class="form-control" [ngClass]="{'invalid': gralService.validation(address)}" formControlName="address" id="address" type="text">
-                            <div class="text-invalid" *ngIf="gralService.validation(address)">
-                                <div *ngIf="address.hasError('required')">
-                                    <i>El <b>Dirección</b> es obligatorio.</i>
-                                </div>
-                                <div *ngIf="address.hasError('maxlength')">
-                                    <i>El <b>Dirección</b> no debe contener más de 180 caracteres.</i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="role">Rol *</label>
-                            <app-load-input [loadInput]="loadRoles"></app-load-input>
-                            <ng-select formControlName="role_id" placeholder="Seleccione un Rol" bindLabel="name" bindValue="id" *ngIf="loadRoles" [ngClass]="{'invalid': gralService.validation(role_id)}" [items]="rolesDB" [clearable]="false"></ng-select>
-                            <div class="text-invalid" *ngIf="gralService.validation(role_id)">
-                                <div *ngIf="role_id.hasError('required')">
-                                    <i>El <b>Rol</b> es obligatorio.</i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="company_position">Cargo *</label>
-                            <app-load-input [loadInput]="loadCompanyPositions"></app-load-input>
-                            <ng-select formControlName="company_position_id" *ngIf="loadCompanyPositions" placeholder="Seleccione un Cargo" bindLabel="name" bindValue="id" [ngClass]="{'invalid': gralService.validation(company_position_id)}" [items]="companyPositionsDB" [clearable]="false"></ng-select>
-                            <div class="text-invalid" *ngIf="gralService.validation(company_position_id)">
-                                <div *ngIf="company_position_id.hasError('required')">
-                                    <i>El <b>Cargo</b> es obligatorio.</i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="phone">Teléfono *</label>
-                            <input class="form-control" [ngClass]="{'invalid': gralService.validation(phone)}" formControlName="phone" id="phone" type="text">
-                            <div class="text-invalid" *ngIf="gralService.validation(phone)">
-                                <div *ngIf="phone.hasError('required')">
-                                    <i>El <b>Teléfono</b> es obligatorio.</i>
-                                </div>
-                                <div *ngIf="phone.hasError('maxlength')">
-                                    <i>El <b>Teléfono</b> no debe contener más de 50 caracteres.</i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label for="status">Estado *</label>
-                            <br>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" formControlName="status" [value]="1" id="statusH" name="status">
-                                <label class="custom-control-label" for="statusH">Habilitado</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" formControlName="status" [value]="0" id="statusD" name="status">
-                                <label class="custom-control-label" for="statusD">Deshabilitado</label>
-                            </div>
-                        </div>
+                    <div class="col-md-12 personality-footer">
+                        <hr>
+                        <button type="submit" class="btn btn-primary btn-sm"
+                            [disabled]="formUser.invalid || formUser.pending"><i class="fa fa-save"></i>
+                            {{ initialState.btnStoreUpdate }}</button>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card" style="width: 350px; height: 350px;">
-                    <img *ngIf="!tmpImage" [src]="urlImage" class="card-img-top">
-                    <img *ngIf="tmpImage" [src]="tmpImage" class="card-img-top">
-                </div>
-                <div class="custom-file" style="width: 350px;">
-                    <input id="imagen" (change)="selectImage($event.target.files[0])" type="file" class="custom-file-input" accept="image/jpeg">
-                    <label class="custom-file-label" for="imagen" data-browse="Foto">Seleccionar Imagen</label>
-                </div>
-            </div>
-            
-            <div class="col-md-12 personality-footer">
-                <hr>
-                <button type="submit" class="btn btn-primary btn-sm" [disabled]="formUser.invalid || formUser.pending"><i class="fa fa-save"></i> {{ initialState.btnStoreUpdate }}</button>
-            </div>
+        </div>
     </div>
     <div class="align-middle-load-page" *ngIf="!loadPage">
         <div class="d-inline-block">
             <app-load [txtLoad]="txtLoad"></app-load>
         </div>
     </div>
-    
+
 </form>

@@ -1,5 +1,5 @@
 .align-middle-load {
-    width: 100%;
+    width: calc(100% - 30px);
     position: absolute;
     top: 45%;
     transform: translateY(-50%);
@@ -138,28 +138,6 @@ hr {
     font-size: .95rem;
     color: rgb(78, 78, 78);
 }
-
-/* .ngx-dropdown-container>.ngx-dropdown-button {
-    border: 1px solid #8ad4ee !important;
-}
-
-.invalid .ngx-dropdown-container>.ngx-dropdown-button {
-    border: 1px solid #f86c6b !important;
-}
-
-.invalid .ngx-dropdown-container>.ngx-dropdown-button:focus {
-    border-color: #dc3545 !important;
-    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, .25) !important;
-}
-
-.ngx-dropdown-container>.ngx-dropdown-button:focus {
-    color: #5c6873;
-    background-color: #fff;
-    border-color: #8ad4ee;
-    outline: 0;
-    border: 1px solid #8ad4ee !important;
-    box-shadow: 0 0 0 0.2rem rgba(32, 168, 216, .25);
-} */
 
 .form-control.invalid {
     border-color: #f86c6b;

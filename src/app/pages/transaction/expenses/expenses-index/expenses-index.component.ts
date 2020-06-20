@@ -31,13 +31,13 @@ export class ExpensesIndexComponent implements OnInit {
 
   bsModalRef: BsModalRef;
 
-  @ViewChild(ExpensesFilterComponent,{ static: true }) expenseFilter: ExpensesFilterComponent;
+  @ViewChild(ExpensesFilterComponent, { static: true }) expenseFilter: ExpensesFilterComponent;
   constructor(private expenseService: ExpenseService,
-              private toastr: ToastrService,
-              private modalService: BsModalService,
-              private swalService: SwalService,
-              private router: Router,
-              private gralService: GeneralService) {
+    private toastr: ToastrService,
+    private modalService: BsModalService,
+    private swalService: SwalService,
+    private router: Router,
+    private gralService: GeneralService) {
     this.meta = new Meta;
     this.gralService.changeSelectBtn(INDEX);
   }
@@ -51,7 +51,7 @@ export class ExpensesIndexComponent implements OnInit {
     this.loadPage = false;
     this.expenseService.indexExpenses(this.formFilter, this.perPage, this.currentPage).subscribe(
       resp => {
-        this.expenses = resp.data;
+        this.expenses = resp.expenses;
         this.meta = resp.meta;
       },
       () => this.toastr.error('Consulte con el Administrador', 'Error al listar los GASTOS.')
@@ -60,12 +60,12 @@ export class ExpensesIndexComponent implements OnInit {
     );
   }
 
-  filter(event):void {
+  filter(event): void {
     this.currentPage = 1;
     this.formFilter = event;
     this.indexExpenses();
   }
-  
+
   changePerPage(): void {
     this.currentPage = 1;
     this.indexExpenses();
@@ -86,7 +86,7 @@ export class ExpensesIndexComponent implements OnInit {
   }
 
   updateExpenses(code: string): void {
-    this.router.navigate(['transaction/expenses/update',code]);
+    this.router.navigate(['transaction/expenses/update', code]);
   }
 
   revokeExpenses(code: string): void {
@@ -96,10 +96,10 @@ export class ExpensesIndexComponent implements OnInit {
     return this.expenseService.valUpdateDeleteForDate(date_expense);
   }
 
-  restoreExpenses(code: string ): void{
+  restoreExpenses(code: string): void {
     this.swalRevokeRestoreExpenses(code, 'restore', 'Restaurar', 'Restaurando');
   }
-  
+
   /**
    * Permite mostrar la opcion de anular o restaurar en un swal.
    * @param code Código del gasto
@@ -107,20 +107,20 @@ export class ExpensesIndexComponent implements OnInit {
    * @param verb Texto para mostrar en los mensajes del Swal
    * @param gerun Gerundio del tipo de gasto para mostrar en el mensaje
    */
-  swalRevokeRestoreExpenses(code: string, type: string, verb: string, gerund: string):void {
+  swalRevokeRestoreExpenses(code: string, type: string, verb: string, gerund: string): void {
     let title: string = 'Gasto';
     Swal.fire(
       this.swalService.revokeRestoreOptions(code, title, verb)
     ).then((result) => {
-      if(result.value) {
-        this.swalService.revokeRestoreLoad(title,type);
-        this.expenseService.revokeRestoreExpenses(code,type).subscribe(
+      if (result.value) {
+        this.swalService.revokeRestoreLoad(title, type);
+        this.expenseService.revokeRestoreExpenses(code, type).subscribe(
           resp => {
             Swal.close();
-            this.toastr.success(`${title} ${resp.code}`,`${title} ${gerund} Correctamente.`);
+            this.toastr.success(`${title} ${resp.code}`, `${title} ${gerund} Correctamente.`);
             this.indexExpenses();
           },
-          () => this.swalService.revokeRestoreError(title,type)
+          () => this.swalService.revokeRestoreError(title, type)
         );
       }
     })

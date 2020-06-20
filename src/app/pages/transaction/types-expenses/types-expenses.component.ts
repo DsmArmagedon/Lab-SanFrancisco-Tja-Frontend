@@ -1,5 +1,6 @@
-import { TypesExpensesIndexComponent } from './types-expenses-index/types-expenses-index.component';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { GeneralService } from 'src/app/services/common/general.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-types-expenses',
@@ -7,17 +8,30 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 })
 export class TypesExpensesComponent implements OnInit {
 
-  @ViewChild(TypesExpensesIndexComponent, { static: true }) typeExpenseIndex: TypesExpensesIndexComponent;
-  constructor() { }
+  radioModel: string;
+  disabled: boolean = true;
+  routeIndex = 'transaction/types-expenses/index';
+  routeStore = 'transaction/types-expenses/store';
+  routeUpdate = 'transaction/types-expenses/update';
 
+  constructor(private gralService: GeneralService,
+    private router: Router) {
+    this.gralService.disabledUpdateObservable.subscribe(
+      // setTimeOut => Error: ExpressionChangedAfterItHasBeenCheckedError
+      resp => setTimeout(() => this.disabled = resp, 0)
+    );
+    this.gralService.selectBtnActiveObservable.subscribe(
+      resp => setTimeout(() => this.radioModel = resp, 0)
+    );
+  }
   ngOnInit() {
   }
 
-  executeIndex(): void {
-    this.typeExpenseIndex.indexTypeExpenses();
+  routerIndex(): void {
+    this.router.navigate([this.routeIndex]);
   }
 
-  selectRowIndexNull(): void {
-    this.typeExpenseIndex.selectedRowIndex = null;
+  routerStore(): void {
+    this.router.navigate([this.routeStore]);
   }
 }

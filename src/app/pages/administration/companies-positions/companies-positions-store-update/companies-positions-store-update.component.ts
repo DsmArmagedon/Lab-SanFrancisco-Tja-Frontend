@@ -1,55 +1,39 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { CompanyPositionService } from '../../../../services/company-position/company-position.service';
 import { CompanyPosition } from 'src/app/models/company-position.model';
 import { ValidatorsPattern } from '../../../../validators/validators-pattern';
 import { ValidationsNameDirective } from '../../../../directives/validations-name.directive';
 import { ToastrService } from 'ngx-toastr';
 import { GeneralService } from 'src/app/services/common/general.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { STORE, UPDATE } from 'src/app/global-variables';
 
 @Component({
   selector: 'app-companies-positions-store-update',
   templateUrl: './companies-positions-store-update.component.html',
-  providers: [ ValidationsNameDirective ]
+  providers: [ValidationsNameDirective]
 })
 export class CompaniesPositionsStoreUpdateComponent implements OnInit {
-  @Output() executeIndex: EventEmitter<any> = new EventEmitter<any>();
-  @Output() selectRowIndexNull: EventEmitter<any> = new EventEmitter<any>();
   formCompanyPosition: FormGroup;
   txtLoad: string;
   loadPage: boolean = true;
-  loadPageStoreUpdate: boolean = true;
   companyPosition: CompanyPosition;
   initialState: any;
-
-
-  stateStore: any = {
-    title: 'Crear Cargo',
-    btnStoreUpdate: 'Guardar'
-  };
-
-  stateUpdate: any = {
-    title: 'Editar Cargo',
-    btnStoreUpdate: 'Actualizar'
-  }
+  idCompanyPosition: number;
 
   constructor(private companyPositionService: CompanyPositionService,
-              private validationsDirective: ValidationsNameDirective,
-              private toastr: ToastrService,
-              public gralService: GeneralService) {
-    this.initialState = this.stateStore; 
+    private validationsDirective: ValidationsNameDirective,
+    private toastr: ToastrService,
+    private route: ActivatedRoute,
+    public gralService: GeneralService,
+    private router: Router) {
   }
 
   ngOnInit() {
     this.formCompanyPosition = this.formGroupCompanyPosition();
-    this.companyPositionService.updateCompanyPositionObservable.subscribe(
-      resp => {
-          this.formCompanyPosition.reset();
-          this.companyPosition = resp;
-          this.initialState = this.stateUpdate;
-          this.assignValuesFormCompanyPosition();
-      }
-    );
+    this.initialState = this.gralService.getDataInitialState(this.route);
+    this.selectTypeFormStoreOrUpdate();
   }
 
   get id() { return this.formCompanyPosition.get('id'); }
@@ -60,12 +44,12 @@ export class CompaniesPositionsStoreUpdateComponent implements OnInit {
   formGroupCompanyPosition(): FormGroup {
     return new FormGroup({
       id: new FormControl(null),
-      name: new FormControl('',{
-        validators: [ Validators.required, Validators.maxLength(100), ValidatorsPattern.alphaNumericSpacePattern ],
-        asyncValidators: [ this.validationsDirective.validateUniqueCompanyPosition.bind(this.validationsDirective) ]
+      name: new FormControl('', {
+        validators: [Validators.required, Validators.maxLength(100), ValidatorsPattern.alphaNumericSpacePattern],
+        asyncValidators: [this.validationsDirective.validateUniqueCompanyPosition.bind(this.validationsDirective)]
       }),
-      description: new FormControl('',{
-        validators: [ Validators.maxLength(180) ]
+      description: new FormControl('', {
+        validators: [Validators.maxLength(255)]
       }),
       status: new FormControl(1)
     });
@@ -78,36 +62,45 @@ export class CompaniesPositionsStoreUpdateComponent implements OnInit {
     this.status.setValue(this.companyPosition.status);
   }
 
-  getStore(): void {
-    this.initialState = this.stateStore;
-    this.companyPositionService.companyPositionEdit = new CompanyPosition;
-    this.formCompanyPosition.reset();
-    this.status.setValue(1);
-    this.selectRowIndexNull.emit();
+  getUpdate(): void {
+    this.txtLoad = this.initialState.txtLoad;
+    this.getIdToParameterFromUrl();
+    this.loadPage = false;
+    this.companyPositionService.editShowCompanyPositions(this.idCompanyPosition).subscribe(
+      resp => {
+        this.companyPosition = resp;
+        this.assignValuesFormCompanyPosition();
+      },
+      () => {
+        this.toastr.error('Consulte con el Administrador', 'Error al mostrar el formulario para Actualizar el CARGO');
+        this.router.navigate(['administration/companies-positions/index']);
+      }
+    ).add(
+      () => this.loadPage = true
+    );
   }
 
-  saveFormCompanyPosition():void {
-    if(this.formCompanyPosition.valid) {
-      this.loadPageStoreUpdate = false;
-      if(!this.id.value) {
-        this.storeForm();    
+  saveFormCompanyPosition(): void {
+    if (this.formCompanyPosition.valid) {
+      this.loadPage = false;
+      if (!this.id.value) {
+        this.storeForm();
       } else {
         this.updateForm();
       }
     }
   }
 
-  storeForm():void{
+  storeForm(): void {
     this.txtLoad = 'Guardando Cargo';
     this.companyPositionService.storeCompanyPositions(this.formCompanyPosition.value).subscribe(
       resp => {
-        this.toastr.success(resp.name.toUpperCase(), 'CARGO Creado Correctamente');
-        this.executeIndex.emit();
         this.resetFormCompanyPosition();
+        this.toastr.success(resp.name.toUpperCase(), 'CARGO Creado Correctamente');
       },
       () => this.toastr.error('Consulte con el Administrador.', 'Error al crear: CARGO.')
     ).add(
-      () => this.loadPageStoreUpdate = true
+      () => this.loadPage = true
     );
   }
 
@@ -115,20 +108,43 @@ export class CompaniesPositionsStoreUpdateComponent implements OnInit {
     this.txtLoad = 'Actualizando Cargo';
     this.companyPositionService.updateCompanyPositions(this.formCompanyPosition.value).subscribe(
       resp => {
-        this.executeIndex.emit();
-        this.selectRowIndexNull.emit();
-        this.resetFormCompanyPosition();
         this.toastr.success(resp.name.toUpperCase(), 'CARGO Actualizado Correctamente');
+        this.router.navigate(['administration/companies-positions/index']);
       },
       () => this.toastr.error('Consulte con el Administrador.', 'Error al actualizar: CARGO.'),
     ).add(
-      () => this.loadPageStoreUpdate = true
+      () => this.loadPage = true
     );
+  }
+
+  selectTypeFormStoreOrUpdate(): void {
+    switch (this.initialState.type) {
+      case STORE:
+        this.gralService.changeSelectBtn(STORE);
+        break;
+      case UPDATE:
+        this.gralService.changeDisabled(false);
+        this.gralService.changeSelectBtn(UPDATE);
+        this.getUpdate();
+        break;
+    }
+  }
+
+  getIdToParameterFromUrl(): void {
+    this.route.paramMap.subscribe(
+      params => this.idCompanyPosition = parseInt(params.get('id'))
+    );
+
   }
 
   resetFormCompanyPosition(): void {
     this.formCompanyPosition.reset();
     this.status.setValue(1);
   }
+
+  ngOnDestroy() {
+    if (this.initialState.type == UPDATE) {
+      this.gralService.changeDisabled(true);
+    }
+  }
 }
- 

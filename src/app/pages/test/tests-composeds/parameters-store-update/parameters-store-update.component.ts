@@ -110,7 +110,7 @@ export class ParametersStoreUpdateComponent implements OnInit {
   loadUnitsForm(): void {
     this.loadUnits = false;
     this.unitService.listUnits().subscribe(
-      resp => this.unitsDB = resp,
+      resp => this.unitsDB = resp.units,
       () => this.toastr.error('Consulte con el Administrador', 'Error al cargar las UNIDADES DE MEDIDA')
     ).add(
       () => this.loadUnits = true

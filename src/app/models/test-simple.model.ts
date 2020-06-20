@@ -12,20 +12,12 @@ enum TestTypeData {
     'opciones'
 }
 interface ITestSimple {
-    id?: number;
-    name?: string;
-    slug?: string;
-    price?: number;
-    type?: TestType;
-    status?: boolean;
-    study_id?: number;
-    study?: Study;
     unit_id?: number;
     unit?: Unit;
     type_data?: TestTypeData;
     reference_values?: string;
     note?: string;
-    options?: Array<string>;   
+    options?: Array<string>;
     default_values?: string;
 }
 
@@ -37,7 +29,7 @@ export class TestSimple implements ITestSimple {
     private _type?: TestType;
     private _status?: boolean;
     private _study_id?: number;
-    private _study?: Study =  new Study;
+    private _study?: Study = new Study;
     private _unit_id?: number;
     private _unit?: Unit = new Unit;
     private _type_data?: TestTypeData;
@@ -104,8 +96,8 @@ export class TestSimple implements ITestSimple {
 
     set unit_id(unit_id: number) {
         this._unit_id = unit_id;
-    } 
-    get unit_id (): number {
+    }
+    get unit_id(): number {
         return this._unit_id;
     }
 

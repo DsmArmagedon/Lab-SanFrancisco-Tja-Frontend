@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { CompaniesPositionsIndexComponent } from './companies-positions-index/companies-positions-index.component';
+import { Component, OnInit } from '@angular/core';
+import { GeneralService } from 'src/app/services/common/general.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-companies-positions',
@@ -7,20 +8,30 @@ import { CompaniesPositionsIndexComponent } from './companies-positions-index/co
 })
 export class CompaniesPositionsComponent implements OnInit {
 
-  @ViewChild(CompaniesPositionsIndexComponent, { static: true }) companyPositionIndex: CompaniesPositionsIndexComponent;
+  radioModel: string;
+  disabled: boolean = true;
+  routeIndex = 'administration/companies-positions/index';
+  routeStore = 'administration/companies-positions/store';
+  routeUpdate = 'administration/companies-positions/update';
 
-
-  constructor() { }
-
+  constructor(private gralService: GeneralService,
+    private router: Router) {
+    this.gralService.disabledUpdateObservable.subscribe(
+      // setTimeOut => Error: ExpressionChangedAfterItHasBeenCheckedError
+      resp => setTimeout(() => this.disabled = resp, 0)
+    );
+    this.gralService.selectBtnActiveObservable.subscribe(
+      resp => setTimeout(() => this.radioModel = resp, 0)
+    );
+  }
   ngOnInit() {
   }
 
-
-  executeIndex(): void {
-    this.companyPositionIndex.indexCompanyPositions();
+  routerIndex(): void {
+    this.router.navigate([this.routeIndex]);
   }
 
-  selectRowIndexNull(): void {
-    this.companyPositionIndex.selectedRowIndex = null;
+  routerStore(): void {
+    this.router.navigate([this.routeStore]);
   }
 }

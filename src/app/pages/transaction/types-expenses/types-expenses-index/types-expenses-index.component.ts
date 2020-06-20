@@ -7,6 +7,9 @@ import { TypeExpenseService } from '../../../../services/type-expense/type-expen
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 import { SwalService } from '../../../../services/common/swal.service';
+import { GeneralService } from 'src/app/services/common/general.service';
+import { Router } from '@angular/router';
+import { INDEX } from 'src/app/global-variables';
 
 @Component({
   selector: 'app-types-expenses-index',
@@ -14,7 +17,7 @@ import { SwalService } from '../../../../services/common/swal.service';
   styles: []
 })
 export class TypesExpensesIndexComponent implements OnInit {
-  public isCollapsed: boolean = true;
+  public isCollapsed: boolean = false;
   public currentPage: number;
   selectedRowIndex: number;
   formFilter: FormGroup;
@@ -26,8 +29,11 @@ export class TypesExpensesIndexComponent implements OnInit {
   @ViewChild(TypesExpensesFilterComponent, { static: true }) typeExpenseFilter: TypesExpensesFilterComponent;
   constructor(private typeExpenseService: TypeExpenseService,
     private toastr: ToastrService,
-    private swalService: SwalService) {
+    private swalService: SwalService,
+    public gralService: GeneralService,
+    private router: Router) {
     this.meta = new Meta;
+    this.gralService.changeSelectBtn(INDEX);
   }
 
   ngOnInit() {
@@ -39,7 +45,7 @@ export class TypesExpensesIndexComponent implements OnInit {
     this.loadPage = false;
     this.typeExpenseService.indexTypeExpenses(this.formFilter.value, this.perPage, this.currentPage).subscribe(
       resp => {
-        this.typeExpenses = resp.data;
+        this.typeExpenses = resp.typeExpenses;
         this.meta = resp.meta;
       },
       () => this.toastr.error('Consulte con el Administrador.', 'Error al listar los TIPOS DE GASTOS.')
@@ -62,17 +68,12 @@ export class TypesExpensesIndexComponent implements OnInit {
     this.typeExpenseFilter.resetFormFilter();
   }
 
-  updateTypeExpenses(typeExpense: TypeExpense): void {
-    this.selectedRowIndex = typeExpense.id;
-    this.typeExpenseService.updateTypeExpenseObs(typeExpense);
+  updateTypeExpenses(id: number): void {
+    this.router.navigate(['transaction/types-expenses/update', id]);
   }
 
   destroyTypeExpenses(id: number, name: string): void {
     let title: string = 'Tipo de Cargo';
-    if (id == this.typeExpenseService.typeExpenseEdit.id) {
-      this.toastr.error('Prohibido eliminar el TIPO DE CARGO, mientras se encuentre en edición, para continuar seleccione Nuevo.', 'Error al eliminar el TIPO DE CARGO');
-      return;
-    }
     Swal.fire(
       this.swalService.deleteOptions(name, title)
     ).then(

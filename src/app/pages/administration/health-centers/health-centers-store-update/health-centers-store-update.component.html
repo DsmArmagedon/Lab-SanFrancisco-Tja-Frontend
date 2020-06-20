@@ -4,17 +4,18 @@
     </div>
 </div>
 <hr>
-<form [formGroup]="formHealthCenter" (ngSubmit)="saveFormHealthCenter()">
-    <div class="row position-absolute">
-        <div class="col-md-12" [ngClass]="{'load-page-visibility':!loadPageStoreUpdate}">
-            <div class="card card-accent-info">
+<form [formGroup]="formHealthCenter" (ngSubmit)="saveFormHealthCenter()" autocomplete="off">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card card-accent-info" [ngClass]="{'load-page-visibility':!loadPage}">
                 <div class="card-body card-personality">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="name">Nombre *</label>
                                 <input type="hidden" formControlName="id">
-                                <input class="form-control" [ngClass]="{'invalid': gralService.validation(name)}" formControlName="name" id="name" type="text">
+                                <input class="form-control" [ngClass]="{'invalid': gralService.validation(name)}"
+                                    formControlName="name" id="name" type="text">
                                 <div class="text-validation" *ngIf="name.pending">
                                     <i class="fa fa-spinner fa-spin"></i> Disponibilidad de Nombre
                                 </div>
@@ -37,7 +38,8 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="deduction">Descuento *</label>
-                                <input class="form-control" [ngClass]="{'invalid': gralService.validation(deduction)}" formControlName="deduction" id="deduction" type="number">
+                                <input class="form-control" [ngClass]="{'invalid': gralService.validation(deduction)}"
+                                    formControlName="deduction" id="deduction" type="number">
                                 <div class="text-invalid" *ngIf="gralService.validation(deduction)">
                                     <div *ngIf="deduction.hasError('required')">
                                         <i>El <b>Descuento</b> es obligatorio.</i>
@@ -51,7 +53,8 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label for="phone">Teléfono <i>(Opcional)</i></label>
-                                <input class="form-control" [ngClass]="{'invalid': gralService.validation(phone)}" formControlName="phone" id="phone" type="text">
+                                <input class="form-control" [ngClass]="{'invalid': gralService.validation(phone)}"
+                                    formControlName="phone" id="phone" type="text">
                                 <div class="text-invalid" *ngIf="gralService.validation(phone)">
                                     <div *ngIf="phone.hasError('maxlength')">
                                         <i>El <b>Teléfono</b> no debe contener más de 50 caracteres.</i>
@@ -62,7 +65,9 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="information">Información <i>(Opcional)</i></label>
-                                <textarea class="js form-control" style="resize: none;" [ngClass]="{'invalid': gralService.validation(information)}" rows="4" formControlName="information" id="information"></textarea>
+                                <textarea class="js form-control" style="resize: none;"
+                                    [ngClass]="{'invalid': gralService.validation(information)}" rows="4"
+                                    formControlName="information" id="information"></textarea>
                                 <div class="text-invalid" *ngIf="gralService.validation(information)">
                                     <div *ngIf="information.hasError('maxlength')">
                                         <i>El <b>Información</b> no debe contener más de 180 caracteres.</i>
@@ -75,25 +80,28 @@
                                 <label for="status">Estado *</label>
                                 <br>
                                 <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" class="custom-control-input" formControlName="status" [value]="1" id="statusH" name="status">
+                                    <input type="radio" class="custom-control-input" formControlName="status"
+                                        [value]="1" id="statusH" name="status">
                                     <label class="custom-control-label" for="statusH">Habilitado</label>
                                 </div>
                                 <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" class="custom-control-input" formControlName="status" [value]="0" id="statusD" name="status">
+                                    <input type="radio" class="custom-control-input" formControlName="status"
+                                        [value]="0" id="statusD" name="status">
                                     <label class="custom-control-label" for="statusD">Deshabilitado</label>
                                 </div>
                             </div>
                         </div>
                         <hr>
                         <div class="col-md-12 personality-footer">
-                            <button type="submit" class="btn btn-primary btn-sm" [disabled]="formHealthCenter.invalid || formHealthCenter.pending"><i class="fa fa-fw fa-save" ></i> {{ initialState.btnStoreUpdate }}</button>
-                            <button type="button" class="btn btn-outline-warning btn-sm" (click)="getStore()"><i class="fa fa-fw fa-file-o"></i> Nuevo</button>
+                            <button type="submit" class="btn btn-primary btn-sm"
+                                [disabled]="formHealthCenter.invalid || formHealthCenter.pending"><i
+                                    class="fa fa-fw fa-save"></i> {{ initialState.btnStoreUpdate }}</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="align-middle-load" *ngIf="!loadPageStoreUpdate">
+        <div class="align-middle-load" *ngIf="!loadPage">
             <div class="d-inline-block">
                 <app-load [txtLoad]="txtLoad" [width]="'120px'"></app-load>
             </div>

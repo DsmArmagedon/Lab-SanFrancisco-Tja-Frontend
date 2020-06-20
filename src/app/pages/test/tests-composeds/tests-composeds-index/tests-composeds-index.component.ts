@@ -19,7 +19,7 @@ import { GeneralService } from 'src/app/services/common/general.service';
   styles: []
 })
 export class TestsComposedsIndexComponent implements OnInit {
-  public isCollapsed: boolean = true;
+  public isCollapsed: boolean = false;
   public currentPage: number;
   meta: Meta;
   formFilter: FormGroup;
@@ -51,7 +51,7 @@ export class TestsComposedsIndexComponent implements OnInit {
     this.loadPage = false;
     this.testComposedService.indexTests(this.formFilter.value, this.perPage, this.currentPage).subscribe(
       resp => {
-        this.testComposeds = resp.data;
+        this.testComposeds = resp.testComposeds;
         this.meta = resp.meta;
       },
       () => this.toastr.error('Consulte con el Administrador', 'Error al listar las PRUEBAS.')

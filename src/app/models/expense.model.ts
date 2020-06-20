@@ -1,5 +1,6 @@
 import { User } from './user.model';
 import { TypeExpense } from './type-expense.model';
+import { BaseMetaLinks } from './base-meta-links.model';
 
 interface IExpense {
     id?: string;
@@ -15,6 +16,10 @@ interface IExpense {
     user_id?: string;
     user?: User;
     status?: boolean;
+}
+
+interface IExpenseCollection {
+    expenses: Array<Expense>;
 }
 
 export class Expense implements IExpense {
@@ -38,7 +43,7 @@ export class Expense implements IExpense {
     get id(): string {
         return this._id;
     }
-    
+
     set code(code: string) {
         this._code = code;
     }
@@ -121,5 +126,18 @@ export class Expense implements IExpense {
     }
     get status(): boolean {
         return this._status;
+    }
+}
+
+export class ExpenseCollection extends BaseMetaLinks implements IExpenseCollection {
+    private _expenses: Array<Expense>;
+
+    set data(expenses: Array<Expense>) {
+        this._expenses = expenses.map((e) => {
+            return Object.assign(new Expense, e);
+        })
+    }
+    get expenses(): Array<Expense> {
+        return this._expenses;
     }
 }

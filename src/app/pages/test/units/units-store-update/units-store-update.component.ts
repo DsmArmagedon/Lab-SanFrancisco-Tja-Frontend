@@ -1,59 +1,49 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Unit } from 'src/app/models/unit.model';
 import { UnitService } from '../../../../services/unit/unit.service';
 import { ToastrService } from 'ngx-toastr';
 import { GeneralService } from 'src/app/services/common/general.service';
+import { ValidationsNameDirective } from 'src/app/directives/validations-name.directive';
+import { ActivatedRoute, Router } from '@angular/router';
+import { STORE, UPDATE } from 'src/app/global-variables';
 
 @Component({
   selector: 'app-units-store-update',
   templateUrl: './units-store-update.component.html',
-  styles: []
+  styles: [],
+  providers: [ValidationsNameDirective]
 })
-export class UnitsStoreUpdateComponent implements OnInit {
-  @Output() executeIndex: EventEmitter<any> = new EventEmitter<any>();
-  @Output() selectRowIndexNull: EventEmitter<any> = new EventEmitter<any>();
-
+export class UnitsStoreUpdateComponent implements OnInit, OnDestroy {
   formUnit: FormGroup;
   unit: Unit;
   txtLoad: string;
   loadPage: boolean = true;
-  loadPageStoreUpdate: boolean = true;
-
-  stateStore: any = {
-    title: 'Crear Unidad de Medida',
-    btnStoreUpdate: 'Guardar'
-  }
-
-  stateUpdate: any = {
-    title: 'Editar Unidad de Medida',
-    btnStoreUpdate: 'Actualizar'
-  }
-
+  display: string;
+  idUnit: number;
   initialState: any;
   constructor(private unitService: UnitService,
-              private toastr: ToastrService,
-              public gralService: GeneralService) {
-    this.initialState = this.stateStore;
+    private toastr: ToastrService,
+    public gralService: GeneralService,
+    private validationsDirective: ValidationsNameDirective,
+    private route: ActivatedRoute,
+    private router: Router) {
   }
 
-  value: string;
   ngOnInit() {
     this.formUnit = this.formGroupUnit();
-    this.unitService.updateUnitObservable.subscribe(
-      resp => {
-        this.unit = resp;
-        this.initialState = this.stateUpdate;
-        this.assignValuesFormUnit();
-      }
-    );
+    this.initialState = this.gralService.getDataInitialState(this.route);
+    this.selectTypeFormStoreOrUpdate();
   }
 
   formGroupUnit(): FormGroup {
     return new FormGroup({
       id: new FormControl(null),
-      name: new FormControl(''),
-      note: new FormControl(''),
+      name: new FormControl('', {
+        validators: [Validators.required, Validators.maxLength(100)],
+        asyncValidators: [this.validationsDirective.validateUniqueUnit.bind(this.validationsDirective)]
+      }),
+      note: new FormControl('', [Validators.maxLength(255)]),
       status: new FormControl(1)
     });
   }
@@ -67,14 +57,32 @@ export class UnitsStoreUpdateComponent implements OnInit {
     this.id.setValue(this.unit.id);
     this.name.setValue(this.unit.name);
     this.note.setValue(this.unit.note);
-    this.value = this.unit.display;
+    this.display = this.unit.display;
     this.status.setValue(this.unit.status);
   }
 
+  getUpdate(): void {
+    this.txtLoad = this.initialState.txtLoad;
+    this.getIdToParameterFromUrl();
+    this.loadPage = false;
+    this.unitService.editShowUnits(this.idUnit).subscribe(
+      resp => {
+        this.unit = resp;
+        this.assignValuesFormUnit();
+      },
+      () => {
+        this.toastr.error('Consulte con el Administrador', 'Error al mostrar el formulario para Actualizar el UNIDAD DE MEDIDA');
+        this.router.navigate(['administration/units/index']);
+      }
+    ).add(
+      () => this.loadPage = true
+    );
+  }
+
   saveFormUnit(): void {
-    if(this.formUnit.valid) {
-      this.loadPageStoreUpdate = false;
-      if(!this.id.value) {
+    if (this.formUnit.valid) {
+      this.loadPage = false;
+      if (!this.id.value) {
         this.storeForm();
       } else {
         this.updateForm();
@@ -87,12 +95,11 @@ export class UnitsStoreUpdateComponent implements OnInit {
     this.unitService.storeUnits(this.formUnit.value).subscribe(
       resp => {
         this.toastr.success(resp.name, 'UNIDAD DE MEDIDA Creado Correctamente');
-        this.executeIndex.emit();
         this.resetFormUnit();
       },
       () => this.toastr.error('Consulte con el Administrador.', 'Error al crear: UNIDAD DE MEDIDA.')
     ).add(
-      () => this.loadPageStoreUpdate = true
+      () => this.loadPage = true
     );
   }
 
@@ -101,13 +108,11 @@ export class UnitsStoreUpdateComponent implements OnInit {
     this.unitService.updateUnits(this.formUnit.value).subscribe(
       resp => {
         this.toastr.success(resp.name, 'UNIDAD DE MEDIDA Actualizado Correctamente');
-        this.executeIndex.emit();
-        this.selectRowIndexNull.emit();
-        this.resetFormUnit();
+        this.router.navigate(['test/units/index']);
       },
       () => this.toastr.error('Consulte con el Administrador.', 'Error al actualizar: UNIDAD DE MEDIDA.'),
     ).add(
-      () => this.loadPageStoreUpdate = true
+      () => this.loadPage = true
     );
   }
 
@@ -170,24 +175,43 @@ export class UnitsStoreUpdateComponent implements OnInit {
             }
           }
           break;
-        }
+      }
     }
-    this.value = valueNameHtml;
+    this.display = valueNameHtml;
   }
   addSym() {
     this.name.setValue(this.name.value + '^');
   }
 
+  selectTypeFormStoreOrUpdate(): void {
+    switch (this.initialState.type) {
+      case STORE:
+        this.gralService.changeSelectBtn(STORE);
+        break;
+      case UPDATE:
+        this.gralService.changeDisabled(false);
+        this.gralService.changeSelectBtn(UPDATE);
+        this.getUpdate();
+        break;
+    }
+  }
+
+  getIdToParameterFromUrl(): void {
+    this.route.paramMap.subscribe(
+      params => this.idUnit = parseInt(params.get('id'))
+    );
+
+  }
+
   resetFormUnit(): void {
     this.formUnit.reset();
-    this.value = '';
+    this.display = '';
     this.status.setValue(1);
   }
 
-  getStore(): void {
-    this.resetFormUnit();
-    this.initialState = this.stateStore;
-    this.selectRowIndexNull.emit();
-    this.unitService.unitEdit = new Unit;
+  ngOnDestroy() {
+    if (this.initialState.type == UPDATE) {
+      this.gralService.changeDisabled(true);
+    }
   }
 }

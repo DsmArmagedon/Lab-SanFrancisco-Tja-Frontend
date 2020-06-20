@@ -71,7 +71,7 @@ export class TestsStoreUpdateComponent implements OnInit {
   loadTestComposedForm(): void {
     this.loadStudy = false;
     this.studyService.listStudies().subscribe(
-      resp => this.studiesDB = resp,
+      resp => this.studiesDB = resp.studies,
       () => this.toastr.error('Consulte con el Administrador', 'Error al Cargar los ESTUDIOS.')
     ).add(
       () => this.loadStudy = true

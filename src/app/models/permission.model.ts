@@ -4,6 +4,7 @@ interface IPermission {
     slug?: string,
     description?: string,
     resource?: string,
+    index?: number,
     status?: boolean
 }
 
@@ -13,6 +14,7 @@ export class Permission implements IPermission {
     private _slug?: string;
     private _description?: string;
     private _resource?: string;
+    private _index?: number;
     private _status?: boolean;
 
     set id(id: number) {
@@ -50,10 +52,17 @@ export class Permission implements IPermission {
         return this._status;
     }
 
-    set resource(resource: string){
+    set resource(resource: string) {
         this._resource = resource;
     }
     get resource(): string {
         return this._resource;
+    }
+
+    set index(index: number) {
+        this._index = index;
+    }
+    get index(): number {
+        return this._index;
     }
 }

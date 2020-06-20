@@ -1,3 +1,5 @@
+import { BaseMetaLinks } from './base-meta-links.model';
+
 interface IHealthCenter {
     id?: number;
     name?: string;
@@ -6,6 +8,10 @@ interface IHealthCenter {
     deduction?: number;
     phone?: string;
     status?: boolean;
+}
+
+interface IHealthCenterCollection {
+    healthCenters: Array<HealthCenter>;
 }
 
 export class HealthCenter implements IHealthCenter {
@@ -17,10 +23,10 @@ export class HealthCenter implements IHealthCenter {
     private _phone?: string;
     private _status?: boolean;
 
-    set id(id:number) {
+    set id(id: number) {
         this._id = id;
     }
-    get id():number {
+    get id(): number {
         return this._id;
     }
 
@@ -64,5 +70,18 @@ export class HealthCenter implements IHealthCenter {
     }
     get status(): boolean {
         return this._status;
+    }
+}
+
+export class HealthCenterCollection extends BaseMetaLinks implements IHealthCenterCollection {
+    private _healthCenters: Array<HealthCenter>;
+
+    set data(healthCenters: Array<HealthCenter>) {
+        this._healthCenters = healthCenters.map((e) => {
+            return Object.assign(new HealthCenter, e);
+        });
+    }
+    get healthCenters(): Array<HealthCenter> {
+        return this._healthCenters;
     }
 }

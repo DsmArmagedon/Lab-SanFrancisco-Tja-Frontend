@@ -12,8 +12,8 @@ interface IRole {
     permissions_id?: number[];
 }
 
-interface IRoleMetaLinks {
-    roles: Role[];
+interface IRoleCollection {
+    roles: Array<Role>;
 }
 
 export class Role implements IRole {
@@ -22,8 +22,8 @@ export class Role implements IRole {
     private _slug?: string;
     private _description?: string;
     private _status?: boolean;
-    private _permissions?: Permission[] = [];
-    private _permissions_id?: number[] = [];
+    private _permissions?: Array<Permission>;
+    private _permissions_id?: Array<number>;
 
     set id(id: number) {
         this._id = id;
@@ -60,28 +60,32 @@ export class Role implements IRole {
         return this._status;
     }
 
-    set permissions(permissions: Permission[]) {
-        this._permissions = permissions;
+    set permissions(permissions: Array<Permission>) {
+        this._permissions = permissions.map((e) => {
+            return Object.assign(new Permission, e);
+        });
     }
-    get permissions(): Permission[] {
+    get permissions(): Array<Permission> {
         return this._permissions;
     }
 
-    set permissions_id(ids: number[]) {
+    set permissions_id(ids: Array<number>) {
         this._permissions_id = ids;
     }
-    get permissions_id(): number[] {
+    get permissions_id(): Array<number> {
         return this._permissions_id;
     }
 }
 
-export class RoleMetaLinks extends BaseMetaLinks implements IRoleMetaLinks {
-    private _roles: Role[];
+export class RoleCollection extends BaseMetaLinks implements IRoleCollection {
+    private _roles: Array<Role>;
 
-    set roles(roles: Role[]) {
-        this._roles = roles;
+    set data(roles: Array<Role>) {
+        this._roles = roles.map((e) => {
+            return Object.assign(new Role, e);
+        });
     }
-    get roles(): Role[] {
+    get roles(): Array<Role> {
         return this._roles;
     }
 }

@@ -7,13 +7,17 @@ import { CompanyPosition } from '../../../../models/company-position.model';
 import { CompanyPositionService } from '../../../../services/company-position/company-position.service';
 import { CompaniesPositionsFilterComponent } from '../companies-positions-filter/companies-positions-filter.component';
 import { SwalService } from '../../../../services/common/swal.service';
+import { GeneralService } from 'src/app/services/common/general.service';
+import { INDEX } from 'src/app/global-variables';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-companies-positions-index',
   templateUrl: './companies-positions-index.component.html'
 })
 export class CompaniesPositionsIndexComponent implements OnInit {
-  public isCollapsed: boolean = true;
+  @ViewChild(CompaniesPositionsFilterComponent, { static: true }) companyPositionFilter: CompaniesPositionsFilterComponent;
+  public isCollapsed: boolean = false;
   public currentPage: number;
   selectedRowIndex: number;
   formFilter: FormGroup;
@@ -23,11 +27,13 @@ export class CompaniesPositionsIndexComponent implements OnInit {
   loadPage: boolean;
   meta: Meta;
   idCompanyPositionEdit: number;
-  @ViewChild(CompaniesPositionsFilterComponent,{ static: true }) companyPositionFilter: CompaniesPositionsFilterComponent;
   constructor(private companyPositionService: CompanyPositionService,
-              private toastr: ToastrService,
-              private swalService: SwalService) {
-    this.meta = new Meta();
+    private toastr: ToastrService,
+    private swalService: SwalService,
+    public gralService: GeneralService,
+    private router: Router) {
+    this.meta = new Meta;
+    this.gralService.changeSelectBtn(INDEX);
   }
 
   ngOnInit() {
@@ -35,11 +41,11 @@ export class CompaniesPositionsIndexComponent implements OnInit {
     this.indexCompanyPositions();
   }
 
-  indexCompanyPositions(): void{
+  indexCompanyPositions(): void {
     this.loadPage = false;
     this.companyPositionService.indexCompanyPositions(this.formFilter.value, this.perPage, this.currentPage).subscribe(
       resp => {
-        this.companyPositions = resp.data;
+        this.companyPositions = resp.companyPositions;
         this.meta = resp.meta;
       },
       () => this.toastr.error('Consulte con el Administrador.', 'Error al listar los CARGOS.')
@@ -48,9 +54,8 @@ export class CompaniesPositionsIndexComponent implements OnInit {
     );
   }
 
-  updateCompanyPositions(companyPosition: CompanyPosition): void {
-    this.selectedRowIndex = companyPosition.id;
-    this.companyPositionService.updateCompanyPositionObs(companyPosition);
+  updateCompanyPositions(id: number): void {
+    this.router.navigate(['administration/companies-positions/update', id]);
   }
 
   resetFormFilter(): void {
@@ -73,12 +78,8 @@ export class CompaniesPositionsIndexComponent implements OnInit {
     this.indexCompanyPositions();
   }
 
-  destroyCompanyPositions(id: number, name: string):void {
+  destroyCompanyPositions(id: number, name: string): void {
     let title: string = 'Cargo';
-    if(id == this.companyPositionService.companyPositionEdit.id) {
-      this.toastr.error('Prohibido eliminar el CARGO, mientras se encuentre en edición, para continuar seleccione Nuevo.', 'Error al eliminar el CARGO');
-      return;
-    }
     Swal.fire(
       this.swalService.deleteOptions(name, title)
     ).then((result) => {
@@ -91,7 +92,7 @@ export class CompaniesPositionsIndexComponent implements OnInit {
             this.indexCompanyPositions();
           },
           err => {
-            this.swalService.deleteError(err.status,title);
+            this.swalService.deleteError(err.status, title);
           }
         );
       }

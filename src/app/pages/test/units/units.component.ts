@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { UnitsIndexComponent } from './units-index/units-index.component';
+import { Component, OnInit } from '@angular/core';
+import { GeneralService } from 'src/app/services/common/general.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-units',
@@ -7,18 +8,30 @@ import { UnitsIndexComponent } from './units-index/units-index.component';
 })
 export class UnitsComponent implements OnInit {
 
-  @ViewChild(UnitsIndexComponent, { static: true }) unitIndex: UnitsIndexComponent;
+  radioModel: string;
+  disabled: boolean = true;
+  routeIndex = 'test/units/index';
+  routeStore = 'test/units/store';
+  routeUpdate = 'test/units/update';
 
-  constructor() { }
-
+  constructor(private gralService: GeneralService,
+    private router: Router) {
+    this.gralService.disabledUpdateObservable.subscribe(
+      // setTimeOut => Error: ExpressionChangedAfterItHasBeenCheckedError
+      resp => setTimeout(() => this.disabled = resp, 0)
+    );
+    this.gralService.selectBtnActiveObservable.subscribe(
+      resp => setTimeout(() => this.radioModel = resp, 0)
+    );
+  }
   ngOnInit() {
   }
 
-  executeIndex(): void {
-    this.unitIndex.indexUnits();
+  routerIndex(): void {
+    this.router.navigate([this.routeIndex]);
   }
 
-  selectRowIndexNull(): void {
-    this.unitIndex.selectedRowIndex = null;
+  routerStore(): void {
+    this.router.navigate([this.routeStore]);
   }
 }

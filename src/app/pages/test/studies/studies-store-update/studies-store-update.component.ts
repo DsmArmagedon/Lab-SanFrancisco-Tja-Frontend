@@ -1,54 +1,56 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Study } from 'src/app/models/study.model';
 import { StudyService } from '../../../../services/study/study.service';
 import { ValidationsNameDirective } from '../../../../directives/validations-name.directive';
 import { ToastrService } from 'ngx-toastr';
 import { GeneralService } from 'src/app/services/common/general.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { UPDATE, STORE } from 'src/app/global-variables';
 
 @Component({
   selector: 'app-studies-store-update',
   templateUrl: './studies-store-update.component.html',
   styles: [],
-  providers: [ ValidationsNameDirective ]
+  providers: [ValidationsNameDirective]
 })
-export class StudiesStoreUpdateComponent implements OnInit {
-  @Output() executeIndex: EventEmitter<any> = new EventEmitter<any>();
-  @Output() selectRowIndexNull: EventEmitter<any> = new EventEmitter<any>();
+export class StudiesStoreUpdateComponent implements OnInit, OnDestroy {
   formStudy: FormGroup;
   study: Study;
   txtLoad: string;
   loadPage: boolean = true;
-  loadPageStoreUpdate: boolean = true;
-
-  stateStore: any = {
-    title: 'Crear Estudio',
-    btnStoreUpdate: 'Guardar'
-  }
-
-  stateUpdate: any = {
-    title: 'Editar Estudio',
-    btnStoreUpdate: 'Actualizar'
-  }
-
   initialState: any;
+  idStudy: number;
+
   constructor(private studyService: StudyService,
-              private validationsDirective: ValidationsNameDirective,
-              private toastr: ToastrService,
-              public gralService: GeneralService) {
-    this.initialState = this.stateStore;
+    private validationsDirective: ValidationsNameDirective,
+    private toastr: ToastrService,
+    public gralService: GeneralService,
+    private router: Router,
+    private route: ActivatedRoute) {
   }
 
   ngOnInit() {
     this.formStudy = this.formGroupStudy();
-    this.studyService.updateStudyObservable.subscribe(
-      resp => {
-        this.formStudy.reset();
-        this.study = resp;
-        this.initialState = this.stateUpdate;
-        this.assignValuesFormStudy()
-      }
-    );
+    this.initialState = this.gralService.getDataInitialState(this.route);
+    this.selectTypeFormStoreOrUpdate();
+  }
+
+  get id() { return this.formStudy.get('id'); }
+  get name() { return this.formStudy.get('name'); }
+  get description() { return this.formStudy.get('description'); }
+  get status() { return this.formStudy.get('status'); }
+
+  formGroupStudy(): FormGroup {
+    return new FormGroup({
+      id: new FormControl(null),
+      name: new FormControl('', {
+        validators: [Validators.required, Validators.maxLength(100)],
+        asyncValidators: [this.validationsDirective.validateUniqueStudy.bind(this.validationsDirective)]
+      }),
+      description: new FormControl('', [Validators.maxLength(255)]),
+      status: new FormControl(1)
+    });
   }
 
   assignValuesFormStudy(): void {
@@ -57,27 +59,29 @@ export class StudiesStoreUpdateComponent implements OnInit {
     this.description.setValue(this.study.description);
     this.status.setValue(this.study.status);
   }
-  formGroupStudy(): FormGroup {
-    return new FormGroup({
-      id: new FormControl(null),
-      name: new FormControl('', {
-        validators: [ Validators.required, Validators.maxLength(100) ],
-        asyncValidators: [ this.validationsDirective.validateUniqueStudy.bind(this.validationsDirective)]
-      }),
-      description: new FormControl('', [ Validators.maxLength(180) ]),
-      status: new FormControl(1)
-    });
+
+  getUpdate(): void {
+    this.txtLoad = this.initialState.txtLoad;
+    this.getIdToParameterFromUrl();
+    this.loadPage = false;
+    this.studyService.editShowStudies(this.idStudy).subscribe(
+      resp => {
+        this.study = resp;
+        this.assignValuesFormStudy();
+      },
+      () => {
+        this.toastr.error('Consulte con el Administrador', 'Error al mostrar el formulario para Actualizar el ESTUDIO');
+        this.router.navigate(['test/studies/index']);
+      }
+    ).add(
+      () => this.loadPage = true
+    );
   }
 
-  get id() { return this.formStudy.get('id'); }
-  get name() { return this.formStudy.get('name'); }
-  get description() { return this.formStudy.get('description'); }
-  get status() { return this.formStudy.get('status'); }
-
   saveFormStudy(): void {
-    if(this.formStudy.valid) {
-      this.loadPageStoreUpdate = false;
-      if(!this.id.value) {
+    if (this.formStudy.valid) {
+      this.loadPage = false;
+      if (!this.id.value) {
         this.storeForm();
       } else {
         this.updateForm();
@@ -89,13 +93,12 @@ export class StudiesStoreUpdateComponent implements OnInit {
     this.txtLoad = 'Guardando Estudio';
     this.studyService.storeStudies(this.formStudy.value).subscribe(
       resp => {
-        this.toastr.success(resp.name.toUpperCase(), 'ESTUDIO Actualizado Correctamente');
-        this.executeIndex.emit();
         this.resetFormStudy();
+        this.toastr.success(resp.name.toUpperCase(), 'ESTUDIO Guardado Correctamente');
       },
       () => this.toastr.error('Consulte con el Administrador.', 'Error al crear: ESTUDIO.')
     ).add(
-      () => this.loadPageStoreUpdate = true
+      () => this.loadPage = true
     );
   }
 
@@ -104,14 +107,32 @@ export class StudiesStoreUpdateComponent implements OnInit {
     this.studyService.updateStudies(this.formStudy.value).subscribe(
       resp => {
         this.toastr.success(resp.name.toUpperCase(), 'ESTUDIO Actualizado Correctamente');
-        this.executeIndex.emit();
-        this.selectRowIndexNull.emit();
-        this.resetFormStudy();
+        this.router.navigate(['test/studies/index']);
       },
       () => this.toastr.error('Consulte con el Administrador.', 'Error al actualizar: ESTUDIO.'),
     ).add(
-      () => this.loadPageStoreUpdate = true
+      () => this.loadPage = true
     );
+  }
+
+  selectTypeFormStoreOrUpdate(): void {
+    switch (this.initialState.type) {
+      case STORE:
+        this.gralService.changeSelectBtn(STORE);
+        break;
+      case UPDATE:
+        this.gralService.changeDisabled(false);
+        this.gralService.changeSelectBtn(UPDATE);
+        this.getUpdate();
+        break;
+    }
+  }
+
+  getIdToParameterFromUrl(): void {
+    this.route.paramMap.subscribe(
+      params => this.idStudy = parseInt(params.get('id'))
+    );
+
   }
 
   resetFormStudy(): void {
@@ -119,11 +140,9 @@ export class StudiesStoreUpdateComponent implements OnInit {
     this.status.setValue(1);
   }
 
-  getStore(): void {
-    this.formStudy.reset();
-    this.status.setValue(1);
-    this.initialState = this.stateStore;
-    this.selectRowIndexNull.emit();
-    this.studyService.studyEdit = new Study;
+  ngOnDestroy() {
+    if (this.initialState.type == UPDATE) {
+      this.gralService.changeDisabled(true);
+    }
   }
 }

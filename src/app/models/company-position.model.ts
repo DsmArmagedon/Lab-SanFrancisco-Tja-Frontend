@@ -1,9 +1,15 @@
+import { BaseMetaLinks } from './base-meta-links.model';
+
 interface ICompanyPosition {
     id?: number;
     name?: string;
     slug?: string;
     description?: string;
     status?: boolean;
+}
+
+interface ICompanyPositionCollection {
+    companyPositions: Array<CompanyPosition>;
 }
 
 export class CompanyPosition implements ICompanyPosition {
@@ -13,10 +19,10 @@ export class CompanyPosition implements ICompanyPosition {
     private _description?: string;
     private _status?: boolean;
 
-    set id(id:number) {
+    set id(id: number) {
         this._id = id;
     }
-    get id():number {
+    get id(): number {
         return this._id;
     }
 
@@ -46,5 +52,18 @@ export class CompanyPosition implements ICompanyPosition {
     }
     get status(): boolean {
         return this._status;
+    }
+}
+
+export class CompanyPositionCollection extends BaseMetaLinks implements ICompanyPositionCollection {
+    private _companyPositions: Array<CompanyPosition>;
+
+    set data(companyPositions: Array<CompanyPosition>) {
+        this._companyPositions = companyPositions.map((e) => {
+            return Object.assign(new CompanyPosition, e);
+        })
+    }
+    get companyPositions(): Array<CompanyPosition> {
+        return this._companyPositions;
     }
 }

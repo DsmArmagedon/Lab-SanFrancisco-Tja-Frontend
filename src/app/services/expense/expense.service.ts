@@ -1,9 +1,8 @@
 import { URL_GLOBAL } from './../../config';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
-import { Expense } from 'src/app/models/expense.model';
-import { Meta } from 'src/app/models/meta.model';
+import { Observable } from 'rxjs';
+import { Expense, ExpenseCollection } from 'src/app/models/expense.model';
 import { map } from 'rxjs/operators';
 import { FormGroup } from '@angular/forms';
 import { Params } from '@angular/router';
@@ -20,7 +19,7 @@ export class ExpenseService extends BaseService {
     super();
   }
 
-  indexExpenses(formFilter: FormGroup, per_page: number, page: number): Observable<Expense[]> {
+  indexExpenses(formFilter: FormGroup, per_page: number, page: number): Observable<ExpenseCollection> {
     let url = `${URL_GLOBAL}/expenses`;
     let paramsFormFilter: any = formFilter.value;
     let dateInitialFormat: string = null;
@@ -45,18 +44,14 @@ export class ExpenseService extends BaseService {
       expense_order_option: 'DESC',
       ...paramsFormFilter
     }
-    return this.http.get<Expense[]>(url, { params }).pipe(
+    return this.http.get<ExpenseCollection>(url, { params }).pipe(
       map((resp: any) => {
-        resp.data = resp.data.map((e) => {
-          return Object.assign(new Expense, e);
-        })
-        resp.meta = Object.assign(new Meta, resp.meta);
-        return resp;
+        return Object.assign(new ExpenseCollection, resp);
       })
     );
   }
 
-  codeExpenses(): Observable<Expense> {
+  codeExpenses(): Observable<any> {
     let url = `${URL_GLOBAL}/expenses-code`;
     return this.http.get(url).pipe(
       map((resp: any) => {
@@ -82,7 +77,7 @@ export class ExpenseService extends BaseService {
     let url = `${URL_GLOBAL}/expenses`;
     return this.http.post<Expense>(url, expense).pipe(
       map((resp: any) => {
-        return resp.data;
+        return Object.assign(new Expense, resp.data);
       })
     );
   }
@@ -91,7 +86,7 @@ export class ExpenseService extends BaseService {
     let url = `${URL_GLOBAL}/expenses/${expense.code}`;
     return this.http.put<Expense>(url, expense).pipe(
       map((resp: any) => {
-        return resp.data;
+        return Object.assign(new Expense, resp.data);
       })
     );
   }
@@ -100,7 +95,7 @@ export class ExpenseService extends BaseService {
     let url = `${URL_GLOBAL}/expenses/${code}/${type}`;
     return this.http.get<Expense>(url).pipe(
       map((resp: any) => {
-        return resp.data;
+        return Object.assign(new Expense, resp.data);
       })
     );
   }

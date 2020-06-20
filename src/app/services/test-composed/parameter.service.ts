@@ -21,9 +21,7 @@ export class ParameterService {
     }
     return this.http.get<Parameter[]>(url, { params }).pipe(
       map((resp: any) => {
-        return resp.data.map((e) => {
-          return Object.assign(new Parameter, e);
-        })
+        return Object.assign(new Parameter, resp.data);
       })
     );
   }

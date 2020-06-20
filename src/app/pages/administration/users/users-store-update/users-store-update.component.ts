@@ -41,7 +41,6 @@ export class UsersStoreUpdateComponent implements OnInit {
   loadPage: boolean = true;
   loadRoles: boolean = true;
   loadCompanyPositions: boolean = true;
-  optionModal: boolean;
   initialState: any;
 
   constructor(private roleService: RoleService,
@@ -54,7 +53,6 @@ export class UsersStoreUpdateComponent implements OnInit {
     private router: Router,
     public gralService: GeneralService) {
     this.urlImage = IMAGES.original // Carga imagen por defecto para crear usuarios
-    this.optionModal = false; // Bandera que determina que al cerrar el componente modal con onHide, solo se ejecute el index si se actualiza o guarda.
   }
   ngOnInit() {
     bsCustomFileInput.init()
@@ -82,7 +80,7 @@ export class UsersStoreUpdateComponent implements OnInit {
     return new FormGroup({
       id: new FormControl(null),
       ci: new FormControl('', {
-        validators: [Validators.required, Validators.minLength(7), Validators.maxLength(20)],
+        validators: [Validators.required, Validators.minLength(7), Validators.maxLength(50)],
         asyncValidators: [
           this.validationsDirective.validateCi.bind(this.validationsDirective)
         ]
@@ -93,17 +91,17 @@ export class UsersStoreUpdateComponent implements OnInit {
           this.validationsDirective.validateUsername.bind(this.validationsDirective)
         ]
       }),
-      first_name: new FormControl('', [Validators.required, Validators.maxLength(180), ValidatorsPattern.alphaSpacePattern]),
-      last_name: new FormControl('', [Validators.required, Validators.maxLength(180), ValidatorsPattern.alphaSpacePattern]),
+      first_name: new FormControl('', [Validators.required, Validators.maxLength(100), ValidatorsPattern.alphaSpacePattern]),
+      last_name: new FormControl('', [Validators.required, Validators.maxLength(100), ValidatorsPattern.alphaSpacePattern]),
       email: new FormControl('', {
-        validators: [Validators.required, Validators.email, Validators.maxLength(180)],
+        validators: [Validators.required, Validators.email, Validators.maxLength(150)],
         asyncValidators: [
           this.validationsDirective.validateEmail.bind(this.validationsDirective)
         ]
       }),
-      job_title: new FormControl('', [Validators.maxLength(150)]),
-      address: new FormControl('', [Validators.required, Validators.maxLength(180)]),
-      phone: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+      job_title: new FormControl('', [Validators.maxLength(100)]),
+      address: new FormControl('', [Validators.required, Validators.maxLength(150)]),
+      phone: new FormControl('', [Validators.required, Validators.maxLength(150)]),
       status: new FormControl(1),
       role_id: new FormControl(null, [Validators.required]),
       company_position_id: new FormControl(null, [Validators.required])
@@ -165,7 +163,6 @@ export class UsersStoreUpdateComponent implements OnInit {
     this.userService.storeUsers(userData).subscribe(
       resp => {
         this.resetFormUser();
-        this.urlImage = IMAGES.original
         this.responseSaveFormUser(resp, 'USUARIO Creado Correctamente!');
       },
       () => this.toastr.error('Consulte con el Administrador.', 'Error al crear: USUARIO.')
@@ -204,7 +201,9 @@ export class UsersStoreUpdateComponent implements OnInit {
   loadRolesForm(): void {
     this.loadRoles = false;
     this.roleService.listRoles().subscribe(
-      resp => this.rolesDB = resp,
+      resp => {
+        this.rolesDB = resp.roles;
+      },
       () => this.toastr.error('Consulte con el Administrador', 'Error al cargar los ROLES')
     ).add(
       () => this.loadRoles = true
@@ -214,7 +213,7 @@ export class UsersStoreUpdateComponent implements OnInit {
   loadCompanyPositionsForm(): void {
     this.loadCompanyPositions = false;
     this.companyPositionService.listCompanyPositions().subscribe(
-      resp => this.companyPositionsDB = resp,
+      resp => this.companyPositionsDB = resp.companyPositions,
       () => this.toastr.error('Consulte con el Administrador', 'Error al cargar los CARGOS')
     ).add(
       () => this.loadCompanyPositions = true
@@ -222,7 +221,6 @@ export class UsersStoreUpdateComponent implements OnInit {
   }
 
   responseSaveFormUser(user: User, title: string): void {
-    this.optionModal = true;
     let fullName = `${user.first_name} ${user.last_name}`;
     this.toastr.success(this.titleCasePipe.transform(fullName), title);
   }
@@ -249,6 +247,7 @@ export class UsersStoreUpdateComponent implements OnInit {
   resetFormUser(): void {
     this.formUser.reset();
     this.status.setValue(1);
+    this.urlImage = IMAGES.original
   }
 
   getIdToParameterFromUrl(): void {

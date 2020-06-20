@@ -21,6 +21,7 @@ import { GeneralService } from 'src/app/services/common/general.service';
   styles: []
 })
 export class UsersIndexComponent implements OnInit {
+  @ViewChild(UsersFilterComponent, { static: true }) usersFilter: UsersFilterComponent;
 
   users: User[] = [];
   maxSize: number = 3;
@@ -30,11 +31,10 @@ export class UsersIndexComponent implements OnInit {
   formFilter: FormGroup;
   perPage: number = 25;
   public currentPage: number;
-  public isCollapsed = true;
+  public isCollapsed = false;
   page: number;
   bsModalRef: BsModalRef;
   subscription: Subscription;
-  @ViewChild(UsersFilterComponent, { static: true }) usersFilter: UsersFilterComponent;
   constructor(private userService: UserService,
     private titleCase: TitleCasePipe,
     private swalService: SwalService,
@@ -42,7 +42,7 @@ export class UsersIndexComponent implements OnInit {
     private modalService: BsModalService,
     private router: Router,
     private gralService: GeneralService) {
-    this.meta = new Meta();
+    this.meta = new Meta;
     this.gralService.changeSelectBtn(INDEX);
   }
   ngOnInit() {

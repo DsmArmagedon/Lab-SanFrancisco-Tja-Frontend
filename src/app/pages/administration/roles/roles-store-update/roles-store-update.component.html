@@ -14,7 +14,8 @@
                             <div class="form-group">
                                 <label for="name">Nombre *</label>
                                 <input type="hidden" formControlName="id">
-                                <input class="form-control" [ngClass]="{'invalid': gralService.validation(name)}" formControlName="name" id="name" type="text">
+                                <input class="form-control" [ngClass]="{'invalid': gralService.validation(name)}"
+                                    formControlName="name" id="name" type="text">
                                 <div class="text-validation" *ngIf="name.pending">
                                     <i class="fa fa-spinner fa-spin"></i> Disponibilidad de Nombre
                                 </div>
@@ -37,7 +38,9 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="name">Descripción <i>(Opcional)</i></label>
-                                <textarea class="form-control" style="resize: none;" [ngClass]="{'invalid': gralService.validation(description)}" formControlName="description" id="description" rows="4"></textarea>
+                                <textarea class="form-control" style="resize: none;"
+                                    [ngClass]="{'invalid': gralService.validation(description)}"
+                                    formControlName="description" id="description" rows="4"></textarea>
                                 <div class="text-invalid" *ngIf="gralService.validation(description)">
                                     <div *ngIf="description.hasError('maxlength')">
                                         <i>El <b>Descripción</b> no debe contener más de 180 caracteres.</i>
@@ -50,18 +53,22 @@
                                 <label for="status">Estado *</label>
                                 <br>
                                 <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" class="custom-control-input" formControlName="status" [value]="1" id="statusH" name="status">
+                                    <input type="radio" class="custom-control-input" formControlName="status"
+                                        [value]="1" id="statusH" name="status">
                                     <label class="custom-control-label" for="statusH">Habilitado</label>
                                 </div>
                                 <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" class="custom-control-input" formControlName="status" [value]="0" id="statusD" name="status">
+                                    <input type="radio" class="custom-control-input" formControlName="status"
+                                        [value]="0" id="statusD" name="status">
                                     <label class="custom-control-label" for="statusD">Deshabilitado</label>
                                 </div>
                             </div>
+                            <hr>
                         </div>
-                        <hr>
                         <div class="col-md-12 personality-footer">
-                            <button type="submit" class="btn btn-primary btn-sm" [disabled]="formRole.invalid || formRole.pending"><i class="fa fa-fw fa-save" ></i> {{ initialState.btnStoreUpdate }}</button>
+                            <button type="submit" class="btn btn-primary btn-sm"
+                                [disabled]="formRole.invalid || formRole.pending"><i class="fa fa-fw fa-save"></i>
+                                {{ initialState.btnStoreUpdate }}</button>
                         </div>
                     </div>
                 </div>
@@ -77,80 +84,34 @@
                                     <label for="permissions">Permisos *</label>
                                 </div>
                                 <div class="col-md-6 mb-1">
-                                    <button class="btn btn-outline-primary btn-sm float-right mb-0 " (click)="selectAll()" type="button"><i class="fa fa-plus"></i> Seleccionar todos</button>
-                                    <button class="btn btn-outline-danger btn-sm float-right mr-1" (click)="deselectAll()" type="button"><i class="fa fa-minus"></i> Deseleccionar todos</button>
+                                    <button class="btn btn-outline-primary btn-sm float-right mb-0 "
+                                        (click)="selectAll()" type="button"><i class="fa fa-plus"></i> Seleccionar
+                                        todos</button>
+                                    <button class="btn btn-outline-danger btn-sm float-right mr-1"
+                                        (click)="deselectAll()" type="button"><i class="fa fa-minus"></i> Deseleccionar
+                                        todos</button>
                                 </div>
                             </div>
                             <accordion [isAnimated]="true" role="button">
-                                <accordion-group [isOpen]="isAccordionPermissionsOpen">
+                                <accordion-group [isOpen]="isAccordionPermissionsOpen"
+                                    *ngFor="let permissions of permissionsDB">
                                     <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
-                                            <div class="pull-left float-left">Administración</div>
-                                        </button>
-                                    <div *ngFor="let permission of permissions.controls; let i = index">
-                                        <div *ngIf="permissionsDB[i].resource == 'administration'">
-                                            <div class="custom-control custom-checkbox" formArrayName="permissions">
-                                                <input type="checkbox" class="custom-control-input" id="{{permissionsDB[i].id}}" [formControlName]="i">
-                                                <label class="custom-control-label" for="{{permissionsDB[i].id}}"><b>{{ permissionsDB[i].name }} : </b><i>{{ permissionsDB[i].description }}</i></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </accordion-group>
-                                <accordion-group [isOpen]="isAccordionPermissionsOpen">
-                                    <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
-                                            <div class="pull-left float-left">Transacciones</div>
-                                        </button>
-                                    <div *ngFor="let permission of permissions.controls; let i = index">
-                                        <div *ngIf="permissionsDB[i].resource == 'transactions'">
-                                            <div class="custom-control custom-checkbox" formArrayName="permissions">
-                                                <input type="checkbox" class="custom-control-input" id="{{permissionsDB[i].id}}" [formControlName]="i">
-                                                <label class="custom-control-label" for="{{permissionsDB[i].id}}"><b>{{ permissionsDB[i].name }} : </b><i>{{ permissionsDB[i].description }}</i></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </accordion-group>
-                                <accordion-group [isOpen]="isAccordionPermissionsOpen">
-                                    <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
-                                            <div class="pull-left float-left">Pruebas</div>
-                                        </button>
-                                    <div *ngFor="let permission of permissions.controls; let i = index">
-                                        <div *ngIf="permissionsDB[i].resource == 'tests'">
-                                            <div class="custom-control custom-checkbox" formArrayName="permissions">
-                                                <input type="checkbox" class="custom-control-input" id="{{permissionsDB[i].id}}" [formControlName]="i">
-                                                <label class="custom-control-label" for="{{permissionsDB[i].id}}"><b>{{ permissionsDB[i].name }} : </b><i>{{ permissionsDB[i].description }}</i></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </accordion-group>
-                                <accordion-group [isOpen]="isAccordionPermissionsOpen">
-                                    <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
-                                            <div class="pull-left float-left">Pacientes</div>
-                                        </button>
-                                    <div *ngFor="let permission of permissions.controls; let i = index">
-                                        <div *ngIf="permissionsDB[i].resource == 'patients'">
-                                            <div class="custom-control custom-checkbox" formArrayName="permissions">
-                                                <input type="checkbox" class="custom-control-input" id="{{permissionsDB[i].id}}" [formControlName]="i">
-                                                <label class="custom-control-label" for="{{permissionsDB[i].id}}"><b>{{ permissionsDB[i].name }} : </b><i>{{ permissionsDB[i].description }}</i></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </accordion-group>
-                                <accordion-group [isOpen]="isAccordionPermissionsOpen">
-                                    <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
-                                            <div class="pull-left float-left">Especiales</div>
-                                        </button>
-                                    <div *ngFor="let permission of permissions.controls; let i = index">
-                                        <div *ngIf="permissionsDB[i].resource == 'specials'">
-                                            <div class="custom-control custom-checkbox" formArrayName="permissions">
-                                                <input type="checkbox" class="custom-control-input" id="{{permissionsDB[i].id}}" [formControlName]="i">
-                                                <label class="custom-control-label" for="{{permissionsDB[i].id}}"><b>{{ permissionsDB[i].name }} : </b><i>{{ permissionsDB[i].description }}</i></label>
-                                            </div>
+                                        <div class="pull-left float-left">{{ permissions.resource }}</div>
+                                    </button>
+                                    <div *ngFor="let permission of permissions.permissions">
+                                        <div class="custom-control custom-checkbox" formArrayName="permissions">
+                                            <input type="checkbox" class="custom-control-input" id="{{permission.id}}"
+                                                [formControlName]="permission.index">
+                                            <label class="custom-control-label"
+                                                for="{{permission.id}}"><b>{{ permission.name }} :
+                                                </b><i>{{ permission.description }}</i></label>
                                         </div>
                                     </div>
                                 </accordion-group>
                             </accordion>
                             <div class="text-invalid" *ngIf="gralService.validation(permissions)">
                                 <div *ngIf="permissions.hasError('arrayRequired')">
-                                    <i>El <b>Permisos</b> es obligatorio.</i>
+                                    <i>Los <b>Permisos</b> son obligatorios.</i>
                                 </div>
                             </div>
                         </div>

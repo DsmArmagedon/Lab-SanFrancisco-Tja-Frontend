@@ -4,12 +4,17 @@
             TIPOS DE GASTO
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-4">
-            <app-types-expenses-store-update (executeIndex)="executeIndex()" (selectRowIndexNull)="selectRowIndexNull()"></app-types-expenses-store-update>
-        </div>
-        <div class="col-md-8">
-            <app-types-expenses-index></app-types-expenses-index>
+    <div class="row title-plus">
+        <div class="btn-group btn-group-sm ml-3">
+            <button class="btn btn-outline-success" [(ngModel)]="radioModel" btnRadio="store" (click)="routerStore()"><i
+                    class="fa fa-fw fa-plus"></i>Agregar</button>
+            <button class="btn btn-outline-success" [(ngModel)]="radioModel" btnRadio="index" (click)="routerIndex()"><i
+                    class="fa fa-fw fa-list"></i>Listar</button>
+            <button class="btn btn-outline-success" [(ngModel)]="radioModel" btnRadio="update" [disabled]="disabled"><i
+                    class="fa fa-fw fa-edit"></i>Editar</button>
+
         </div>
     </div>
+    <hr>
+    <router-outlet></router-outlet>
 </div>

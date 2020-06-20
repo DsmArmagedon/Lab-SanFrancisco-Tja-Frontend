@@ -1,9 +1,15 @@
+import { BaseMetaLinks } from './base-meta-links.model';
+
 interface IStudy {
     id?: number;
     name?: string;
     slug?: string;
     description?: string;
     status?: boolean;
+}
+
+interface IStudyCollection {
+    studies: Array<Study>;
 }
 
 export class Study implements IStudy {
@@ -13,10 +19,10 @@ export class Study implements IStudy {
     private _description?: string;
     private _status?: boolean;
 
-    set id(id:number) {
+    set id(id: number) {
         this._id = id;
     }
-    get id():number {
+    get id(): number {
         return this._id;
     }
 
@@ -46,5 +52,18 @@ export class Study implements IStudy {
     }
     get status(): boolean {
         return this._status;
+    }
+}
+
+export class StudyCollection extends BaseMetaLinks implements IStudyCollection {
+    private _studies: Array<Study>;
+
+    set data(studies: Array<Study>) {
+        this._studies = studies.map((e) => {
+            return Object.assign(new Study, e);
+        })
+    }
+    get studies(): Array<Study> {
+        return this._studies;
     }
 }

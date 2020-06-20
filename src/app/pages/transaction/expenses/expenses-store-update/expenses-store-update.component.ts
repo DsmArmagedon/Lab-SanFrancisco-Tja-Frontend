@@ -42,20 +42,20 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
   initialState: any;
 
   constructor(private expenseService: ExpenseService,
-              private localService: BsLocaleService,
-              private toastr: ToastrService,
-              private typeExpenseService: TypeExpenseService,
-              private functionService: FunctionService,
-              private route: ActivatedRoute,
-              private router: Router,
-              public gralService: GeneralService) {
+    private localService: BsLocaleService,
+    private toastr: ToastrService,
+    private typeExpenseService: TypeExpenseService,
+    private functionService: FunctionService,
+    private route: ActivatedRoute,
+    private router: Router,
+    public gralService: GeneralService) {
     this.localService.use('es');
     this.missingDays = this.functionService.getMissingDays();
     this.minDate = new Date;
     this.maxDate = new Date;
     this.minDate.setDate(this.minDate.getDate() - this.missingDays);
     this.maxDate.setDate(this.maxDate.getDate());
-   }
+  }
 
   ngOnInit() {
     this.formExpense = this.formGroupExpense();
@@ -78,17 +78,17 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
   formGroupExpense(): FormGroup {
     return new FormGroup({
       id: new FormControl(null),
-      code: new FormControl('',[Validators.required]),
-      type_expense_id: new FormControl(null,[ Validators.required ]),
-      description: new FormControl('', [ Validators.required, Validators.maxLength(180)]),
+      code: new FormControl('', [Validators.required]),
+      type_expense_id: new FormControl(null, [Validators.required]),
+      description: new FormControl('', [Validators.required, Validators.maxLength(255)]),
       date_expense_notFormat: new FormControl(''),
-      amount: new FormControl(0,[ Validators.required, ValidatorsGlobal.valueMin(0) ]),
+      amount: new FormControl(0, [Validators.required, ValidatorsGlobal.valueMin(0)]),
       document: new FormControl(null),
       serial_document: new FormControl({
         value: '',
         disabled: true
       }),
-      name_responsible: new FormControl('', [ Validators.required, Validators.maxLength(100) ])
+      name_responsible: new FormControl('', [Validators.required, Validators.maxLength(100)])
     });
   }
 
@@ -133,12 +133,12 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
     );
   }
 
-  saveFormExpense(): void{
+  saveFormExpense(): void {
     this.loadPage = false;
     let expenseData: Expense = this.formExpense.value;
     expenseData.date_expense = this.expenseService.convertDateToString(this.date_expense_notFormat.value);
-    if(this.formExpense.valid) {
-      if(!this.id.value) {
+    if (this.formExpense.valid) {
+      if (!this.id.value) {
         this.storeForm();
       } else {
         this.updateForm();
@@ -160,7 +160,7 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
     );
   }
 
-  updateForm(): void{
+  updateForm(): void {
     this.txtLoad = 'Actualizando Gasto';
     this.expenseService.updateExpenses(this.formExpense.value).subscribe(
       resp => {
@@ -176,15 +176,15 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
   loadTypeExpenseForm(): void {
     this.loadTypeExpense = false;
     this.typeExpenseService.listTypeExpenses().subscribe(
-      resp => this.typeExpensesDB = resp,
-      ()  => this.toastr.error('Consulte con el Administrador', 'Error al Cargar los TIPOS DE GASTOS.')
+      resp => this.typeExpensesDB = resp.typeExpenses,
+      () => this.toastr.error('Consulte con el Administrador', 'Error al Cargar los TIPOS DE GASTOS.')
     ).add(
       () => this.loadTypeExpense = true
     );
   }
 
   onChange(event) {
-    if(event) {
+    if (event) {
       this.serial_document.setValidators([Validators.required, Validators.maxLength(100)]);
       this.serial_document.enable();
     } else {
@@ -195,7 +195,7 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
   }
 
   selectTypeFormStoreOrUpdate(): void {
-    switch(this.initialState.type) {
+    switch (this.initialState.type) {
       case STORE:
         this.gralService.changeSelectBtn(STORE);
         this.getStore();
@@ -209,7 +209,7 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
   }
 
   documentEnable() {
-    if(this.document.value) {
+    if (this.document.value) {
       this.serial_document.enable();
     }
   }
@@ -221,7 +221,7 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if(this.initialState.type == UPDATE) {
+    if (this.initialState.type == UPDATE) {
       this.gralService.changeDisabled(true);
       this.expenseService.expense = null;
     }

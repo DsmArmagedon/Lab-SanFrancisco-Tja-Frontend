@@ -52,13 +52,13 @@ export class TitleService {
     );
   }
 
-  listTitles(test_id: number): Observable<Title> {
+  listTitles(test_id: number): Observable<any> {
     let url = `${URL_GLOBAL}/tests-composeds/${test_id}/titles`;
     const params: Params = {
       title_select: 'name',
       title_status: 1
     }
-    return this.http.get<Title[]>(url, { params }).pipe(
+    return this.http.get<any>(url, { params }).pipe(
       map((resp: any) => {
         let data = resp.data.map((e) => {
           return Object.assign(new Title, e);

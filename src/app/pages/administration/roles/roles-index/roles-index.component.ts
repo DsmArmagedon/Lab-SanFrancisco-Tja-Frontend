@@ -20,7 +20,7 @@ import { GeneralService } from 'src/app/services/common/general.service';
 })
 export class RolesIndexComponent implements OnInit {
   @ViewChild(RolesFilterComponent, { static: true }) rolesFilter: RolesFilterComponent;
-  public isCollapsed: boolean = true;
+  public isCollapsed: boolean = false;
   public currentPage: number;
 
   meta: Meta;

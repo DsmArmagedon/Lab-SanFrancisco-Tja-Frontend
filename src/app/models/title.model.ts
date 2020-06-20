@@ -1,4 +1,3 @@
-import { TestComposed } from './test-composed.model';
 import { Parameter } from './parameter.model';
 interface ITitle {
     id?: number;
@@ -19,7 +18,7 @@ export class Title implements ITitle {
     private _note?: string;
     private _status?: boolean;
     private _test_id?: number;
-    private _parameters?: Array<Parameter> = new Array<Parameter>();
+    private _parameters?: Array<Parameter>;
 
     set id(id: number) {
         this._id = id;
@@ -66,12 +65,12 @@ export class Title implements ITitle {
     set test_id(test_id: number) {
         this._test_id = test_id;
     }
-    get test_id(): number{
+    get test_id(): number {
         return this._test_id;
     }
 
     set parameters(parameters: Array<Parameter>) {
-        this._parameters = parameters.map( (e) => {
+        this._parameters = parameters.map((e) => {
             return Object.assign(new Parameter, e);
         });
     }
