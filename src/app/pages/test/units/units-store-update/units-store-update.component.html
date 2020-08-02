@@ -7,7 +7,7 @@
 <form [formGroup]="formUnit" (ngSubmit)="saveFormUnit()" autocomplete="off">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card card-accent-info" [ngClass]="{'load-page-visibility':!loadPage}">
+            <div class="card card-accent-info" [ngClass]="{'load-page-visibility':!loadUnit}">
                 <div class="card-body card-personality">
                     <div class="row">
                         <div class="col-md-12">
@@ -64,7 +64,7 @@
                                     id="note" rows="4"></textarea>
                                 <div class="text-invalid" *ngIf="gralService.validation(note)">
                                     <div *ngIf="note.hasError('maxlength')">
-                                        <i>El <b>Nota</b> no debe contener más de 180 caracteres.</i>
+                                        <i>El <b>Nota</b> no debe contener más de 255 caracteres.</i>
                                     </div>
                                 </div>
                             </div>
@@ -94,9 +94,9 @@
                     </div>
                 </div>
             </div>
-            <div class="align-middle-load" *ngIf="!loadPage">
+            <div class="align-middle-load" *ngIf="!loadUnit">
                 <div class="d-inline-block">
-                    <app-load [txtLoad]="txtLoad"></app-load>
+                    <app-load [txtLoad]="txtStatusSecUnit"></app-load>
                 </div>
             </div>
         </div>

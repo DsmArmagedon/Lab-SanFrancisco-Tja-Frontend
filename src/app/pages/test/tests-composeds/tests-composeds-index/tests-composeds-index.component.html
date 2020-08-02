@@ -8,22 +8,24 @@
     <div class="col-md-6">
         <span>Mostrar </span>
         <select class="form-control-sm block" [(ngModel)]="perPage" (change)="changePerPage()">
-                <option value="25">25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="200">200</option>
-            </select>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="200">200</option>
+        </select>
         <span> registros</span>
     </div>
     <div class="col-md-6">
-        <button type="button" class="btn btn-outline-info btn-sm float-right" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="filter">
-                <i class="fa fa-fw fa-arrow-up" *ngIf="!isCollapsed"></i>
-                <i class="fa fa-fw fa-arrow-down" *ngIf="isCollapsed"></i>
-                Filtrar
-            </button>
-        <button type="button" class="btn btn-info btn-sm float-right mr-1" *ngIf="!isCollapsed" (click)="resetFormFilter()">
-                <i class="fa fa-fw fa-eraser"></i>
-                Limpiar
+        <button type="button" class="btn btn-outline-info btn-sm float-right" (click)="isCollapsed = !isCollapsed"
+            [attr.aria-expanded]="!isCollapsed" aria-controls="filter">
+            <i class="fa fa-fw fa-arrow-up" *ngIf="!isCollapsed"></i>
+            <i class="fa fa-fw fa-arrow-down" *ngIf="isCollapsed"></i>
+            Filtrar
+        </button>
+        <button type="button" class="btn btn-info btn-sm float-right mr-1" *ngIf="!isCollapsed"
+            (click)="resetFormFilter()">
+            <i class="fa fa-fw fa-eraser"></i>
+            Limpiar
         </button>
     </div>
 </div>
@@ -52,7 +54,7 @@
             Acciones
         </td>
     </thead>
-    <ng-container *ngIf="loadPage; then tbody; else load">
+    <ng-container *ngIf="loadTestComposed; then tbody; else load">
     </ng-container>
     <ng-template #tbody>
         <ng-container *ngIf="testComposeds.length > 0; then withValues; else nothingValues">
@@ -81,9 +83,12 @@
                     </td>
                     <td class="text-right">
 
-                        <button type="button" class="btn btn-success btn-sm mr-1" (click)="showTest(test.id)"><i class="fa fa-fw fa-eye fa-xs"></i></button>
-                        <button type="button" class="btn btn-info btn-sm mr-1" (click)="updateTest(test.id)"><i class="fa fa-fw fa-edit fa-xs" ></i> </button>
-                        <button type="button" class="btn btn-danger btn-sm" (click)="destroyTest(test.id, test.name)"><i class="fa fa-fw fa-trash fa-xs"></i> </button>
+                        <button type="button" class="btn btn-success btn-sm mr-1" (click)="showTest(test.id)"><i
+                                class="fa fa-fw fa-eye fa-xs"></i></button>
+                        <button type="button" class="btn btn-info btn-sm mr-1" (click)="updateTest(test.id)"><i
+                                class="fa fa-fw fa-edit fa-xs"></i> </button>
+                        <button type="button" class="btn btn-danger btn-sm" (click)="destroyTest(test.id, test.name)"><i
+                                class="fa fa-fw fa-trash fa-xs"></i> </button>
                     </td>
                 </tr>
             </tbody>
@@ -110,9 +115,11 @@
         </tr>
     </ng-template>
 </table>
-<div class="row" [style.visibility]="loadPage && testComposeds.length > 0 ? 'visible' : 'hidden'">
+<div class="row" [style.visibility]="loadTestComposed && testComposeds.length > 0 ? 'visible' : 'hidden'">
     <div class="col-md-6">
-        <pagination [boundaryLinks]="true" [totalItems]="meta.total" (pageChanged)="pageChanged($event)" [itemsPerPage]="meta.per_page" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [maxSize]="maxSize" [(ngModel)]="currentPage">
+        <pagination [boundaryLinks]="true" [totalItems]="meta.total" (pageChanged)="pageChanged($event)"
+            [itemsPerPage]="meta.per_page" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;"
+            lastText="&raquo;" [maxSize]="maxSize" [(ngModel)]="currentPage">
         </pagination>
     </div>
     <div class="col-md-6 text-right">

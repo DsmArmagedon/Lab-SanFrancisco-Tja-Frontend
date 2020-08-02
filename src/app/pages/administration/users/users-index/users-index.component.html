@@ -16,12 +16,14 @@
         <span> registros</span>
     </div>
     <div class="col-md-6">
-        <button type="button" class="btn btn-outline-info btn-sm float-right" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="filter">
+        <button type="button" class="btn btn-outline-info btn-sm float-right" (click)="isCollapsed = !isCollapsed"
+            [attr.aria-expanded]="!isCollapsed" aria-controls="filter">
             <i class="fa fa-fw fa-arrow-up" *ngIf="!isCollapsed"></i>
             <i class="fa fa-fw fa-arrow-down" *ngIf="isCollapsed"></i>
             Filtrar
         </button>
-        <button type="button" class="btn btn-info btn-sm float-right mr-1" *ngIf="!isCollapsed" (click)="resetFormFilter()">
+        <button type="button" class="btn btn-info btn-sm float-right mr-1" *ngIf="!isCollapsed"
+            (click)="resetFormFilter()">
             <i class="fa fa-fw fa-eraser"></i>
             Limpiar
         </button>
@@ -57,7 +59,7 @@
             Acciones
         </td>
     </thead>
-    <ng-container *ngIf="loadPage; then tbody; else load">
+    <ng-container *ngIf="loadUsers; then tbody; else load">
     </ng-container>
     <ng-template #tbody>
         <ng-container *ngIf="users.length > 0; then withValues; else nothingValues">
@@ -91,9 +93,13 @@
                         </ng-template>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-success btn-sm mr-1" (click)="showUsers(user.ci)"><i class="fa fa-fw fa-eye fa-xs"></i></button>
-                        <button type="button" class="btn btn-info btn-sm mr-1" (click)="updateUsers(user.ci)"><i class="fa fa-fw fa-edit fa-xs" ></i> </button>
-                        <button type="button" class="btn btn-danger btn-sm" (click)="destroyUsers(user.ci, user.fullName)"><i class="fa fa-fw fa-trash fa-xs"></i> </button>
+                        <button type="button" class="btn btn-success btn-sm mr-1" (click)="showUsers(user.ci)"><i
+                                class="fa fa-fw fa-eye fa-xs"></i></button>
+                        <button type="button" class="btn btn-info btn-sm mr-1" (click)="updateUsers(user.ci)"><i
+                                class="fa fa-fw fa-edit fa-xs"></i> </button>
+                        <button type="button" class="btn btn-danger btn-sm"
+                            (click)="destroyUsers(user.ci, user.fullName)"><i class="fa fa-fw fa-trash fa-xs"></i>
+                        </button>
                     </td>
                 </tr>
             </tbody>
@@ -120,9 +126,11 @@
         </tr>
     </ng-template>
 </table>
-<div class="row" [style.visibility]="loadPage && users.length > 0 ? 'visible' : 'hidden'">
+<div class="row" [style.visibility]="loadUsers && users.length > 0 ? 'visible' : 'hidden'">
     <div class="col-md-6">
-        <pagination [boundaryLinks]="true" [totalItems]="meta.total" (pageChanged)="pageChanged($event)" [itemsPerPage]="meta.per_page" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;" [maxSize]="maxSize" [(ngModel)]="currentPage">
+        <pagination [boundaryLinks]="true" [totalItems]="meta.total" (pageChanged)="pageChanged($event)"
+            [itemsPerPage]="meta.per_page" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;"
+            lastText="&raquo;" [maxSize]="maxSize" [(ngModel)]="currentPage">
         </pagination>
     </div>
     <div class="col-md-6 text-right">

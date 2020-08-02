@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
-import { STORE, UPDATE } from 'src/app/global-variables';
+import { Parameter } from 'src/app/models/parameter/parameter.model';
+import { Title } from 'src/app/models/title/title.model';
+import { KindHttp } from 'src/app/global-variables';
+
 
 @Injectable({
   providedIn: 'root'
@@ -45,5 +48,22 @@ export class GeneralService {
       resp => this.initialState = resp
     );
     return this.initialState;
+  }
+
+  updateArray(data: Array<any>, resource: any): Array<any> {
+    // return data.map(item => (item.id === resource.id) ? resource : item)
+    // for (const index in data) {
+    //   if (data[index].id === resource.id) {
+    //     data[index] = resource;
+    //     break;
+    //   }
+    // }
+    const index = data.findIndex(item => item.id === resource.id);
+    return (index > -1) ? data.splice(index, 1, resource) : data;
+  }
+
+  deleteArray(data: Array<any>, id: number): Array<any> {
+    const index = data.findIndex(item => item.id === id);
+    return (index > -1) ? data.splice(index, 1) : data;
   }
 }

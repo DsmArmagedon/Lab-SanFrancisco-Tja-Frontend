@@ -1,32 +1,35 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { Meta } from 'src/app/models/meta.model';
 import Swal from 'sweetalert2';
-import { CompanyPosition } from '../../../../models/company-position.model';
+import { CompanyPosition } from '../../../../models/company-position/company-position.model';
 import { CompanyPositionService } from '../../../../services/company-position/company-position.service';
 import { CompaniesPositionsFilterComponent } from '../companies-positions-filter/companies-positions-filter.component';
 import { SwalService } from '../../../../services/common/swal.service';
 import { GeneralService } from 'src/app/services/common/general.service';
 import { INDEX } from 'src/app/global-variables';
 import { Router } from '@angular/router';
+import { takeUntil, finalize } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { Meta } from 'src/app/models/custom/meta.model';
 
 @Component({
   selector: 'app-companies-positions-index',
   templateUrl: './companies-positions-index.component.html'
 })
-export class CompaniesPositionsIndexComponent implements OnInit {
+export class CompaniesPositionsIndexComponent implements OnInit, OnDestroy {
   @ViewChild(CompaniesPositionsFilterComponent, { static: true }) companyPositionFilter: CompaniesPositionsFilterComponent;
   public isCollapsed: boolean = false;
   public currentPage: number;
-  selectedRowIndex: number;
   formFilter: FormGroup;
   companyPositions: CompanyPosition[] = [];
   perPage: number = 25;
   maxSize: number = 3;
-  loadPage: boolean;
+  loadCompanyPositions: boolean;
   meta: Meta;
-  idCompanyPositionEdit: number;
+
+  private onDestroy = new Subject();
+
   constructor(private companyPositionService: CompanyPositionService,
     private toastr: ToastrService,
     private swalService: SwalService,
@@ -42,16 +45,18 @@ export class CompaniesPositionsIndexComponent implements OnInit {
   }
 
   indexCompanyPositions(): void {
-    this.loadPage = false;
-    this.companyPositionService.indexCompanyPositions(this.formFilter.value, this.perPage, this.currentPage).subscribe(
-      resp => {
-        this.companyPositions = resp.companyPositions;
-        this.meta = resp.meta;
-      },
-      () => this.toastr.error('Consulte con el Administrador.', 'Error al listar los CARGOS.')
-    ).add(
-      () => this.loadPage = true
-    );
+    this.loadCompanyPositions = false;
+    this.companyPositionService.indexCompanyPositions(this.formFilter.value, this.perPage, this.currentPage)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadCompanyPositions = true)
+      ).subscribe(
+        resp => {
+          this.companyPositions = resp.companyPositions;
+          this.meta = resp.meta;
+        },
+        () => this.toastr.error('Consulte con el Administrador.', 'Error al listar los CARGOS.')
+      );
   }
 
   updateCompanyPositions(id: number): void {
@@ -85,17 +90,24 @@ export class CompaniesPositionsIndexComponent implements OnInit {
     ).then((result) => {
       if (result.value) {
         this.swalService.deleteLoad(title);
-        this.companyPositionService.destroyCompanyPositions(id).subscribe(
-          resp => {
-            Swal.close();
-            this.toastr.success(`${title} ${resp.name.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente.`);
-            this.indexCompanyPositions();
-          },
-          err => {
-            this.swalService.deleteError(err.status, title);
-          }
-        );
+        this.companyPositionService.destroyCompanyPositions(id)
+          .pipe(
+            takeUntil(this.onDestroy),
+            finalize(() => Swal.close())
+          )
+          .subscribe(
+            resp => {
+              this.toastr.success(`${title} ${resp.name.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente.`);
+              this.indexCompanyPositions();
+            },
+            () => this.toastr.error('Consulte con el Administrador.', `Error al eliminar: CARGO.`)
+          );
       }
     })
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next(true);
+    this.onDestroy.complete();
   }
 }

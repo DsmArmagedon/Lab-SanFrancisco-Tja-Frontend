@@ -1,6 +1,5 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { TypeExpense } from 'src/app/models/type-expense.model';
-import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { TypeExpenseService } from '../../../../services/type-expense/type-expense.service';
 import { ValidatorsPattern } from '../../../../validators/validators-pattern';
 import { ValidationsNameDirective } from 'src/app/directives/validations-name.directive';
@@ -8,6 +7,9 @@ import { ToastrService } from 'ngx-toastr';
 import { GeneralService } from 'src/app/services/common/general.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { STORE, UPDATE } from 'src/app/global-variables';
+import { Subject } from 'rxjs';
+import { takeUntil, finalize } from 'rxjs/operators';
+import { TypeExpense } from 'src/app/models/type-expense/type-expense.model';
 
 @Component({
   selector: 'app-types-expenses-store-update',
@@ -15,13 +17,15 @@ import { STORE, UPDATE } from 'src/app/global-variables';
   styles: [],
   providers: [ValidationsNameDirective]
 })
-export class TypesExpensesStoreUpdateComponent implements OnInit {
+export class TypesExpensesStoreUpdateComponent implements OnInit, OnDestroy {
   formTypeExpense: FormGroup;
   typeExpense: TypeExpense;
-  txtLoad: string;
-  loadPage: boolean = true;
+  txtStatusSecTypeExpense: string;
+  loadTypeExpense: boolean = true;
   initialState: any;
   idTypeExpense: number;
+
+  private onDestroy = new Subject();
 
   constructor(private typeExpenseService: TypeExpenseService,
     private validationsDirective: ValidationsNameDirective,
@@ -47,11 +51,14 @@ export class TypesExpensesStoreUpdateComponent implements OnInit {
       id: new FormControl(null),
       name: new FormControl('', {
         validators: [Validators.required, Validators.maxLength(100), ValidatorsPattern.alphaNumericSpacePattern],
-        asyncValidators: [this.validationsDirective.validateUniqueTypeExpense.bind(this.validationsDirective)],
+        asyncValidators: [this.validationsDirective.validateUniqueTypeExpense()],
       }),
       description: new FormControl('', [Validators.maxLength(255)]),
       status: new FormControl(1)
-    });
+    },
+      {
+        updateOn: 'blur'
+      });
   }
 
   assignValuesFormTypeExpense(): void {
@@ -62,59 +69,65 @@ export class TypesExpensesStoreUpdateComponent implements OnInit {
   }
 
   getUpdate(): void {
-    this.txtLoad = this.initialState.txtLoad;
+    this.txtStatusSecTypeExpense = this.initialState.txtLoad;
     this.getIdToParameterFromUrl();
-    this.loadPage = false;
-    this.typeExpenseService.editShowTypeExpenses(this.idTypeExpense).subscribe(
-      resp => {
-        this.typeExpense = resp;
-        this.assignValuesFormTypeExpense();
-      },
-      () => {
-        this.toastr.error('Consulte con el Administrador', 'Error al mostrar el formulario para Actualizar el CARGO');
-        this.router.navigate(['transaction/types-expenses/index']);
-      }
-    ).add(
-      () => this.loadPage = true
-    );
+    this.loadTypeExpense = false;
+    this.typeExpenseService.editShowTypeExpenses(this.idTypeExpense)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadTypeExpense = true)
+      )
+      .subscribe(
+        resp => {
+          this.typeExpense = resp;
+          this.assignValuesFormTypeExpense();
+        },
+        () => {
+          this.toastr.error('Consulte con el Administrador', 'Error al mostrar el formulario para Actualizar el CARGO');
+          this.router.navigate(['transaction/types-expenses/index']);
+        }
+      );
   }
 
   saveFormTypeExpense(): void {
     if (this.formTypeExpense.valid) {
-      this.loadPage = false;
-      if (!this.id.value) {
-        this.storeForm();
-      } else {
-        this.updateForm();
-      }
+      this.typeExpense = Object.assign(new TypeExpense, this.formTypeExpense.value);
+      this.loadTypeExpense = false;
+      !this.id.value ? this.storeForm() : this.updateForm();
     }
   }
 
   storeForm(): void {
-    this.txtLoad = 'Guardando Tipo de Gasto';
-    this.typeExpenseService.storeTypeExpenses(this.formTypeExpense.value).subscribe(
-      resp => {
-        this.toastr.success(resp.name.toUpperCase(), 'TIPO DE GASTO Creado Correctamente');
-        this.resetFormTypeExpense();
-      },
-      () =>
-        this.toastr.error('Consulte con el Administrador.', 'Error al crear: TIPO DE GASTO.')
-    ).add(
-      () => this.loadPage = true
-    );
+    this.txtStatusSecTypeExpense = 'Guardando Tipo de Gasto';
+    this.typeExpenseService.storeTypeExpenses(this.typeExpense)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadTypeExpense = true)
+      )
+      .subscribe(
+        resp => {
+          this.toastr.success(resp.name.toUpperCase(), 'TIPO DE GASTO Creado Correctamente');
+          this.resetFormTypeExpense();
+        },
+        () =>
+          this.toastr.error('Consulte con el Administrador.', 'Error al crear: TIPO DE GASTO.')
+      );
   }
 
   updateForm(): void {
-    this.txtLoad = 'Actualizando Tipo de Gasto';
-    this.typeExpenseService.updateTypeExpenses(this.formTypeExpense.value).subscribe(
-      resp => {
-        this.toastr.success(resp.name.toUpperCase(), 'TIPO DE GASTO Actualizado Correctamente');
-        this.router.navigate(['transaction/types-expenses/index']);
-      },
-      () => this.toastr.error('Consulte con el Administrador.', 'Error al actualizar: TIPO DE GASTO.'),
-    ).add(
-      () => this.loadPage = true
-    );
+    this.txtStatusSecTypeExpense = 'Actualizando Tipo de Gasto';
+    this.typeExpenseService.updateTypeExpenses(this.typeExpense)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadTypeExpense = true)
+      )
+      .subscribe(
+        resp => {
+          this.toastr.success(resp.name.toUpperCase(), 'TIPO DE GASTO Actualizado Correctamente');
+          this.router.navigate(['transaction/types-expenses/index']);
+        },
+        () => this.toastr.error('Consulte con el Administrador.', 'Error al actualizar: TIPO DE GASTO.'),
+      );
   }
 
   selectTypeFormStoreOrUpdate(): void {
@@ -143,8 +156,8 @@ export class TypesExpensesStoreUpdateComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    if (this.initialState.type == UPDATE) {
-      this.gralService.changeDisabled(true);
-    }
+    if (this.initialState.type == UPDATE) this.gralService.changeDisabled(true);
+    this.onDestroy.next(true);
+    this.onDestroy.complete();
   }
 }

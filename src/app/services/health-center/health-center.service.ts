@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
-import { HealthCenter, HealthCenterCollection } from 'src/app/models/health-center.model';
+import { Observable } from 'rxjs';
 import { URL_GLOBAL } from 'src/app/config';
 import { map } from 'rxjs/operators';
 import { Params } from '@angular/router';
+import { HealthCenter } from 'src/app/models/health-center/health-center.model';
+import { HealthCenterCollection } from 'src/app/models/health-center/health-center-collection.model';
 
 
 @Injectable({
@@ -26,6 +27,7 @@ export class HealthCenterService {
     }
     return this.http.get<HealthCenterCollection>(url, { params }).pipe(
       map((resp: any) => {
+        resp.data = resp.data.map((healthCenter: HealthCenter) => Object.assign(new HealthCenter, healthCenter));
         return Object.assign(new HealthCenterCollection, resp);
       })
     );

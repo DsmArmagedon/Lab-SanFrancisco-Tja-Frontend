@@ -50,15 +50,14 @@
             Acciones
         </td>
     </thead>
-    <ng-container *ngIf="loadPage; then tbody; else load">
+    <ng-container *ngIf="loadTypeExpenses; then tbody; else load">
     </ng-container>
     <ng-template #tbody>
         <ng-container *ngIf="typeExpenses.length > 0; then withValues; else nothingValues">
         </ng-container>
         <ng-template #withValues>
             <tbody>
-                <tr *ngFor="let typeExpense of typeExpenses"
-                    [ngClass]="{'table-info': selectedRowIndex == typeExpense.id}">
+                <tr *ngFor="let typeExpense of typeExpenses">
                     <td>
                         {{ typeExpense.name }}
                     </td>
@@ -108,7 +107,7 @@
         </tr>
     </ng-template>
 </table>
-<div class="row" [style.visibility]="loadPage && typeExpenses.length > 0 ? 'visible' : 'hidden'">
+<div class="row" [style.visibility]="loadTypeExpenses && typeExpenses.length > 0 ? 'visible' : 'hidden'">
     <div class="col-md-6">
         <pagination [boundaryLinks]="true" [totalItems]="meta.total" (pageChanged)="pageChanged($event)"
             [itemsPerPage]="meta.per_page" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;"

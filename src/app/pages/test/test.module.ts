@@ -46,7 +46,6 @@ import { TestsSimplesStoreUpdateComponent } from './tests-simples/tests-simples-
 /* COMPONENTS TEST COMPOSEDS */
 import { TestsComposedsStoreUpdateComponent } from './tests-composeds/tests-composeds-store-update/tests-composeds-store-update.component';
 import { TestsComposedsShowComponent } from './tests-composeds/tests-composeds-show/tests-composeds-show.component';
-import { TestsStoreUpdateComponent } from './tests-composeds/tests-store-update/tests-store-update.component';
 import { TitlesIndexComponent } from './tests-composeds/titles-index/titles-index.component';
 import { ParametersIndexComponent } from './tests-composeds/parameters-index/parameters-index.component';
 import { TestsComposedsIndexComponent } from './tests-composeds/tests-composeds-index/tests-composeds-index.component';
@@ -55,13 +54,15 @@ import { ParametersStoreUpdateComponent } from './tests-composeds/parameters-sto
 import { TitlesStoreUpdateComponent } from './tests-composeds/titles-store-update/titles-store-update.component';
 import { ParametersShowComponent } from './tests-composeds/parameters-show/parameters-show.component';
 
+/* COMPONENTS NORMAL VALUES */
+import { NormalValuesComponent } from './normal-values/normal-values.component';
+
 /* INTERCEPTORS */
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenErrorInterceptorService } from 'src/app/services/interceptors/token-error-interceptor.service';
 
 /* PIPES */
 import { TypeDataPipe } from '../../pipes/type-data.pipe';
-import { NormalValuesComponent } from './normal-values/normal-values.component';
 @NgModule({
   declarations: [
     StudiesComponent,
@@ -78,7 +79,6 @@ import { NormalValuesComponent } from './normal-values/normal-values.component';
     TestsSimplesIndexComponent,
     TestsSimplesStoreUpdateComponent,
     TestsComposedsStoreUpdateComponent,
-    TestsStoreUpdateComponent,
     TitlesIndexComponent,
     ParametersIndexComponent,
     TestsComposedsIndexComponent,

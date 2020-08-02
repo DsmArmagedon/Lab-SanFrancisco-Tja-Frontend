@@ -11,13 +11,13 @@ import { GeneralService } from 'src/app/services/common/general.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  
+
   formLogin: FormGroup;
   loadLogin: boolean;
-  constructor(private loginService: LoginService, 
-              private router: Router,
-              private authenticationService: AuthenticationService,
-              public gralService: GeneralService) { 
+  constructor(private loginService: LoginService,
+    private router: Router,
+    private authenticationService: AuthenticationService,
+    public gralService: GeneralService) {
     this.loadLogin = false;
   }
   ngOnInit() {
@@ -35,43 +35,43 @@ export class LoginComponent implements OnInit {
       ])
     });
   }
-  
+
   get username() { return this.formLogin.get('username') };
   get password() { return this.formLogin.get('password') };
 
-  resetForm():void {
+  resetForm(): void {
     this.formLogin.reset();
   }
 
-  getUserAuth():void {
+  getUserAuth(): void {
     this.authenticationService.userAuth().subscribe(
       resp => {
         localStorage.setItem('user', JSON.stringify(resp));
+        Swal.fire({
+          title: 'Bienvenido al Sistema',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 2500
+        });
         this.getPrivilegesAuth();
       }
     );
   }
-  getPrivilegesAuth():void {
+  getPrivilegesAuth(): void {
     this.authenticationService.privilegesAuthHeaders().subscribe(
       resp => {
         localStorage.setItem('privileges', JSON.stringify(resp));
         this.router.navigate(['/dashboard']);
-        Swal.fire({
-          title:'Bienvenido al Sistema', 
-          icon:'success',
-          showConfirmButton: false,
-          timer: 2500
-        });
       }
     );
   }
-  saveForm():void {
-    if(this.formLogin.valid) {
+  saveForm(): void {
+    if (this.formLogin.valid) {
       this.loadLogin = true;
-      this.loginService.login(this.formLogin.value.username,this.formLogin.value.password).subscribe(
+      this.loginService.login(this.formLogin.value.username, this.formLogin.value.password).subscribe(
         resp => {
           localStorage.setItem('token_type', resp.data.token_type);
-          localStorage.setItem('access_token',resp.data.access_token);
+          localStorage.setItem('access_token', resp.data.access_token);
           localStorage.setItem('expires_in', resp.data.expires_in);
           localStorage.setItem('control_token', btoa(resp.data.access_token));
           this.getUserAuth();

@@ -2,7 +2,7 @@
 export const URL_GLOBAL = 'http://lab-sanfrancisco-tja.test/api';
 export const GRANT_TYPE = 'password';
 export const CLIENT_ID = 1;
-export const CLIENT_SECRET = 'gV1Lx8BBIhMWlX5jk0gYjoboX1laxekkFjOXCisG';
+export const CLIENT_SECRET = 'wkWUFFSRBdyniO87WxxZviawhmeaKBdVPyafXlac';
 export const IMAGES = {
     small: 'assets/img/users/thumb60/no-photo.jpg',
     original: 'assets/img/users/no-photo.jpg',

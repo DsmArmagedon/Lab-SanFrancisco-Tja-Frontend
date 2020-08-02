@@ -3,8 +3,9 @@ import { URL_GLOBAL } from '../../config';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { CompanyPosition, CompanyPositionCollection } from '../../models/company-position.model';
+import { CompanyPosition } from '../../models/company-position/company-position.model';
 import { Params } from '@angular/router';
+import { CompanyPositionCollection } from 'src/app/models/company-position/company-position-collection.model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,13 +27,14 @@ export class CompanyPositionService {
 
     return this.http.get<CompanyPositionCollection>(url, { params }).pipe(
       map((resp: any) => {
+        resp.data = resp.data.map((companyPosition: CompanyPosition) => Object.assign(new CompanyPosition, companyPosition));
         return Object.assign(new CompanyPositionCollection, resp)
       })
     );
   }
 
 
-  listCompanyPositions(): Observable<CompanyPositionCollection> {
+  listCompanyPositions(): Observable<CompanyPosition[]> {
     let url = `${URL_GLOBAL}/companies-positions`;
     const params: Params = {
       company_position_select: 'name',
@@ -40,9 +42,9 @@ export class CompanyPositionService {
       company_position_status: 1
     }
 
-    return this.http.get<CompanyPositionCollection>(url, { params }).pipe(
+    return this.http.get<CompanyPosition[]>(url, { params }).pipe(
       map((resp: any) => {
-        return Object.assign(new CompanyPositionCollection, resp);
+        return resp.data.map((companyPosition: CompanyPosition) => Object.assign(new CompanyPosition, companyPosition));
       })
     );
   }

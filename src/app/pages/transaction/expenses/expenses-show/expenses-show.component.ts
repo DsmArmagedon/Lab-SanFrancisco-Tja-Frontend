@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ExpenseService } from '../../../../services/expense/expense.service';
-import { Expense } from 'src/app/models/expense.model';
+import { Expense } from 'src/app/models/expense/expense.model';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -11,11 +11,9 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 export class ExpensesShowComponent implements OnInit {
 
   expense: Expense;
-  constructor(private expenseService: ExpenseService,
-              public bsModalRef: BsModalRef) { }
+  constructor(public bsModalRef: BsModalRef) { }
 
   ngOnInit() {
-    this.expense = this.expenseService.expense;
   }
 
 }

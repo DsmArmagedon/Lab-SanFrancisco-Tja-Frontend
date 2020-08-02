@@ -1,23 +1,23 @@
 <div class="modal-header">
     <h4 class="modal-title pull-left">Rol</h4>
     <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
-      <span aria-hidden="true">&times;</span>
+        <span aria-hidden="true">&times;</span>
     </button>
 </div>
-<div class="modal-body" [ngClass]="{'load-page-visibility':!loadPage}">
+<div class="modal-body" [ngClass]="{'load-page-visibility':!loadRole}">
     <div class="row">
         <div class="col-md-8 offset-2">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                    <b>Nombre:</b> <span class="pull-right">{{ role?.name }}</span>
+                    <b>Nombre:</b> <span class="pull-right">{{ role.name }}</span>
                 </li>
                 <li class="list-group-item">
-                    <b>Descripción:</b> <span class="pull-right">{{ role?.description }}</span>
+                    <b>Descripción:</b> <span class="pull-right">{{ role.description }}</span>
                 </li>
                 <li class="list-group-item">
                     <b>Estado:</b>
-                    <div class="pull-right badge badge-success" *ngIf="role?.status == true">Habilitado</div>
-                    <div class="pull-right badge badge-danger" *ngIf="role?.status == false">Deshabilitado</div>
+                    <div class="pull-right badge badge-success" *ngIf="role.status == true">Habilitado</div>
+                    <div class="pull-right badge badge-danger" *ngIf="role.status == false">Deshabilitado</div>
                 </li>
                 <li class="list-group-item">
                 </li>
@@ -30,7 +30,7 @@
                 <li class="list-group-item">
                     <b>Permisos:</b>
                     <div class="row">
-                        <div class="col-md-4" *ngFor="let permission of role?.permissions; let i = index">
+                        <div class="col-md-4" *ngFor="let permission of role.permissions; let i = index">
                             {{ i + nroInitial }}. <i>{{ permission.name }}</i>
                         </div>
                     </div>
@@ -39,11 +39,11 @@
         </div>
     </div>
 </div>
-<div class="align-middle-load" *ngIf="!loadPage">
+<div class="align-middle-load" *ngIf="!loadRole">
     <div class="d-inline-block">
-        <app-load [txtLoad]="txtLoad"></app-load>
+        <app-load [txtLoad]="txtStatusSecRole"></app-load>
     </div>
 </div>
-<div class="modal-footer" [ngClass]="{'load-page-visibility':!loadPage}">
+<div class="modal-footer" [ngClass]="{'load-page-visibility':!loadRole}">
     <button type="button" class="btn btn-outline-danger" (click)="bsModalRef.hide()">Cerrar</button>
 </div>

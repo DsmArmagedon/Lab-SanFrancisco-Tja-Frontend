@@ -1,11 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import Swal from 'sweetalert2';
-import { Meta } from 'src/app/models/meta.model';
 import { UserService } from 'src/app/services/service.index';
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { FormGroup } from '@angular/forms';
-import { User } from 'src/app/models/user.model';
+import { User } from 'src/app/models/user/user.model';
 import { UsersFilterComponent } from '../users-filter/users-filter.component';
 import { TitleCasePipe } from '@angular/common';
 import { SwalService } from 'src/app/services/common/swal.service';
@@ -14,19 +13,22 @@ import { Router } from '@angular/router';
 import { INDEX } from 'src/app/global-variables';
 import { UsersShowComponent } from '../users-show/users-show.component';
 import { GeneralService } from 'src/app/services/common/general.service';
+import { takeUntil, finalize } from 'rxjs/operators';
+import { Meta } from 'src/app/models/custom/meta.model';
+import { IfStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-users-index',
   templateUrl: './users-index.component.html',
   styles: []
 })
-export class UsersIndexComponent implements OnInit {
+export class UsersIndexComponent implements OnInit, OnDestroy {
   @ViewChild(UsersFilterComponent, { static: true }) usersFilter: UsersFilterComponent;
 
   users: User[] = [];
   maxSize: number = 3;
   meta: Meta;
-  loadPage: boolean = false;
+  loadUsers: boolean = false;
   totalItems: number;
   formFilter: FormGroup;
   perPage: number = 25;
@@ -34,7 +36,7 @@ export class UsersIndexComponent implements OnInit {
   public isCollapsed = false;
   page: number;
   bsModalRef: BsModalRef;
-  subscription: Subscription;
+  private onDestroy = new Subject();
   constructor(private userService: UserService,
     private titleCase: TitleCasePipe,
     private swalService: SwalService,
@@ -53,23 +55,26 @@ export class UsersIndexComponent implements OnInit {
   showUsers(ci: string) {
     const initialState = {
       id: ci,
-      txtLoad: 'Cargando Usuario'
+      txtStatusSecUser: 'Cargando Usuario'
     }
     this.bsModalRef = this.modalService.show(UsersShowComponent, { initialState });
     this.bsModalRef.setClass('modal-lg');
   }
 
   indexUsers(): void {
-    this.loadPage = false;
-    this.userService.indexUsers(this.formFilter.value, this.perPage, this.currentPage).subscribe(
-      resp => {
-        this.users = resp.users;
-        this.meta = resp.meta;
-      },
-      () => this.toastr.error('Consulte con el Administrador.', 'Error al listar los USUARIOS.')
-    ).add(
-      () => this.loadPage = true
-    );
+    this.loadUsers = false;
+    this.userService.indexUsers(this.formFilter.value, this.perPage, this.currentPage)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadUsers = true)
+      )
+      .subscribe(
+        resp => {
+          this.users = resp.users;
+          this.meta = resp.meta;
+        },
+        () => this.toastr.error('Consulte con el Administrador.', 'Error al listar los USUARIOS.')
+      );
   }
 
   filter($event) {
@@ -99,21 +104,33 @@ export class UsersIndexComponent implements OnInit {
     ).then((result) => {
       if (result.value) {
         this.swalService.deleteLoad(title);
-        this.userService.destroyUsers(ci).subscribe(
-          resp => {
-            Swal.close();
-            this.toastr.success(`${title} ${resp.fullName.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente.`);
-            this.indexUsers();
-          },
-          err => {
-            this.swalService.deleteError(err.status, title);
-          }
-        );
+        this.userService.destroyUsers(ci)
+          .pipe(
+            takeUntil(this.onDestroy),
+            finalize(() => Swal.close())
+          ).subscribe(
+            resp => {
+              this.toastr.success(`${title} ${resp.fullName.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente.`);
+              this.indexUsers();
+            },
+            err => {
+              if (err.status === 406) {
+                this.toastr.error(`Prohibido eliminar el recurso, debido a que realizo TRANSACCIONES en otros recursos.`, `Error al eliminar: USUARIO`);
+              } else {
+                this.toastr.error('Consulte con el Administrador.', `Error al eliminar: USUARIO.`);
+              }
+            }
+          );
       }
     })
   }
 
   updateUsers(id: number) {
     this.router.navigate(['administration/users/update', id]);
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next(true);
+    this.onDestroy.complete();
   }
 }

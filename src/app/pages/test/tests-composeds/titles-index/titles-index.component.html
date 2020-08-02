@@ -1,13 +1,16 @@
 <div class="row">
 
     <div class="col-md-4 mb-1">
-        <button class="btn btn-outline-success btn-sm btn-block" (click)="showTestComplete()"><i class="fa fa-fw fa-eye"></i>Ver Prueba Completa</button>
+        <button class="btn btn-outline-success btn-sm btn-block" (click)="showTestComplete()"><i
+                class="fa fa-fw fa-eye"></i>Ver Prueba Completa</button>
     </div>
     <div class="col-md-4 mb-1">
-        <button class="btn btn-outline-warning btn-sm btn-block"><i class="fa fa-fw fa-print"></i>Imprimir Prueba Completa</button>
+        <button class="btn btn-outline-warning btn-sm btn-block"><i class="fa fa-fw fa-print"></i>Imprimir Prueba
+            Completa</button>
     </div>
     <div class="col-md-4 mb-1">
-        <button class="btn btn-outline-danger btn-sm btn-block" (click)="finish()"><i class="fa fa-fw fa-times"></i>Terminar</button>
+        <button class="btn btn-outline-danger btn-sm btn-block" (click)="finish()"><i
+                class="fa fa-fw fa-times"></i>Terminar</button>
     </div>
     <div class="w-100"></div>
     <div class="col-md-6">
@@ -18,15 +21,18 @@
                         <h5>Títulos</h5>
                     </div>
                     <div class="col-md-4 text-right">
-                        <button type="button" class="btn btn-outline-info btn-sm" [disabled]="testSelected == null" (click)="toUpdateTitles()"><i class="fa fa-fw fa-refresh"></i>Actualizar</button>
-                        <button type="button" class="btn btn-outline-success btn-sm ml-2" [disabled]="testSelected == null" (click)="storeTitles()"><i class="fa fa-fw fa-plus" ></i>Añadir</button>
+                        <button type="button" class="btn btn-outline-info btn-sm" [disabled]="idTestSelected == null"
+                            (click)="toUpdateTitles()"><i class="fa fa-fw fa-refresh"></i>Actualizar</button>
+                        <button type="button" class="btn btn-outline-success btn-sm ml-2"
+                            [disabled]="idTestSelected == null" (click)="storeTitles()"><i
+                                class="fa fa-fw fa-plus"></i>Añadir</button>
                     </div>
                 </div>
                 <hr>
                 <div class="row">
                     <div class="col-md-12">
                         <b>Prueba: </b>
-                        <span> {{ test | uppercase }}</span>
+                        <span> {{ nameTestSelected | uppercase }}</span>
                     </div>
                 </div>
 
@@ -49,7 +55,7 @@
                             Acciones
                         </td>
                     </thead>
-                    <ng-container *ngIf="loadTitle; then tbody; else load">
+                    <ng-container *ngIf="loadTitles; then tbody; else load">
                     </ng-container>
 
                     <ng-template #tbody>
@@ -57,7 +63,8 @@
                         </ng-container>
                         <ng-template #withValues>
                             <tbody>
-                                <tr *ngFor="let title of titles" [ngClass]="{'table-info': selectedRowIndex == title.id}">
+                                <tr *ngFor="let title of titles"
+                                    [ngClass]="{'table-info': selectedRowIndex == title.id}">
                                     <td>
                                         {{ title.name }}
                                     </td>
@@ -72,7 +79,9 @@
                                         </ng-template>
                                     </td>
                                     <td class="text-center">
-                                        <button class="btn btn-light btn-sm" *ngIf="title.note" popoverTitle="Nota" popover="{{title.note}}" placement="top" outsideClick="true"><i class="fa fa-fw fa-info"></i></button>
+                                        <button class="btn btn-light btn-sm" *ngIf="title.note" popoverTitle="Nota"
+                                            popover="{{title.note}}" placement="top" outsideClick="true"><i
+                                                class="fa fa-fw fa-info"></i></button>
                                     </td>
                                     <td class="text-center">
                                         <ng-container *ngIf="title.status; then habilitado; else deshabilitado">
@@ -85,9 +94,16 @@
                                         </ng-template>
                                     </td>
                                     <td class="text-right">
-                                        <button type="button" class="btn btn-warning btn-sm mr-1" (click)="showParameters(title)" [disabled]="disabledButtonListParameters" title="Mostrar Parámetros"><i class="fa fa-fw fa-list fa-xs" ></i> </button>
-                                        <button type="button" class="btn btn-info btn-sm mr-1" (click)="updateTitles(title)" title="Editar"><i class="fa fa-fw fa-edit fa-xs" ></i> </button>
-                                        <button type="button" class="btn btn-danger btn-sm" title="Eliminar"><i class="fa fa-fw fa-trash fa-xs"></i> </button>
+                                        <button type="button" class="btn btn-warning btn-sm mr-1"
+                                            (click)="showParameters(title)" [disabled]="disabledButtonListParameters"
+                                            title="Mostrar Parámetros"><i class="fa fa-fw fa-list fa-xs"></i> </button>
+                                        <button type="button" class="btn btn-info btn-sm mr-1"
+                                            (click)="updateTitles(title)" title="Editar"><i
+                                                class="fa fa-fw fa-edit fa-xs"></i> </button>
+                                        <button type="button" class="btn btn-danger btn-sm" title="Eliminar"
+                                            (click)="destroyTitles(title.id, title.name)"><i
+                                                class="fa fa-fw fa-trash fa-xs"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             </tbody>

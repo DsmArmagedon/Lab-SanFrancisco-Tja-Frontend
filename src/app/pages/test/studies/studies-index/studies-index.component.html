@@ -8,6 +8,7 @@
     <div class="col-md-6">
         <span>Mostrar </span>
         <select class="form-control-sm block" [(ngModel)]="perPage" (change)="changePerPage()">
+            <option value="2">2</option>
             <option value="25">25</option>
             <option value="50">50</option>
             <option value="100">100</option>
@@ -50,14 +51,14 @@
             Acciones
         </td>
     </thead>
-    <ng-container *ngIf="loadPage; then tbody; else load">
+    <ng-container *ngIf="loadStudies; then tbody; else load">
     </ng-container>
     <ng-template #tbody>
         <ng-container *ngIf="studies.length > 0; then withValues; else nothingValues">
         </ng-container>
         <ng-template #withValues>
             <tbody>
-                <tr *ngFor="let study of studies" [ngClass]="{'table-info': selectedRowIndex == study.id}">
+                <tr *ngFor="let study of studies">
                     <td>
                         {{ study.name | uppercase }}
                     </td>
@@ -106,7 +107,7 @@
         </tr>
     </ng-template>
 </table>
-<div class="row" [style.visibility]="loadPage && studies.length > 0 ? 'visible' : 'hidden'">
+<div class="row" [style.visibility]="loadStudies && studies.length > 0 ? 'visible' : 'hidden'">
     <div class="col-md-6">
         <pagination [boundaryLinks]="true" [totalItems]="meta.total" (pageChanged)="pageChanged($event)"
             [itemsPerPage]="meta.per_page" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;"

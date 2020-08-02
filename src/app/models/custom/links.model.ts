@@ -6,34 +6,34 @@ interface ILinks {
 }
 
 export class Links implements ILinks {
-    private _first: string;
-    private _last: string;
-    private _prev: string;
-    private _next: string;
+    private _first: string = null;
+    private _last: string = null;
+    private _prev: string = null;
+    private _next: string = null;
 
-    set first(first: string) {
-        this._first = first;
+    set first(value: string) {
+        this._first = value;
     }
     get first(): string {
         return this._first;
     }
 
-    set last(last: string) {
-        this._last = last;
+    set last(value: string) {
+        this._last = value;
     }
     get last(): string {
         return this._last;
     }
 
-    set prev(prev: string) {
-        this._prev = prev;
+    set prev(value: string) {
+        this._prev = value;
     }
     get prev(): string {
         return this._prev;
     }
 
-    set next(next: string) {
-        this._next = next;
+    set next(value: string) {
+        this._next = value;
     }
     get next(): string {
         return this._next;

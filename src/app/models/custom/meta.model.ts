@@ -9,67 +9,60 @@ interface IMeta {
 }
 
 export class Meta implements IMeta {
-    private _current_page: number;
-    private _from: number;
-    private _last_page: number;
-    private _path: string;
-    private _per_page: number;
-    private _to: number;
-    private _total: number;
+    private _current_page: number = null;
+    private _from: number = null;
+    private _last_page: number = null;
+    private _path: string = null;
+    private _per_page: number = null;
+    private _to: number = null;
+    private _total: number = null;
 
-    set current_page(current_page: number) {
-        this._current_page = current_page;
+    set current_page(value: number) {
+        this._current_page = value;
     }
-
     get current_page(): number {
         return this._current_page;
     }
 
-    set from(from: number) {
-        this._from = from;
+    set from(value: number) {
+        this._from = value;
     }
-
     get from(): number {
         return this._from;
     }
 
-    set last_page(last_page: number) {
-        this._last_page = last_page;
+    set last_page(value: number) {
+        this._last_page = value;
     }
-
     get last_page(): number {
         return this._last_page;
     }
 
-    set path(path: string) {
-        this._path = path;
+    set path(value: string) {
+        this._path = value;
     }
-
     get path(): string {
         return this._path;
     }
 
-    set per_page(per_page: number) {
-        this._per_page = per_page;
+    set per_page(value: number) {
+        this._per_page = value;
     }
-
     get per_page(): number {
         return this._per_page;
     }
 
-    set to(to: number) {
-        this._to = to;
+    set to(value: number) {
+        this._to = value;
     }
-
     get to(): number {
         return this._to;
     }
 
-    set total(total: number) {
-        this._total = total;
+    set total(value: number) {
+        this._total = value;
     }
-
     get total(): number {
         return this._total;
     }
- }
+}

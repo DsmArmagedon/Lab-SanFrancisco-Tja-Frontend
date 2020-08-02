@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, HostListener, OnDestroy } from '@angular/core';
 import { AuthenticationService } from '../../services/login/authentication.service';
-import { User } from '../../models/user.model';
+import { User } from '../../models/user/user.model';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -22,16 +22,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
       });
     this.sideBarToggle = true;
     this.dropdownActive = false;
-    
+
   }
-  @HostListener ('document:click', ['$event']) clickedOutActive( $event ) {
+  @HostListener('document:click', ['$event']) clickedOutActive($event) {
     if (this.dropdownActive) {
       this.dropdownActive = false;
     }
   }
 
   ngOnInit() {
-      this.authenticationService.loadUserAuth();
+    this.authenticationService.loadUserAuth();
   }
   active($event) {
     $event.preventDefault();
@@ -47,7 +47,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.userAuthenticateObservableSusc.unsubscribe();
   }
 
-  logout():void {
+  logout(): void {
     localStorage.clear();
     this.router.navigate(['/login']);
   }

@@ -2,9 +2,12 @@ import { Observable } from 'rxjs';
 import { URL_GLOBAL } from '../../config';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User, UserCollection } from 'src/app/models/user.model';
+import { User } from 'src/app/models/user/user.model';
 import { map } from 'rxjs/operators';
 import { Params } from '@angular/router';
+import { CompanyPosition } from 'src/app/models/company-position/company-position.model';
+import { Role } from 'src/app/models/role/role.model';
+import { UserCollection } from 'src/app/models/user/user-collection.model';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +31,11 @@ export class UserService {
     }
     return this.http.get<UserCollection>(url, { params }).pipe(
       map((resp: any) => {
+        resp.data = resp.data.map((user: User) => {
+          user.companyPosition = Object.assign(new CompanyPosition, user.companyPosition);
+          user.role = Object.assign(new Role, user.role);
+          return Object.assign(new User, user);
+        });
         return Object.assign(new UserCollection, resp);
       })
     );
@@ -37,12 +45,14 @@ export class UserService {
     let url = `${URL_GLOBAL}/users/${ci}`;
     const params: Params = {
       role: 'load',
-      role_select: 'name',
+      role_select: 'name,status',
       company_position: 'load',
-      company_position_select: 'name'
+      company_position_select: 'name,status'
     }
     return this.http.get<User>(url, { params }).pipe(
       map((resp: any) => {
+        resp.data.companyPosition = Object.assign(new CompanyPosition, resp.data.companyPosition);
+        resp.data.role = Object.assign(new Role, resp.data.role);
         return Object.assign(new User, resp.data);
       })
     );
@@ -50,7 +60,7 @@ export class UserService {
 
   storeUsers(user: User): Observable<User> {
     let url = `${URL_GLOBAL}/users`;
-    return this.http.post<User>(url, this.toFormData(user)).pipe(
+    return this.http.post<User>(url, this.toFormData(user.toJSON())).pipe(
       map((resp: any) => {
         return Object.assign(new User, resp.data);
       })
@@ -59,7 +69,7 @@ export class UserService {
 
   updateUsers(user: User): Observable<User> {
     let url = `${URL_GLOBAL}/users/${user.id}`;
-    let formDataUser = this.toFormData(user);
+    let formDataUser = this.toFormData(user.toJSON());
     formDataUser.append('_method', 'PUT');
     return this.http.post<User>(url, formDataUser).pipe(
       map((resp: any) => {
@@ -79,7 +89,6 @@ export class UserService {
 
   toFormData<T>(formValue: T) {
     let formData = new FormData();
-
     for (const key of Object.keys(formValue)) {
       const value = formValue[key];
       formData.append(key, value);

@@ -4,10 +4,10 @@
     </div>
 </div>
 <hr>
-<form [formGroup]="formUser" (ngSubmit)="saveFormUser()" autocomplete="off">
+<form [formGroup]="formUser" (ngSubmit)="saveFormUser()" autocomplete="on">
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-accent-info" [ngClass]="{'load-page-visibility':!loadPage}">
+            <div class="card card-accent-info" [ngClass]="{'load-page-visibility':!loadUser}">
                 <div class="card-body card-personality">
                     <div class="row">
                         <div class="col-md-8">
@@ -30,7 +30,7 @@
                                                 <i>El <b>Cédula de Identidad</b> debe contener menos de 7 caracteres</i>
                                             </div>
                                             <div *ngIf="ci.hasError('maxlength')">
-                                                <i>El <b>Cédula de Identidad</b> no debe contener más de 20
+                                                <i>El <b>Cédula de Identidad</b> no debe contener más de 50
                                                     caracteres.</i>
                                             </div>
                                             <div *ngIf="ci.hasError('validateUnique')">
@@ -86,7 +86,7 @@
                                                 <i>El <b>Nombres</b> es obligatorio.</i>
                                             </div>
                                             <div *ngIf="first_name.hasError('minlength')">
-                                                <i>El <b>Nombres</b> no debe contener más de 180 caracteres.</i>
+                                                <i>El <b>Nombres</b> no debe contener más de 100 caracteres.</i>
                                             </div>
                                             <div *ngIf="first_name.hasError('alphaSpace')">
                                                 <i>El <b>Nombres</b> solo permite letras.</i>
@@ -105,7 +105,7 @@
                                                 <i>El <b>Apellidos</b> es obligatorio.</i>
                                             </div>
                                             <div *ngIf="last_name.hasError('maxlength')">
-                                                <i>El <b>Apellidos</b> no debe contener más de 180 caracteres.</i>
+                                                <i>El <b>Apellidos</b> no debe contener más de 100 caracteres.</i>
                                             </div>
                                             <div *ngIf="last_name.hasError('alphaSpace')">
                                                 <i>El <b>Apellidos</b> solo permite letras.</i>
@@ -132,7 +132,7 @@
                                                 <i>El <b>Email</b> debe ser una dirección de correo válida.</i>
                                             </div>
                                             <div *ngIf="email.hasError('maxlength')">
-                                                <i>El <b>Email</b> no debe contener más de 180 caracteres.</i>
+                                                <i>El <b>Email</b> no debe contener más de 150 caracteres.</i>
                                             </div>
                                             <div *ngIf="email.hasError('validateUnique')">
                                                 <i>El valor del <b>Email</b> ya está en uso.</i>
@@ -150,7 +150,7 @@
                                             formControlName="job_title" id="job_title" type="text">
                                         <div class="text-invalid" *ngIf="gralService.validation(job_title)">
                                             <div *ngIf="job_title.hasError('maxlength')">
-                                                <i>El <b>Título Profesional</b> no debe contener más de 150
+                                                <i>El <b>Título Profesional</b> no debe contener más de 100
                                                     caracteres.</i>
                                             </div>
                                         </div>
@@ -167,7 +167,7 @@
                                                 <i>El <b>Dirección</b> es obligatorio.</i>
                                             </div>
                                             <div *ngIf="address.hasError('maxlength')">
-                                                <i>El <b>Dirección</b> no debe contener más de 180 caracteres.</i>
+                                                <i>El <b>Dirección</b> no debe contener más de 150 caracteres.</i>
                                             </div>
                                         </div>
                                     </div>
@@ -179,9 +179,11 @@
                                         <label for="role">Rol *</label>
                                         <app-load-input [loadInput]="loadRoles"></app-load-input>
                                         <ng-select formControlName="role_id" placeholder="Seleccione un Rol"
-                                            bindLabel="name" bindValue="id" *ngIf="loadRoles"
-                                            [ngClass]="{'invalid': gralService.validation(role_id)}" [items]="rolesDB"
-                                            [clearable]="false"></ng-select>
+                                            *ngIf="loadRoles" [ngClass]="{'invalid': gralService.validation(role_id)}"
+                                            [clearable]="false">
+                                            <ng-option [value]="role.id" *ngFor="let role of rolesDB">
+                                                {{ role.name | uppercase }}</ng-option>
+                                        </ng-select>
                                         <div class="text-invalid" *ngIf="gralService.validation(role_id)">
                                             <div *ngIf="role_id.hasError('required')">
                                                 <i>El <b>Rol</b> es obligatorio.</i>
@@ -194,9 +196,13 @@
                                         <label for="company_position">Cargo *</label>
                                         <app-load-input [loadInput]="loadCompanyPositions"></app-load-input>
                                         <ng-select formControlName="company_position_id" *ngIf="loadCompanyPositions"
-                                            placeholder="Seleccione un Cargo" bindLabel="name" bindValue="id"
+                                            placeholder="Seleccione un Cargo"
                                             [ngClass]="{'invalid': gralService.validation(company_position_id)}"
-                                            [items]="companyPositionsDB" [clearable]="false"></ng-select>
+                                            [clearable]="false">
+                                            <ng-option [value]="companyPosition.id"
+                                                *ngFor="let companyPosition of companyPositionsDB">
+                                                {{ companyPosition.name | uppercase }}</ng-option>
+                                        </ng-select>
                                         <div class="text-invalid" *ngIf="gralService.validation(company_position_id)">
                                             <div *ngIf="company_position_id.hasError('required')">
                                                 <i>El <b>Cargo</b> es obligatorio.</i>
@@ -217,7 +223,7 @@
                                                 <i>El <b>Teléfono</b> es obligatorio.</i>
                                             </div>
                                             <div *ngIf="phone.hasError('maxlength')">
-                                                <i>El <b>Teléfono</b> no debe contener más de 50 caracteres.</i>
+                                                <i>El <b>Teléfono</b> no debe contener más de 150 caracteres.</i>
                                             </div>
                                         </div>
                                     </div>
@@ -263,9 +269,9 @@
             </div>
         </div>
     </div>
-    <div class="align-middle-load-page" *ngIf="!loadPage">
+    <div class="align-middle-load-page" *ngIf="!loadUser">
         <div class="d-inline-block">
-            <app-load [txtLoad]="txtLoad"></app-load>
+            <app-load [txtLoad]="txtStatusSecUser"></app-load>
         </div>
     </div>
 

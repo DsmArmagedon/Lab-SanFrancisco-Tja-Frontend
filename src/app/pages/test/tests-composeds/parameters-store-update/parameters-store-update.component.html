@@ -5,13 +5,14 @@
     </button>
 </div>
 <form [formGroup]="formParameter" (ngSubmit)="saveFormParameter()" autocomplete="off">
-    <div class="modal-body" [ngClass]="{'load-page-visibility':!loadPage}">
+    <div class="modal-body" [ngClass]="{'load-page-visibility':!loadParameter}">
         <div class="row">
             <div class="col-sm-7 ">
                 <div class="form-group">
                     <label for="name">Nombre *</label>
                     <input type="hidden" formControlName="id">
-                    <input class="form-control" [ngClass]="{'invalid': gralService.validation(name)}" formControlName="name" id="name" type="text">
+                    <input class="form-control" [ngClass]="{'invalid': gralService.validation(name)}"
+                        formControlName="name" id="name" type="text">
                     <div class="text-validation" *ngIf="name.pending">
                         <i class="fa fa-spinner fa-spin"></i> Disponibilidad del Nombre
                     </div>
@@ -33,32 +34,39 @@
                     <label for="unit_id">Unidad de Medida <i>(Opc.)</i></label>
                     <app-load-input [loadInput]="loadUnits"></app-load-input>
                     <ng-select *ngIf="loadUnits" placeholder="Seleccione una Unidad" formControlName="unit_id">
-                        <ng-option value="unitDB.id" *ngFor="let unitDB of unitsDB"><span [innerHTML]="unitDB.display"></span></ng-option>
+                        <ng-option [value]="unit.id" *ngFor="let unit of unitsDB"><span
+                                [innerHTML]="unit.display"></span></ng-option>
                     </ng-select>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-7">
                 <div class="form-group">
-                    <label for="title_test_id">Título *</label>
+                    <label for="title_id">Título *</label>
                     <app-load-input [loadInput]="loadTitles"></app-load-input>
-                    <ng-select [clearable]="false" *ngIf="loadTitles" placeholder="Seleccione un Título" id="title_test_id" bindValue="id" bindLabel="name" [items]="titlesDB" formControlName="title_test_id"></ng-select>
-                    <div class="text-invalid" *ngIf="gralService.validation(title_test_id)">
-                        <div *ngIf="title_test_id.hasError('required')">
+                    <ng-select [clearable]="false" *ngIf="loadTitles" placeholder="Seleccione un Título" id="title_id"
+                        bindValue="id" bindLabel="name" [items]="titlesDB" formControlName="title_id"
+                        (change)="onChange($event)"></ng-select>
+                    <div class="text-invalid" *ngIf="gralService.validation(title_id)">
+                        <div *ngIf="title_id.hasError('required')">
                             <i>El <b>Título</b> es obligatorio.</i>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <div class="form-group">
                     <label for="type_data">Tipo de Dato *</label>
-                    <ng-select id="type_data" (change)="resetDefaultValue($event)" bindLabel="name" bindValue="id" [items]="typeDataDB" [searchable]="false" [clearable]="false" placeholder="Seleccione un Tipo de Dato" formControlName="type_data"></ng-select>
+                    <ng-select id="type_data" (change)="resetDefaultValue($event)" bindLabel="name" bindValue="id"
+                        [items]="typeDataDB" [searchable]="false" [clearable]="false"
+                        placeholder="Seleccione un Tipo de Dato" formControlName="type_data"></ng-select>
                 </div>
             </div>
             <div class="col-sm-12">
                 <div class="form-group">
                     <label for="reference_values">Valores de Referencia <i>(Opcional)</i></label>
-                    <textarea class="js form-control" style="resize: none;" [ngClass]="{'invalid': gralService.validation(reference_values)}" rows="4" formControlName="reference_values" id="reference_values"></textarea>
+                    <textarea class="js form-control" style="resize: none;"
+                        [ngClass]="{'invalid': gralService.validation(reference_values)}" rows="4"
+                        formControlName="reference_values" id="reference_values"></textarea>
                     <div class="text-invalid" *ngIf="gralService.validation(reference_values)">
                         <div *ngIf="reference_values.hasError('maxlength')">
                             <i>El <b>Valores de Referencia</b> no debe contener más de 180 caracteres.</i>
@@ -72,18 +80,24 @@
                     <label for="default_value">Valor por Defecto <i>(Opcional)</i></label>
                     <ng-container [ngSwitch]="type_data.value">
                         <div *ngSwitchCase="'opciones'">
-                            <ng-select placeholder="Seleccione un Valor" id="default_value" formControlName="default_value">
-                                <ng-option [value]="optionDB" *ngFor="let optionDB of optionsDB">{{optionDB}}</ng-option>
+                            <ng-select placeholder="Seleccione un Valor" id="default_value"
+                                formControlName="default_value">
+                                <ng-option [value]="optionDB" *ngFor="let optionDB of optionsDB">{{optionDB}}
+                                </ng-option>
                             </ng-select>
                         </div>
                         <div *ngSwitchCase="'texto'">
-                            <input class="form-control" [ngClass]="{'invalid': gralService.validation(type_data)}" formControlName="default_value" id="default_value" type="text">
+                            <input class="form-control" [ngClass]="{'invalid': gralService.validation(type_data)}"
+                                formControlName="default_value" id="default_value" type="text">
                         </div>
                         <div *ngSwitchCase="'parrafo'">
-                            <textarea class="js form-control" style="resize: none;" [ngClass]="{'invalid': gralService.validation(type_data)}" rows="3" formControlName="default_value" id="default_value"></textarea>
+                            <textarea class="js form-control" style="resize: none;"
+                                [ngClass]="{'invalid': gralService.validation(type_data)}" rows="3"
+                                formControlName="default_value" id="default_value"></textarea>
                         </div>
                         <div *ngSwitchCase="'numerico'">
-                            <input class="form-control" [ngClass]="{'invalid': gralService.validation(type_data)}" formControlName="default_value" id="default_value" type="number">
+                            <input class="form-control" [ngClass]="{'invalid': gralService.validation(type_data)}"
+                                formControlName="default_value" id="default_value" type="number">
                         </div>
                     </ng-container>
                 </div>
@@ -91,7 +105,9 @@
             <div class="col-md-12">
                 <div class="form-group" *ngIf="type_data.value === 'opciones'">
                     <label for="options">Opciones *</label>
-                    <tag-input placeholder="+  Opciones" (onRemove)="onRemoveOption($event)" (onAdd)="onAddOption($event)" [modelAsStrings]="true" secondaryPlaceholder="+ Nuevas opciones" formControlName="options">
+                    <tag-input placeholder="+  Opciones" (onRemove)="onRemoveOption($event)"
+                        (onAdd)="onAddOption($event)" [modelAsStrings]="true" secondaryPlaceholder="+ Nuevas opciones"
+                        formControlName="options">
                     </tag-input>
                     <div class="text-invalid" *ngIf="gralService.validation(options)">
                         <div *ngIf="options.hasError('required')">
@@ -106,24 +122,29 @@
                     <label for="statusTitle">Estado *</label>
                     <br>
                     <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" formControlName="status" [value]="1" id="statusParameterH" name="status">
+                        <input type="radio" class="custom-control-input" formControlName="status" [value]="1"
+                            id="statusParameterH" name="status">
                         <label class="custom-control-label" for="statusParameterH">Habilitado</label>
                     </div>
                     <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" formControlName="status" [value]="0" id="statusParameterD" name="status">
+                        <input type="radio" class="custom-control-input" formControlName="status" [value]="0"
+                            id="statusParameterD" name="status">
                         <label class="custom-control-label" for="statusParameterD">Deshabilitado</label>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="align-middle-load" *ngIf="!loadPage">
+    <div class="align-middle-load" *ngIf="!loadParameter">
         <div class="d-inline-block">
-            <app-load [txtLoad]="txtLoad"></app-load>
+            <app-load [txtLoad]="txtStatusSecParameter"></app-load>
         </div>
     </div>
-    <div class="modal-footer" [ngClass]="{'load-page-visibility': !loadPage}">
-        <button type="button" class="btn btn-outline-danger btn-sm" (click)="bsModalRef.hide()"><i class="fa fa-fw fa-times"></i>Cerrar</button>
-        <button type="submit" class="btn btn-primary btn-sm" [disabled]="formParameter.invalid || formParameter.pending"><i class="fa fa-save"></i> {{ btnStoreUpdate }}</button>
+    <div class="modal-footer" [ngClass]="{'load-page-visibility': !loadParameter}">
+        <button type="button" class="btn btn-outline-danger btn-sm" (click)="bsModalRef.hide()"><i
+                class="fa fa-fw fa-times"></i>Cerrar</button>
+        <button type="submit" class="btn btn-primary btn-sm"
+            [disabled]="formParameter.invalid || formParameter.pending"><i class="fa fa-save"></i>
+            {{ btnStoreUpdate }}</button>
     </div>
 </form>

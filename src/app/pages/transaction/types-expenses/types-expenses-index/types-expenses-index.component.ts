@@ -1,7 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { TypeExpense } from '../../../../models/type-expense.model';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Meta } from 'src/app/models/meta.model';
 import { TypesExpensesFilterComponent } from '../types-expenses-filter/types-expenses-filter.component';
 import { TypeExpenseService } from '../../../../services/type-expense/type-expense.service';
 import { ToastrService } from 'ngx-toastr';
@@ -10,23 +8,29 @@ import { SwalService } from '../../../../services/common/swal.service';
 import { GeneralService } from 'src/app/services/common/general.service';
 import { Router } from '@angular/router';
 import { INDEX } from 'src/app/global-variables';
+import { takeUntil, finalize } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { TypeExpense } from 'src/app/models/type-expense/type-expense.model';
+import { Meta } from 'src/app/models/custom/meta.model';
 
 @Component({
   selector: 'app-types-expenses-index',
   templateUrl: './types-expenses-index.component.html',
   styles: []
 })
-export class TypesExpensesIndexComponent implements OnInit {
+export class TypesExpensesIndexComponent implements OnInit, OnDestroy {
+  @ViewChild(TypesExpensesFilterComponent, { static: true }) typeExpenseFilter: TypesExpensesFilterComponent;
   public isCollapsed: boolean = false;
   public currentPage: number;
-  selectedRowIndex: number;
   formFilter: FormGroup;
   typeExpenses: TypeExpense[] = [];
   perPage: number = 25;
   maxSize: number = 3;
-  loadPage: boolean;
+  loadTypeExpenses: boolean;
   meta: Meta;
-  @ViewChild(TypesExpensesFilterComponent, { static: true }) typeExpenseFilter: TypesExpensesFilterComponent;
+
+  private onDestroy = new Subject();
+
   constructor(private typeExpenseService: TypeExpenseService,
     private toastr: ToastrService,
     private swalService: SwalService,
@@ -42,16 +46,19 @@ export class TypesExpensesIndexComponent implements OnInit {
   }
 
   indexTypeExpenses(): void {
-    this.loadPage = false;
-    this.typeExpenseService.indexTypeExpenses(this.formFilter.value, this.perPage, this.currentPage).subscribe(
-      resp => {
-        this.typeExpenses = resp.typeExpenses;
-        this.meta = resp.meta;
-      },
-      () => this.toastr.error('Consulte con el Administrador.', 'Error al listar los TIPOS DE GASTOS.')
-    ).add(
-      () => this.loadPage = true
-    );
+    this.loadTypeExpenses = false;
+    this.typeExpenseService.indexTypeExpenses(this.formFilter.value, this.perPage, this.currentPage)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadTypeExpenses = true)
+      )
+      .subscribe(
+        resp => {
+          this.typeExpenses = resp.typeExpenses;
+          this.meta = resp.meta;
+        },
+        () => this.toastr.error('Consulte con el Administrador.', 'Error al listar los TIPOS DE GASTOS.')
+      );
   }
 
   changePerPage(): void {
@@ -80,16 +87,18 @@ export class TypesExpensesIndexComponent implements OnInit {
       (result) => {
         if (result.value) {
           this.swalService.deleteLoad(title);
-          this.typeExpenseService.destroyTypeExpenses(id).subscribe(
-            resp => {
-              Swal.close();
-              this.toastr.success(`${title} ${resp.name.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente.`);
-              this.indexTypeExpenses();
-            },
-            err => {
-              this.swalService.deleteError(err.status, title);
-            }
-          );
+          this.typeExpenseService.destroyTypeExpenses(id)
+            .pipe(
+              takeUntil(this.onDestroy),
+              finalize(() => Swal.close())
+            )
+            .subscribe(
+              resp => {
+                this.toastr.success(`${title} ${resp.name.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente.`);
+                this.indexTypeExpenses();
+              },
+              () => this.toastr.error('Consulte con el Administrador.', `Error al eliminar: TIPO DE GASTO`)
+            );
         }
       }
     );
@@ -99,5 +108,10 @@ export class TypesExpensesIndexComponent implements OnInit {
     this.currentPage = 1;
     this.formFilter = event;
     this.indexTypeExpenses();
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next(true);
+    this.onDestroy.complete();
   }
 }

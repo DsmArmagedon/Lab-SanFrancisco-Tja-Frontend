@@ -5,10 +5,10 @@
                 <h5>Parámetros</h5>
             </div>
             <div class="col-md-4 text-right">
-                <button type="button" class="btn btn-outline-info btn-sm" [disabled]="titleSelected === undefined"
+                <button type="button" class="btn btn-outline-info btn-sm" [disabled]="idTitleSelected === null"
                     (click)="toUpdateParameters()"><i class="fa fa-fw fa-refresh"></i>Actualizar</button>
                 <button type="button" class="btn btn-outline-success btn-sm ml-2"
-                    [disabled]="testSelected === undefined" (click)="storeParameters()"><i
+                    [disabled]="idTestSelected === undefined" (click)="storeParameters()"><i
                         class="fa fa-fw fa-plus"></i>Añadir</button>
             </div>
         </div>
@@ -16,7 +16,7 @@
         <div class="row">
             <div class="col-md-12">
                 <b>Título: </b>
-                <span> {{ title | uppercase }}</span>
+                <span> {{ nameTitleSelected | uppercase }}</span>
             </div>
         </div>
         <table class="table table-sm mb-0 table-hover">
@@ -67,13 +67,17 @@
                             </td>
                             <td class="text-right">
                                 <button type="button" class="btn btn-dark btn-sm mr-1"
-                                    title="Agregar Valores Normales"><i class="fa fa-fw fa-cog fa-xs"></i></button>
-                                <button type="button" class="btn btn-success btn-sm mr-1" title="Mostrar"><i
+                                    (click)="normalValuesParameters()" title="Agregar Valores Normales"
+                                    *ngIf="parameter.type_data === typeData"><i
+                                        class="fa fa-fw fa-cog fa-xs"></i></button>
+                                <button type="button" class="btn btn-success btn-sm mr-1"
+                                    (click)="showParameters(parameter)" title="Mostrar"><i
                                         class="fa fa-fw fa-eye fa-xs"></i></button>
                                 <button type="button" class="btn btn-info btn-sm mr-1"
-                                    (click)="updateParameter(parameter)" title="Editar"><i
+                                    (click)="updateParameters(parameter)" title="Editar"><i
                                         class="fa fa-fw fa-edit fa-xs"></i></button>
-                                <button type="button" class="btn btn-danger btn-sm mr-0" title="Eliminar"><i
+                                <button type="button" class="btn btn-danger btn-sm mr-0"
+                                    (click)="destroyParameters(parameter.id, parameter.name)" title="Eliminar"><i
                                         class="fa fa-fw fa-trash fa-xs"></i></button>
                             </td>
                         </tr>
@@ -83,11 +87,11 @@
                     <tr>
                         <td colspan="5">
                             <div class="alert alert-success">
-                                <div class="row justify-content-center" *ngIf="titleSelected !== undefined">
+                                <div class="row justify-content-center" *ngIf="idTitleSelected !== null">
                                     <h5>No existen parámetros registrados.</h5>
                                 </div>
 
-                                <div class="row justify-content-center" *ngIf="titleSelected == undefined">
+                                <div class="row justify-content-center" *ngIf="idTitleSelected == null">
                                     <h5>Seleccione un Título.</h5>
                                 </div>
                             </div>

@@ -4,8 +4,8 @@
     </div>
 </div>
 <hr>
-<form [formGroup]="formRole" (ngSubmit)="saveFormRole()">
-    <div class="row" [ngClass]="{'load-page-visibility':!loadPage}">
+<form [formGroup]="formRole" (ngSubmit)="saveFormRole()" autocomplete="off">
+    <div class="row" [ngClass]="{'load-page-visibility':!loadRole}">
         <div class="col-md-4">
             <div class="card card-accent-info">
                 <div class="card-body card-personality">
@@ -43,7 +43,7 @@
                                     formControlName="description" id="description" rows="4"></textarea>
                                 <div class="text-invalid" *ngIf="gralService.validation(description)">
                                     <div *ngIf="description.hasError('maxlength')">
-                                        <i>El <b>Descripción</b> no debe contener más de 180 caracteres.</i>
+                                        <i>El <b>Descripción</b> no debe contener más de 255 caracteres.</i>
                                     </div>
                                 </div>
                             </div>
@@ -75,7 +75,7 @@
             </div>
         </div>
         <div class="col-md-8">
-            <div class="card card-accent-info" [ngClass]="{'load-page-visibility':!loadPagePermission}">
+            <div class="card card-accent-info" [ngClass]="{'load-page-visibility':!loadPermissions}">
                 <div class="card-body card-personality">
                     <div class="row">
                         <div class="col-md-12">
@@ -94,15 +94,18 @@
                             </div>
                             <accordion [isAnimated]="true" role="button">
                                 <accordion-group [isOpen]="isAccordionPermissionsOpen"
-                                    *ngFor="let permissions of permissionsDB">
+                                    *ngFor="let permissions of permissionsDB | keyvalue ">
                                     <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
-                                        <div class="pull-left float-left">{{ permissions.display }} <span
-                                                class="badge badge-secondary">New</span></div>
+                                        <div class="pull-left float-left">{{ permissions.value.display }} <span
+                                                class="badge badge-secondary"> {{permissions.value.select}} /
+                                                {{permissions.value.total}}</span>
+                                        </div>
                                     </button>
-                                    <div *ngFor="let permission of permissions.permissions">
+                                    <div *ngFor="let permission of permissions.value.permissions">
                                         <div class="custom-control custom-checkbox" formArrayName="permissions">
                                             <input type="checkbox" class="custom-control-input" id="{{permission.id}}"
-                                                [formControlName]="permission.index">
+                                                [formControlName]="permission.index"
+                                                (click)="updateSelectPermissions(permission, permissions.key)">
                                             <label class="custom-control-label"
                                                 for="{{permission.id}}"><b>{{ permission.name }} :
                                                 </b><i>{{ permission.description }}</i></label>
@@ -120,16 +123,16 @@
 
                 </div>
             </div>
-            <div class="align-middle-load" *ngIf="!loadPagePermission">
+            <div class="align-middle-load" *ngIf="!loadPermissions">
                 <div class="d-inline-block">
-                    <app-load [txtLoad]="txtLoadPermissions"></app-load>
+                    <app-load [txtLoad]="txtStatusSecPermissions"></app-load>
                 </div>
             </div>
         </div>
     </div>
-    <div class="align-middle-load-page" *ngIf="!loadPage">
+    <div class="align-middle-load-page" *ngIf="!loadRole">
         <div class="d-inline-block">
-            <app-load [txtLoad]="txtLoad"></app-load>
+            <app-load [txtLoad]="txtStatusSecRole"></app-load>
         </div>
     </div>
 </form>

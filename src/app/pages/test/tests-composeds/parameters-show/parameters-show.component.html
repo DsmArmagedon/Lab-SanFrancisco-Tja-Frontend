@@ -1,1 +1,50 @@
-<p>parameters-show works!</p>
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Parámetro</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <b>Nombre:</b> <span> {{ parameter.name }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Título:</b> <span> {{ parameter.title.name }}</span>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <b>Tipo de Dato:</b> <span> {{ parameter.type_data | typeData }}</span>
+                        </div>
+                        <div class="col-md-6">
+                            <b>Unidad:</b>&nbsp; <span [innerHTML]="parameter.unit.display"></span>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <b>Valores de Referencia:</b> <span> {{ parameter.reference_values }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Valor por Defecto:</b> <span> {{ parameter.default_value }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Opciones:</b>
+                    &nbsp;<span *ngFor="let option of parameter.options">
+                        <span class="badge badge-info">{{option}}</span> &nbsp;
+                    </span>
+                </li>
+                <li class="list-group-item">
+                    <b>Estado:</b>
+                    <span class="badge badge-success" *ngIf="parameter.status == true"> Activo</span>
+                    <span class="badge badge-danger" *ngIf="parameter.status == false"> Anulado</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-danger" (click)="bsModalRef.hide()">Cerrar</button>
+</div>

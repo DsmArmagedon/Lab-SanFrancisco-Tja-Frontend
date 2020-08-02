@@ -2,18 +2,18 @@ import { URL_GLOBAL } from './../../config';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Expense, ExpenseCollection } from 'src/app/models/expense.model';
+import { Expense } from 'src/app/models/expense/expense.model';
 import { map } from 'rxjs/operators';
 import { FormGroup } from '@angular/forms';
 import { Params } from '@angular/router';
 import { BaseService } from '../base/base.service';
+import { TypeExpense } from 'src/app/models/type-expense/type-expense.model';
+import { ExpenseCollection } from 'src/app/models/expense/expense-collection.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExpenseService extends BaseService {
-
-  expense: Expense = new Expense;
 
   constructor(private http: HttpClient) {
     super();
@@ -46,6 +46,10 @@ export class ExpenseService extends BaseService {
     }
     return this.http.get<ExpenseCollection>(url, { params }).pipe(
       map((resp: any) => {
+        resp.data = resp.data.map((expense: Expense) => {
+          expense.typeExpense = Object.assign(new TypeExpense, expense.typeExpense);
+          return Object.assign(new Expense, expense);
+        })
         return Object.assign(new ExpenseCollection, resp);
       })
     );
@@ -64,10 +68,11 @@ export class ExpenseService extends BaseService {
     let url = `${URL_GLOBAL}/expenses/${code}`;
     const params: Params = {
       type_expense: 'load',
-      type_expense_select: 'name',
+      type_expense_select: 'name,status',
     }
     return this.http.get<Expense>(url, { params }).pipe(
       map((resp: any) => {
+        resp.data.typeExpense = Object.assign(new TypeExpense, resp.data.typeExpense);
         return Object.assign(new Expense, resp.data);
       })
     );

@@ -14,15 +14,15 @@ interface IParameters {
 export class SwalService {
   constructor(private toastr: ToastrService) { }
   deleteOptions(name: string, title: string): {} {
-    return this.options({name: name, title: title, verb:'Eliminar'});
+    return this.options({ name: name, title: title, verb: 'Eliminar' });
   }
   deleteLoad(title: string): void {
-    this.load(title,'Eliminando');
+    this.load(title, 'Eliminando');
   }
-  
-  revokeRestoreLoad(title: string, type: string ): void {
+
+  revokeRestoreLoad(title: string, type: string): void {
     let typeVerb: string;
-    switch(type) {
+    switch (type) {
       case 'revoke':
         typeVerb = 'Anulando';
         break;
@@ -44,29 +44,15 @@ export class SwalService {
 
   }
 
-  deleteError(status: number, title: string): void {
-    Swal.close();
-    if(status == 406) {
-      this.toastr.error(`Prohibido eliminar el recurso, debido a que realizo TRANSACCIONES en otros recursos.`, `Error al eliminar: ${title.toUpperCase()}`);
-    } else {
-      this.toastr.error('Consulte con el Administrador.', `Error al eliminar: ${title.toUpperCase()}.`);
-    }
-  }
-
-  revokeRestoreError(title: string, option: string): void {
-    Swal.close();
-    this.toastr.error('Consulte con el Administrador.', `Error al ${option}: ${title.toUpperCase()}.`);
-  }
-
-  revokeRestoreOptions(name: string, title: string, option: string):{} {
-    return this.options({name:name, title: title, verb: option});
+  revokeRestoreOptions(name: string, title: string, option: string): {} {
+    return this.options({ name: name, title: title, verb: option });
   }
 
 
-  private options(parameters: IParameters):{} {
+  private options(parameters: IParameters): {} {
     return {
       title: `¿Esta seguro que desea ${parameters.verb}?`,
-      text: parameters.title+ ': ' + parameters.name,
+      text: parameters.title + ': ' + parameters.name,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',

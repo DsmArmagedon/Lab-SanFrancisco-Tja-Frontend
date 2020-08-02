@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { CompanyPositionService } from '../../../../services/company-position/company-position.service';
-import { CompanyPosition } from 'src/app/models/company-position.model';
+import { CompanyPosition } from 'src/app/models/company-position/company-position.model';
 import { ValidatorsPattern } from '../../../../validators/validators-pattern';
 import { ValidationsNameDirective } from '../../../../directives/validations-name.directive';
 import { ToastrService } from 'ngx-toastr';
 import { GeneralService } from 'src/app/services/common/general.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { STORE, UPDATE } from 'src/app/global-variables';
+import { Subject } from 'rxjs';
+import { takeUntil, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-companies-positions-store-update',
@@ -16,11 +18,13 @@ import { STORE, UPDATE } from 'src/app/global-variables';
 })
 export class CompaniesPositionsStoreUpdateComponent implements OnInit {
   formCompanyPosition: FormGroup;
-  txtLoad: string;
-  loadPage: boolean = true;
+  txtStatusSecCompanyPosition: string;
+  loadCompanyPosition: boolean = true;
   companyPosition: CompanyPosition;
   initialState: any;
   idCompanyPosition: number;
+
+  private onDestroy = new Subject();
 
   constructor(private companyPositionService: CompanyPositionService,
     private validationsDirective: ValidationsNameDirective,
@@ -46,13 +50,16 @@ export class CompaniesPositionsStoreUpdateComponent implements OnInit {
       id: new FormControl(null),
       name: new FormControl('', {
         validators: [Validators.required, Validators.maxLength(100), ValidatorsPattern.alphaNumericSpacePattern],
-        asyncValidators: [this.validationsDirective.validateUniqueCompanyPosition.bind(this.validationsDirective)]
+        asyncValidators: [this.validationsDirective.validateUniqueCompanyPosition()]
       }),
       description: new FormControl('', {
         validators: [Validators.maxLength(255)]
       }),
       status: new FormControl(1)
-    });
+    },
+      {
+        updateOn: 'blur'
+      });
   }
 
   assignValuesFormCompanyPosition(): void {
@@ -63,58 +70,63 @@ export class CompaniesPositionsStoreUpdateComponent implements OnInit {
   }
 
   getUpdate(): void {
-    this.txtLoad = this.initialState.txtLoad;
+    this.txtStatusSecCompanyPosition = this.initialState.txtLoad;
     this.getIdToParameterFromUrl();
-    this.loadPage = false;
-    this.companyPositionService.editShowCompanyPositions(this.idCompanyPosition).subscribe(
-      resp => {
-        this.companyPosition = resp;
-        this.assignValuesFormCompanyPosition();
-      },
-      () => {
-        this.toastr.error('Consulte con el Administrador', 'Error al mostrar el formulario para Actualizar el CARGO');
-        this.router.navigate(['administration/companies-positions/index']);
-      }
-    ).add(
-      () => this.loadPage = true
-    );
+    this.loadCompanyPosition = false;
+    this.companyPositionService.editShowCompanyPositions(this.idCompanyPosition)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadCompanyPosition = true)
+      )
+      .subscribe(
+        resp => {
+          this.companyPosition = resp;
+          this.assignValuesFormCompanyPosition();
+        },
+        () => {
+          this.toastr.error('Consulte con el Administrador', 'Error al mostrar el formulario para Actualizar el CARGO');
+          this.router.navigate(['administration/companies-positions/index']);
+        }
+      )
   }
 
   saveFormCompanyPosition(): void {
     if (this.formCompanyPosition.valid) {
-      this.loadPage = false;
-      if (!this.id.value) {
-        this.storeForm();
-      } else {
-        this.updateForm();
-      }
+      this.companyPosition = Object.assign(new CompanyPosition, this.formCompanyPosition.value);
+      this.loadCompanyPosition = false;
+      (!this.id.value) ? this.storeForm() : this.updateForm();
     }
   }
 
   storeForm(): void {
-    this.txtLoad = 'Guardando Cargo';
-    this.companyPositionService.storeCompanyPositions(this.formCompanyPosition.value).subscribe(
-      resp => {
-        this.resetFormCompanyPosition();
-        this.toastr.success(resp.name.toUpperCase(), 'CARGO Creado Correctamente');
-      },
-      () => this.toastr.error('Consulte con el Administrador.', 'Error al crear: CARGO.')
-    ).add(
-      () => this.loadPage = true
-    );
+    this.txtStatusSecCompanyPosition = 'Guardando Cargo';
+    this.companyPositionService.storeCompanyPositions(this.companyPosition)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadCompanyPosition = true)
+      ).subscribe(
+        resp => {
+          this.resetFormCompanyPosition();
+          this.toastr.success(resp.name.toUpperCase(), 'CARGO Creado Correctamente');
+        },
+        () => this.toastr.error('Consulte con el Administrador.', 'Error al crear: CARGO.')
+      )
   }
 
   updateForm(): void {
-    this.txtLoad = 'Actualizando Cargo';
-    this.companyPositionService.updateCompanyPositions(this.formCompanyPosition.value).subscribe(
-      resp => {
-        this.toastr.success(resp.name.toUpperCase(), 'CARGO Actualizado Correctamente');
-        this.router.navigate(['administration/companies-positions/index']);
-      },
-      () => this.toastr.error('Consulte con el Administrador.', 'Error al actualizar: CARGO.'),
-    ).add(
-      () => this.loadPage = true
-    );
+    this.txtStatusSecCompanyPosition = 'Actualizando Cargo';
+    this.companyPositionService.updateCompanyPositions(this.companyPosition)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadCompanyPosition = true)
+      )
+      .subscribe(
+        resp => {
+          this.toastr.success(resp.name.toUpperCase(), 'CARGO Actualizado Correctamente');
+          this.router.navigate(['administration/companies-positions/index']);
+        },
+        () => this.toastr.error('Consulte con el Administrador.', 'Error al actualizar: CARGO.'),
+      )
   }
 
   selectTypeFormStoreOrUpdate(): void {
@@ -143,8 +155,8 @@ export class CompaniesPositionsStoreUpdateComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    if (this.initialState.type == UPDATE) {
-      this.gralService.changeDisabled(true);
-    }
+    if (this.initialState.type == UPDATE) this.gralService.changeDisabled(true);
+    this.onDestroy.next(true);
+    this.onDestroy.complete();
   }
 }

@@ -7,7 +7,7 @@
 <form [formGroup]="formStudy" (ngSubmit)="saveFormStudy()">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card card-accent-info" [ngClass]="{'load-page-visibility':!loadPage}">
+            <div class="card card-accent-info" [ngClass]="{'load-page-visibility':!loadStudy}">
                 <div class="card-body card-personality">
                     <div class="row">
                         <div class="col-md-12">
@@ -26,6 +26,9 @@
                                     <div *ngIf="name.hasError('maxlength')">
                                         <i>El <b>Nombre</b> no debe contener más de 100 caracteres.</i>
                                     </div>
+                                    <div *ngIf="name.hasError('alphaSpace')">
+                                        <i>El <b>Nombre</b> solo permite letras.</i>
+                                    </div>
                                     <div *ngIf="name.hasError('validateUnique')">
                                         <i>El valor del <b>Nombre</b> ya está en uso.</i>
                                     </div>
@@ -40,7 +43,7 @@
                                     formControlName="description" id="description" rows="4"></textarea>
                                 <div class="text-invalid" *ngIf="gralService.validation(description)">
                                     <div *ngIf="description.hasError('maxlength')">
-                                        <i>El <b>Descripción</b> no debe contener más de 180 caracteres.</i>
+                                        <i>El <b>Descripción</b> no debe contener más de 255 caracteres.</i>
                                     </div>
                                 </div>
                             </div>
@@ -70,9 +73,9 @@
                     </div>
                 </div>
             </div>
-            <div class="align-middle-load" *ngIf="!loadPage">
+            <div class="align-middle-load" *ngIf="!loadStudy">
                 <div class="d-inline-block">
-                    <app-load [txtLoad]="txtLoad"></app-load>
+                    <app-load [txtLoad]="txtStatusSecStudy"></app-load>
                 </div>
             </div>
         </div>

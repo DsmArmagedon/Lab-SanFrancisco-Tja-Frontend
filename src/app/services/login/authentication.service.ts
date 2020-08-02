@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { URL_GLOBAL } from '../../config';
 import { Observable, Subject } from 'rxjs';
-import { User } from 'src/app/models/user.model';
+import { User } from 'src/app/models/user/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,19 +17,19 @@ export class AuthenticationService {
   }
 
   loadUserAuth(flag: boolean = false): void {
-    if(flag) {
-      this.userAuth().subscribe( resp => {
+    if (flag) {
+      this.userAuth().subscribe(resp => {
         this.user = resp;
-        localStorage.setItem('user',JSON.stringify(resp));
+        localStorage.setItem('user', JSON.stringify(resp));
         this.userAuthenticate.next(this.user);
       });
     } else {
       let userJson = JSON.parse(localStorage.getItem('user'));
-      this.user = Object.assign(new User(), userJson);
+      this.user = Object.assign(new User, userJson);
       this.userAuthenticate.next(this.user);
     }
   }
-  
+
   userAuth(): Observable<User> {
     let url = `${URL_GLOBAL}/profile`;
     const params = {
@@ -40,8 +40,8 @@ export class AuthenticationService {
       user_select: 'first_name,last_name,email,images'
     }
     return this.http.get(url, { params }).pipe(
-      map ((resp: any) => {
-        return Object.assign(new User(), resp.data) ;
+      map((resp: any) => {
+        return resp.data;
       })
     );
   }
@@ -49,19 +49,19 @@ export class AuthenticationService {
   privilegesAuthHeaders(): Observable<any> {
     let url = `${URL_GLOBAL}/privileges`;
     return this.http.get(url).pipe(
-      map ((resp: any) => {
+      map((resp: any) => {
         return resp.data;
       })
     );
   }
-  
+
   privilegesAuth(): Observable<any> {
     let url = `${URL_GLOBAL}/privileges`;
     const headers = new HttpHeaders({
-      'Authorization' : `${localStorage.getItem('token_type')} ${localStorage.getItem('access_token')}`
+      'Authorization': `${localStorage.getItem('token_type')} ${localStorage.getItem('access_token')}`
     });
-    return this.http.get(url,{headers}).pipe(
-      map ((resp: any) => {
+    return this.http.get(url, { headers }).pipe(
+      map((resp: any) => {
         return resp.data;
       })
     );

@@ -7,12 +7,53 @@
                 <input class="form-control" formControlName="username" id="username" type="text">
             </div>
             <div class="col-md-6">
-                <label for="states">Estados *</label>
-                <input formControlName="state" (typeaheadOnBlur)="typeaheadOnBlur($event)" [typeahead]="states" typeaheadOptionField="name" class="form-control">
+                <label for="state">Estados *</label>
+                <ng-template #customItemTemplate let-model="item">
+                    <h5>{{model.name}}</h5>
+                </ng-template>
+                <input type="hidden" formControlName="state">
+                <input [(ngModel)]="showState" [ngModelOptions]="{standalone: true}"
+                    (typeaheadOnBlur)="typeaheadOnBlur($event)" (typeaheadOnSelect)="onSelect($event)"
+                    [typeaheadItemTemplate]="customItemTemplate" [typeahead]="states" typeaheadOptionField="name"
+                    [typeaheadMinLength]="0" class="form-control">
+                <div class="invalid-feedback" *ngIf="gralService.validation(state)">
+                    <div *ngIf="state.hasError('typeaheadRequired')">
+                        <i>El <b>Nombre del Responsable</b> es obligatorio.</i>
+                    </div>
+                </div>
             </div>
             <div class="col-md-12">
-                <button type="button" class="btn btn-outline-danger btn-block" type="submit">Guardar</button>
+                <button type="button" class="btn btn-outline-danger btn-block" type="submit"
+                    [disabled]="formPrueba.invalid">Guardar</button>
             </div>
         </div>
+        Status: {{formPrueba.status}}
+    </form>
+    <form [formGroup]="formPatients" (ngSubmit)="saveFormPatients()" autocomplete="off">
+        <div class="row">
+            <div class="col-md-12">
+                <label for="patient">Pacientes *</label>
+                <ng-template #customItemTemplatePatient let-model="item">
+                    <h5>{{model.first_name}}</h5>
+                </ng-template>
+                <input type="hidden" formControlName="patient">
+                <input [(ngModel)]="showPatient" [ngModelOptions]="{standalone: true}" typeaheadWaitMs="1000"
+                    (typeaheadOnBlur)="typeaheadOnBlurPatient($event)" (typeaheadOnSelect)="onSelectPatient($event)"
+                    [typeaheadItemTemplate]="customItemTemplatePatient"
+                    (typeaheadLoading)="changeTypeaheadLoading($event)" [typeaheadAsync]="true" [typeahead]="patients"
+                    typeaheadOptionField="first_name" class="form-control">
+                <div class="invalid-feedback" *ngIf="gralService.validation(patient)">
+                    <div *ngIf="patient.hasError('required')">
+                        <i>El <b>Paciente</b> es obligatorio.</i>
+                    </div>
+                </div>
+                <div *ngIf="typeaheadLoading">Loading</div>
+            </div>
+            <div class="col-md-12">
+                <button type="button" class="btn btn-outline-danger btn-block" type="submit"
+                    [disabled]="formPatients.invalid || formPatients.pending">Guardar</button>
+            </div>
+        </div>
+        Status: {{formPatients.status}}
     </form>
 </div>

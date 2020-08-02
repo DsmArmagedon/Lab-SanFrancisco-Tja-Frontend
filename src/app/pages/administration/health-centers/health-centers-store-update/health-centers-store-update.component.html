@@ -7,7 +7,7 @@
 <form [formGroup]="formHealthCenter" (ngSubmit)="saveFormHealthCenter()" autocomplete="off">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card card-accent-info" [ngClass]="{'load-page-visibility':!loadPage}">
+            <div class="card card-accent-info" [ngClass]="{'load-page-visibility':!loadHealthCenter}">
                 <div class="card-body card-personality">
                     <div class="row">
                         <div class="col-md-12">
@@ -57,7 +57,7 @@
                                     formControlName="phone" id="phone" type="text">
                                 <div class="text-invalid" *ngIf="gralService.validation(phone)">
                                     <div *ngIf="phone.hasError('maxlength')">
-                                        <i>El <b>Teléfono</b> no debe contener más de 50 caracteres.</i>
+                                        <i>El <b>Teléfono</b> no debe contener más de 100 caracteres.</i>
                                     </div>
                                 </div>
                             </div>
@@ -70,7 +70,7 @@
                                     formControlName="information" id="information"></textarea>
                                 <div class="text-invalid" *ngIf="gralService.validation(information)">
                                     <div *ngIf="information.hasError('maxlength')">
-                                        <i>El <b>Información</b> no debe contener más de 180 caracteres.</i>
+                                        <i>El <b>Información</b> no debe contener más de 255 caracteres.</i>
                                     </div>
                                 </div>
                             </div>
@@ -101,9 +101,9 @@
                 </div>
             </div>
         </div>
-        <div class="align-middle-load" *ngIf="!loadPage">
+        <div class="align-middle-load" *ngIf="!loadHealthCenter">
             <div class="d-inline-block">
-                <app-load [txtLoad]="txtLoad" [width]="'120px'"></app-load>
+                <app-load [txtLoad]="txtStatusSecHealthCenter" [width]="'120px'"></app-load>
             </div>
         </div>
     </div>

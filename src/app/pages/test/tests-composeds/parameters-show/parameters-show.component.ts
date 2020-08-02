@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Parameter } from 'src/app/models/parameter/parameter.model';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-parameters-show',
@@ -7,7 +9,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ParametersShowComponent implements OnInit {
 
-  constructor() { }
+  parameter: Parameter;
+
+  constructor(public bsModalRef: BsModalRef) { }
 
   ngOnInit() {
   }

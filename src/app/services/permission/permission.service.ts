@@ -3,49 +3,41 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Permission } from '../../models/permission.model';
+import { Permission } from '../../models/permission/permission.model';
 import { Params } from '@angular/router';
+import { Resource } from 'src/app/models/custom/resource.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PermissionService {
-  objectListPermissions: any = [
-    {
-      resource: 'administration',
-      display: 'Administración',
-      permissions: []
-    },
-    {
-      resource: 'transaction',
-      display: 'Transacciones',
-      permissions: []
-    },
-    {
-      resource: 'test',
-      display: 'Pruebas',
-      permissions: []
-    },
-    {
-      resource: 'patient',
-      display: 'Pacientes',
-      permissions: []
-    },
-    {
-      resource: 'special',
-      display: 'Especiales',
-      permissions: []
-    }
-  ]
+
+  arrayResourcesDisplay: any = {
+    administration: 'Administración',
+    transaction: 'Transacción',
+    test: 'Pruebas',
+    patient: 'Pacientes',
+    special: 'Especiales'
+  }
+
+  objectListPermissions: any = {
+    administration: new Resource,
+    transaction: new Resource,
+    test: new Resource,
+    patient: new Resource,
+    special: new Resource
+  }
+
+  unusedPermissions: Array<string> = ['companies-positions.show', 'types-expenses.show', 'studies.show', 'types-expenses.show', 'health-centers.show'];
   index: number;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.initializeObjListPermissions();
+  }
 
   listPermissions(): Observable<Permission[]> {
     let url = `${URL_GLOBAL}/permissions`;
-    this.objectListPermissions.map(obj => {
-      obj.permissions = [];
-    });
+    this.initializeObjListPermissions();
     const params: Params = {
       permission_select: 'name,description,slug',
       permission_status: 1,
@@ -53,93 +45,83 @@ export class PermissionService {
     }
     return this.http.get<Permission[]>(url, { params }).pipe(
       map((resp: any) => {
-        let permissionsApp: [] = this.filterPermissions(resp.data);
+        let permissionsApp: Permission[] = this.filterPermissionsToShow(resp.data);
         this.addIndexPermissionAndChangeToList(permissionsApp);
         return this.objectListPermissions;
       })
     )
 
   }
-  filterPermissions(data: Array<any>): any {
-    let unusedPermissions = ['companies-positions.show', 'types-expenses.show', 'studies.show', 'types-expenses.show', 'health-centers.show'];
+  filterPermissionsToShow(data: Array<any>): any {
     return data.filter(permission => {
-      return unusedPermissions.includes(permission.slug) ? false : true;
+      return this.unusedPermissions.includes(permission.slug) ? false : true;
     });
   }
   addIndexPermissionAndChangeToList(data: Array<any>) {
     this.index = 0;
-    data.map((permission) => {
-      let objPermission: Permission = this.addIndexToConvertObject(permission);
+    data.forEach(permission => {
+      let objPermission: Permission = this.addIndexToObjectAssignPermission(permission);
       let type: string = objPermission.slug.split('.')[0];
-      switch (type) {
-        case 'users':
-        case 'roles':
-        case 'companies-positions':
-        case 'health-centers':
-          this.objectListPermissions[0].permissions.push(objPermission);
-          break;
-        case 'expenses':
-        case 'types-expenses':
-          this.objectListPermissions[1].permissions.push(objPermission);
-          break;
-        case 'tests':
-        case 'studies':
-          this.objectListPermissions[2].permissions.push(objPermission);
-          break;
-        case 'patients':
-          this.objectListPermissions[3].permissions.push(objPermission);
-          break;
-        default:
-          this.objectListPermissions[4].permissions.push(objPermission);
-          break;
-      }
+      this.switchResources(type, objPermission);
     });
 
   }
 
-  addIndexToConvertObject(permission: any): Permission {
+  switchResources(type: string, objPermission?: Permission) {
+    switch (type) {
+      case 'users':
+      case 'roles':
+      case 'companies-positions':
+      case 'health-centers':
+        this.objectListPermissions['administration'].total++;
+        this.objectListPermissions['administration'].permissions.push(objPermission);
+        break;
+      case 'expenses':
+      case 'types-expenses':
+        this.objectListPermissions['transaction'].total++;
+        this.objectListPermissions['transaction'].permissions.push(objPermission);
+        break;
+      case 'tests':
+      case 'studies':
+        this.objectListPermissions['test'].total++;
+        this.objectListPermissions['test'].permissions.push(objPermission);
+        break;
+      case 'patients':
+        this.objectListPermissions['patient'].total++;
+        this.objectListPermissions['patient'].permissions.push(objPermission);
+        break;
+      default:
+        this.objectListPermissions['special'].total++;
+        this.objectListPermissions['special'].permissions.push(objPermission);
+        break;
+    }
+  }
+
+  addIndexToObjectAssignPermission(permission: any): Permission {
     let obj: Permission = Object.assign(new Permission, permission);
     obj.index = this.index;
     this.index++;
     return obj;
   }
-  // listPermissions(): Observable<Permission[]> {
-  //   let url = `${URL_GLOBAL}/permissions`;
-  //   const params: Params = {
-  //     permission_select: 'name,description,slug',
-  //     permission_status: 1,
-  //     paginate: 'disabled'
-  //   }
-  //   return this.http.get<Permission[]>(url, { params }).pipe(
-  //     map((resp: any) => {
-  //       let data = resp.data.map((e) => {
-  //         let permission: Permission = Object.assign(new Permission, e);
-  //         let type = permission.slug.split('.')[0];
-  //         switch (type) {
-  //           case 'users':
-  //           case 'roles':
-  //           case 'companies-positions':
-  //             permission.resource = 'administration';
-  //             break;
-  //           case 'expenses':
-  //           case 'types-expenses':
-  //             permission.resource = 'transactions';
-  //             break;
-  //           case 'tests':
-  //           case 'studies':
-  //             permission.resource = 'tests';
-  //             break;
-  //           case 'patients':
-  //             permission.resource = 'patients';
-  //             break;
-  //           default:
-  //             permission.resource = 'specials';
-  //             break;
-  //         }
-  //         return permission
-  //       })
-  //       return data;
-  //     })
-  //   )
-  // }
+
+  resetListPermissionsSelect(): void {
+    for (const index in this.objectListPermissions) {
+      this.objectListPermissions[index].select = 0;
+    }
+  }
+
+  selectAllListPermissionsSelect(): void {
+    for (const index in this.objectListPermissions) {
+      this.objectListPermissions[index].select = this.objectListPermissions[index].total;
+    }
+  }
+
+  initializeObjListPermissions(): void {
+    for (const index in this.objectListPermissions) {
+      this.objectListPermissions[index].display = this.arrayResourcesDisplay[index];
+      this.objectListPermissions[index].total = 0;
+      this.objectListPermissions[index].select = 0;
+      this.objectListPermissions[index].permissions = [];
+    }
+  }
 }

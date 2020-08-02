@@ -1,9 +1,7 @@
-import { Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { RolesFilterComponent } from '../roles-filter/roles-filter.component';
-import { Role } from 'src/app/models/role.model';
 import { RoleService } from '../../../../services/role/role.service';
 import { FormGroup } from '@angular/forms';
-import { Meta } from 'src/app/models/meta.model';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { RolesShowComponent } from '../roles-show/roles-show.component';
 import Swal from 'sweetalert2';
@@ -12,13 +10,17 @@ import { SwalService } from '../../../../services/common/swal.service';
 import { Router } from '@angular/router';
 import { INDEX } from '../../../../global-variables';
 import { GeneralService } from 'src/app/services/common/general.service';
+import { takeUntil, finalize } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { Meta } from 'src/app/models/custom/meta.model';
+import { Role } from 'src/app/models/role/role.model';
 
 @Component({
   selector: 'app-roles-index',
   templateUrl: './roles-index.component.html',
   styles: []
 })
-export class RolesIndexComponent implements OnInit {
+export class RolesIndexComponent implements OnInit, OnDestroy {
   @ViewChild(RolesFilterComponent, { static: true }) rolesFilter: RolesFilterComponent;
   public isCollapsed: boolean = false;
   public currentPage: number;
@@ -26,10 +28,12 @@ export class RolesIndexComponent implements OnInit {
   meta: Meta;
   formFilter: FormGroup;
   perPage: number = 25;
-  loadPage: boolean;
+  loadRoles: boolean;
   roles: Role[] = [];
   maxSize: number = 3;
   bsModalRef: BsModalRef;
+
+  private onDestroy = new Subject();
   constructor(private roleService: RoleService,
     private modalService: BsModalService,
     private swalService: SwalService,
@@ -46,22 +50,25 @@ export class RolesIndexComponent implements OnInit {
   }
 
   indexRoles(): void {
-    this.loadPage = false;
-    this.roleService.indexRoles(this.formFilter.value, this.perPage, this.currentPage).subscribe(
-      resp => {
-        this.roles = resp.roles;
-        this.meta = resp.meta;
-      },
-      () => this.toastr.error('Consulte con el Administrador.', 'Error al listar los ROLES.')
-    ).add(
-      () => this.loadPage = true
-    );
+    this.loadRoles = false;
+    this.roleService.indexRoles(this.formFilter.value, this.perPage, this.currentPage)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadRoles = true)
+      )
+      .subscribe(
+        resp => {
+          this.roles = resp.roles;
+          this.meta = resp.meta;
+        },
+        () => this.toastr.error('Consulte con el Administrador.', 'Error al listar los ROLES.')
+      );
   }
 
   showRoles(id: number) {
     const initialState = {
       id: id,
-      txtLoad: 'Cargando Rol',
+      txtStatusSecRole: 'Cargando Rol',
       nroInitial: 1
     }
     this.bsModalRef = this.modalService.show(RolesShowComponent, { initialState });
@@ -75,16 +82,24 @@ export class RolesIndexComponent implements OnInit {
     ).then((result) => {
       if (result.value) {
         this.swalService.deleteLoad(title);
-        this.roleService.destroyRoles(id).subscribe(
-          resp => {
-            Swal.close();
-            this.toastr.success(`${title} ${resp.name.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente.`);
-            this.indexRoles();
-          },
-          err => {
-            this.swalService.deleteError(err.status, title);
-          }
-        );
+        this.roleService.destroyRoles(id)
+          .pipe(
+            takeUntil(this.onDestroy),
+            finalize(() => Swal.close())
+          )
+          .subscribe(
+            resp => {
+              this.toastr.success(`${title} ${resp.name.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente.`);
+              this.indexRoles();
+            },
+            err => {
+              if (err.status === 406) {
+                this.toastr.info('Prohibido eliminar el Administrador del Sistema.', 'Información');
+              } else {
+                this.toastr.error('Consulte con el Administrador.', `Error al eliminar: ROL`);
+              }
+            }
+          );
       }
     })
   }
@@ -111,5 +126,10 @@ export class RolesIndexComponent implements OnInit {
 
   updateRoles(id: number) {
     this.router.navigate(['administration/roles/update', id]);
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next(true);
+    this.onDestroy.complete();
   }
 }

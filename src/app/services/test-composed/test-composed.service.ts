@@ -1,11 +1,15 @@
 import { URL_GLOBAL } from './../../config';
 import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
-import { TestComposed, TestComposedCollection } from '../../models/test-composed.model';
+import { TestComposed } from '../../models/test-simple-composed/test-composed.model';
 import { Params } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { Meta } from 'src/app/models/meta.model';
+import { Study } from 'src/app/models/study/study.model';
+import { TestComposedCollection } from 'src/app/models/test-simple-composed/test-composed-collection.model';
+import { Title } from 'src/app/models/title/title.model';
+import { Parameter } from 'src/app/models/parameter/parameter.model';
+import { Unit } from 'src/app/models/unit/unit.model';
 
 interface IIdNameTestSelected {
   id: number,
@@ -59,11 +63,16 @@ export class TestComposedService {
     let url = `${URL_GLOBAL}/tests-composeds/${id}`;
 
     const params: Params = {
-      titles: 'load'
+      titles: 'load',
+      study: 'load',
+      study_select: 'name,status'
     }
 
     return this.http.get<TestComposed>(url, { params }).pipe(
       map((resp: any) => {
+        resp.data.study = Object.assign(new Study, resp.data.study);
+        resp.data.study_id = resp.data.study.id;
+        resp.data.titles = resp.data.titles.map((title: Title) => Object.assign(new Title, title))
         return Object.assign(new TestComposed, resp.data);
       })
     );
@@ -77,14 +86,22 @@ export class TestComposedService {
       titles: 'load',
       parameters: 'load',
       unit: 'load',
-      study_select: 'name',
+      study_select: 'name,status',
       title_select: 'name,print,note,status',
       test_select: 'name,price,status',
-      parameter_select: 'name,type_data,reference_values,options,default_value'
+      parameter_select: 'name,type_data,reference_values,options,default_value,status'
     }
 
     return this.http.get<TestComposed>(url, { params }).pipe(
       map((resp: any) => {
+        resp.data.study = Object.assign(new Study, resp.data.study);
+        resp.data.titles = resp.data.titles.map((title: Title) => {
+          title.parameters = title.parameters.map((parameter: Parameter) => {
+            parameter.unit = Object.assign(new Unit, parameter.unit);
+            return Object.assign(new Parameter, parameter);
+          });
+          return Object.assign(new Title, title);
+        })
         return Object.assign(new TestComposed, resp.data);
       })
     );

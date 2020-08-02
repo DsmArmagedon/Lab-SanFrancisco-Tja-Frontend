@@ -1,10 +1,11 @@
 import { URL_GLOBAL } from './../../config';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Unit, UnitCollection } from 'src/app/models/unit.model';
 import { HttpClient } from '@angular/common/http';
 import { Params } from '@angular/router';
 import { map } from 'rxjs/operators';
+import { Unit } from 'src/app/models/unit/unit.model';
+import { UnitCollection } from 'src/app/models/unit/unit-collection.model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,7 @@ export class UnitService {
 
     return this.http.get<UnitCollection>(url, { params }).pipe(
       map((resp: any) => {
+        resp.data = resp.data.map((unit: Unit) => Object.assign(new Unit, unit));
         return Object.assign(new UnitCollection, resp);
       })
     );
@@ -40,7 +42,6 @@ export class UnitService {
 
   editShowUnits(id: number): Observable<Unit> {
     let url = `${URL_GLOBAL}/units/${id}`;
-    console.log(url);
     return this.http.get<Unit>(url).pipe(
       map((resp: any) => {
         return Object.assign(new Unit, resp.data);
@@ -77,7 +78,7 @@ export class UnitService {
     }
     return this.http.get<UnitCollection>(url, { params }).pipe(
       map((resp: any) => {
-        return Object.assign(new UnitCollection, resp);
+        return resp.data.map((unit: Unit) => Object.assign(new Unit, unit));
       })
     );
   }

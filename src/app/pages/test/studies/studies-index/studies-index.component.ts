@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Study } from 'src/app/models/study.model';
-import { Meta } from 'src/app/models/meta.model';
+import { Study } from 'src/app/models/study/study.model';
 import { StudiesFilterComponent } from '../studies-filter/studies-filter.component';
 import { StudyService } from '../../../../services/study/study.service';
 import { ToastrService } from 'ngx-toastr';
@@ -10,6 +9,9 @@ import Swal from 'sweetalert2';
 import { GeneralService } from 'src/app/services/common/general.service';
 import { INDEX } from 'src/app/global-variables';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil, finalize } from 'rxjs/operators';
+import { Meta } from 'src/app/models/custom/meta.model';
 
 @Component({
   selector: 'app-studies-index',
@@ -17,17 +19,18 @@ import { Router } from '@angular/router';
   styles: []
 })
 export class StudiesIndexComponent implements OnInit {
+  @ViewChild(StudiesFilterComponent, { static: true }) studyFilter: StudiesFilterComponent;
+
   public isCollapsed: boolean = false;
   public currentPage: number;
-  selectedRowIndex: number;
   formFilter: FormGroup;
   studies: Study[] = [];
   perPage: number = 25;
   maxSize: number = 3;
-  loadPage: boolean;
+  loadStudies: boolean;
   meta: Meta;
 
-  @ViewChild(StudiesFilterComponent, { static: true }) studyFilter: StudiesFilterComponent;
+  private onDestroy = new Subject();
 
   constructor(private studyService: StudyService,
     private toastr: ToastrService,
@@ -44,16 +47,19 @@ export class StudiesIndexComponent implements OnInit {
   }
 
   indexStudies(): void {
-    this.loadPage = false;
-    this.studyService.indexStudies(this.formFilter.value, this.perPage, this.currentPage).subscribe(
-      resp => {
-        this.studies = resp.studies;
-        this.meta = resp.meta;
-      },
-      () => this.toastr.error('Consulte con el administrador.', 'Error al listar los ESTUDIOS.')
-    ).add(
-      () => this.loadPage = true
-    );
+    this.loadStudies = false;
+    this.studyService.indexStudies(this.formFilter.value, this.perPage, this.currentPage)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadStudies = true)
+      )
+      .subscribe(
+        resp => {
+          this.studies = resp.studies;
+          this.meta = resp.meta;
+        },
+        () => this.toastr.error('Consulte con el administrador.', 'Error al listar los ESTUDIOS.')
+      );
   }
 
   changePerPage(): void {
@@ -87,16 +93,18 @@ export class StudiesIndexComponent implements OnInit {
     ).then((result) => {
       if (result.value) {
         this.swalService.deleteLoad(title);
-        this.studyService.destroyStudies(id).subscribe(
-          resp => {
-            Swal.close();
-            this.toastr.success(`${title} ${resp.name.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente.`);
-            this.indexStudies();
-          },
-          err => {
-            this.swalService.deleteError(err.status, title);
-          }
-        );
+        this.studyService.destroyStudies(id)
+          .pipe(
+            takeUntil(this.onDestroy),
+            finalize(() => Swal.close())
+          )
+          .subscribe(
+            resp => {
+              this.toastr.success(`${title} ${resp.name.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente.`);
+              this.indexStudies();
+            },
+            () => this.toastr.error('Consulte con el Administrador.', `Error al eliminar: ESTUDIO.`)
+          );
       }
     })
   }

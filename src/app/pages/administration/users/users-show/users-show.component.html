@@ -1,10 +1,10 @@
 <div class="modal-header">
     <h4 class="modal-title pull-left">Usuario</h4>
     <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
-      <span aria-hidden="true">&times;</span>
+        <span aria-hidden="true">&times;</span>
     </button>
 </div>
-<div class="modal-body" [ngClass]="{'load-page-visibility':!loadPage}">
+<div class="modal-body" [ngClass]="{'load-page-visibility':!loadUser}">
     <div class="row">
         <div class="col-md-7 offset-1">
             <ul class="list-group list-group-flush">
@@ -52,11 +52,11 @@
         </div>
     </div>
 </div>
-<div class="align-middle-load" *ngIf="!loadPage">
+<div class="align-middle-load" *ngIf="!loadUser">
     <div class="d-inline-block">
-        <app-load [txtLoad]="txtLoad"></app-load>
+        <app-load [txtLoad]="txtStatusSecUser"></app-load>
     </div>
 </div>
-<div class="modal-footer" [ngClass]="{'load-page-visibility':!loadPage}">
+<div class="modal-footer" [ngClass]="{'load-page-visibility':!loadUser}">
     <button type="button" class="btn btn-outline-danger" (click)="bsModalRef.hide()">Cerrar</button>
 </div>

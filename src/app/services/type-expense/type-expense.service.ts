@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Type } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { TypeExpense, TypeExpenseCollection } from 'src/app/models/type-expense.model';
 import { map } from 'rxjs/operators';
 import { URL_GLOBAL } from './../../config';
 import { Params } from '@angular/router';
+import { TypeExpense } from 'src/app/models/type-expense/type-expense.model';
+import { TypeExpenseCollection } from 'src/app/models/type-expense/type-expense-collection.model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,7 @@ export class TypeExpenseService {
 
     return this.http.get<TypeExpenseCollection>(url, { params }).pipe(
       map((resp: any) => {
+        resp.data = resp.data.map((typeExpense: TypeExpense) => Object.assign(new TypeExpense, typeExpense));
         return Object.assign(new TypeExpenseCollection, resp);
       })
     );
@@ -67,7 +69,7 @@ export class TypeExpenseService {
     );
   }
 
-  listTypeExpenses(): Observable<TypeExpenseCollection> {
+  listTypeExpenses(): Observable<TypeExpense[]> {
     let url = `${URL_GLOBAL}/types-expenses`;
     const params: Params = {
       type_expense_select: 'name',
@@ -76,9 +78,9 @@ export class TypeExpenseService {
       type_expense_order_by: 'name',
       type_expense_order_option: 'ASC'
     }
-    return this.http.get<TypeExpenseCollection>(url, { params }).pipe(
+    return this.http.get<TypeExpense[]>(url, { params }).pipe(
       map((resp: any) => {
-        return Object.assign(new TypeExpenseCollection, resp);
+        return resp.data.map((typeExpense: TypeExpense) => Object.assign(new TypeExpense, typeExpense));
       })
     );
   }

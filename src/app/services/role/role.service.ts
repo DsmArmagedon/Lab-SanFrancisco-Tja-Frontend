@@ -2,9 +2,11 @@ import { URL_GLOBAL } from '../../config';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Role, RoleCollection } from 'src/app/models/role.model';
 import { map } from 'rxjs/operators';
 import { Params } from '@angular/router';
+import { Role } from 'src/app/models/role/role.model';
+import { RoleCollection } from 'src/app/models/role/role-collection.model';
+import { Permission } from 'src/app/models/permission/permission.model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,21 +27,22 @@ export class RoleService {
     }
     return this.http.get<RoleCollection>(url, { params }).pipe(
       map((resp: any) => {
+        resp.data = resp.data.map((role: Role) => Object.assign(new Role, role));
         return Object.assign(new RoleCollection, resp);
       })
     );
   }
 
-  listRoles(): Observable<RoleCollection> {
+  listRoles(): Observable<Role[]> {
     let url = `${URL_GLOBAL}/roles`;
     const params: Params = {
       role_select: 'name',
       role_status: 1,
       paginate: 'disabled'
     }
-    return this.http.get<RoleCollection>(url, { params }).pipe(
+    return this.http.get<Role[]>(url, { params }).pipe(
       map((resp: any) => {
-        return Object.assign(new RoleCollection, resp);
+        return resp.data.map((role: Role) => Object.assign(new Role, role));
       })
     )
   }
@@ -54,6 +57,7 @@ export class RoleService {
 
     return this.http.get<Role>(url, { params }).pipe(
       map((resp: any) => {
+        resp.data.permissions = resp.data.permissions.map((permission: Permission) => Object.assign(new Permission, permission));
         return Object.assign(new Role, resp.data);
       })
     )

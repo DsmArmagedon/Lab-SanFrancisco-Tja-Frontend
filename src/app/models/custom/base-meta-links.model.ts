@@ -12,17 +12,17 @@ export class BaseMetaLinks implements IBaseMetaLinks {
 
     constructor() { }
 
-    set meta(meta: Meta) {
-        this._meta = meta;
-    }
     get meta(): Meta {
         return this._meta;
     }
-
-    set links(links: Links) {
-        this._links = links;
+    set meta(value: Meta) {
+        this._meta = Object.assign(new Meta, value);
     }
+
     get links(): Links {
         return this._links;
+    }
+    set links(value: Links) {
+        this._links = Object.assign(new Links, value);
     }
 }

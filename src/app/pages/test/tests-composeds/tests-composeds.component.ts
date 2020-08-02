@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GeneralService } from 'src/app/services/common/general.service';
 import { TestComposedService } from 'src/app/services/test-composed/test-composed.service';
+import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tests-composeds',
@@ -17,18 +18,12 @@ export class TestsComposedsComponent implements OnInit {
   routeUpdate = 'test/tests-composeds/update';
 
   constructor(private gralService: GeneralService,
-              private testComposedService: TestComposedService, 
-              private router: Router) {
-    this.gralService.disabledUpdateObservable.subscribe(
-      resp => setTimeout( () => this.disabledUpdate = resp, 0 )
-    );
-    this.gralService.selectBtnActiveObservable.subscribe(
-      resp => setTimeout( () => this.radioModel = resp, 0 )
-    );
-    this.testComposedService.disabledShowObservable.subscribe(
-      resp => setTimeout( () => this.disabledShow = resp, 0)
-    );
-   }
+    private testComposedService: TestComposedService,
+    private router: Router) {
+    this.gralService.disabledUpdateObservable.pipe(delay(0)).subscribe(resp => this.disabledUpdate = resp);
+    this.gralService.selectBtnActiveObservable.pipe(delay(0)).subscribe(resp => this.radioModel = resp);
+    this.testComposedService.disabledShowObservable.pipe(delay(0)).subscribe(resp => this.disabledShow = resp);
+  }
 
   ngOnInit() {
   }

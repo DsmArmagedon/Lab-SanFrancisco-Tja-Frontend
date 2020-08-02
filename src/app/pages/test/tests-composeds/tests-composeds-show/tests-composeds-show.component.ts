@@ -1,10 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { TestComposed } from 'src/app/models/test-composed.model';
+import { TestComposed } from 'src/app/models/test-simple-composed/test-composed.model';
 import { ToastrService } from 'ngx-toastr';
 import { TestComposedService } from '../../../../services/test-composed/test-composed.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SHOW } from '../../../../global-variables';
 import { GeneralService } from 'src/app/services/common/general.service';
+import { takeUntil, finalize } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { Study } from 'src/app/models/study/study.model';
 
 @Component({
   selector: 'app-tests-composeds-show',
@@ -17,34 +20,46 @@ export class TestsComposedsShowComponent implements OnInit, OnDestroy {
 
   id: number;
 
-  loadPage: boolean;
-  txtLoad: string;
+  loadTestComposed: boolean;
+  txtStatusSecTestComposed: string;
+
+  private onDestroy = new Subject();
 
   constructor(private testComposedService: TestComposedService,
     private toastr: ToastrService,
     private route: ActivatedRoute,
     private router: Router,
     private gralService: GeneralService) {
-    this.txtLoad = 'Cargando Prueba Compuesta';
-    this.route.paramMap.subscribe(
-      params => this.id = parseInt(params.get('id'))
-    );
+    this.testComposed.study = new Study;
+    this.txtStatusSecTestComposed = 'Cargando Prueba Compuesta';
+    this.getIdToParameterFromUrl();
   }
 
   ngOnInit() {
     this.testComposedService.changeDisabledShow(false);
     this.gralService.changeSelectBtn(SHOW);
-    this.loadPage = false;
-    this.testComposedService.showTests(this.id).subscribe(
-      resp => this.testComposed = resp,
-      () => this.toastr.error('Consulte con el Administrador.', 'Error al mostrar la Prueba Compuesta.')
-    ).add(
-      () => this.loadPage = true
+    this.loadTestComposed = false;
+    this.testComposedService.showTests(this.id)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadTestComposed = true)
+      )
+      .subscribe(
+        resp => this.testComposed = resp,
+        () => this.toastr.error('Consulte con el Administrador.', 'Error al mostrar la Prueba Compuesta.')
+      );
+  }
+
+  getIdToParameterFromUrl(): void {
+    this.route.paramMap.subscribe(
+      params => this.id = parseInt(params.get('id'))
     );
   }
 
   ngOnDestroy() {
     this.testComposedService.changeDisabledShow(true);
+    this.onDestroy.next(true);
+    this.onDestroy.complete();
   }
 
   finish(): void {

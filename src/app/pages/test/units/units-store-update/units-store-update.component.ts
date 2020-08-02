@@ -1,12 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Unit } from 'src/app/models/unit.model';
 import { UnitService } from '../../../../services/unit/unit.service';
 import { ToastrService } from 'ngx-toastr';
 import { GeneralService } from 'src/app/services/common/general.service';
 import { ValidationsNameDirective } from 'src/app/directives/validations-name.directive';
 import { ActivatedRoute, Router } from '@angular/router';
 import { STORE, UPDATE } from 'src/app/global-variables';
+import { Subject } from 'rxjs';
+import { takeUntil, finalize } from 'rxjs/operators';
+import { Unit } from 'src/app/models/unit/unit.model';
 
 @Component({
   selector: 'app-units-store-update',
@@ -17,11 +19,14 @@ import { STORE, UPDATE } from 'src/app/global-variables';
 export class UnitsStoreUpdateComponent implements OnInit, OnDestroy {
   formUnit: FormGroup;
   unit: Unit;
-  txtLoad: string;
-  loadPage: boolean = true;
+  txtStatusSecUnit: string;
+  loadUnit: boolean = true;
   display: string;
   idUnit: number;
   initialState: any;
+
+  private onDestroy = new Subject();
+
   constructor(private unitService: UnitService,
     private toastr: ToastrService,
     public gralService: GeneralService,
@@ -41,11 +46,14 @@ export class UnitsStoreUpdateComponent implements OnInit, OnDestroy {
       id: new FormControl(null),
       name: new FormControl('', {
         validators: [Validators.required, Validators.maxLength(100)],
-        asyncValidators: [this.validationsDirective.validateUniqueUnit.bind(this.validationsDirective)]
+        asyncValidators: [this.validationsDirective.validateUniqueUnit()]
       }),
       note: new FormControl('', [Validators.maxLength(255)]),
       status: new FormControl(1)
-    });
+    },
+      {
+        updateOn: 'blur'
+      });
   }
 
   get id() { return this.formUnit.get('id'); }
@@ -62,58 +70,64 @@ export class UnitsStoreUpdateComponent implements OnInit, OnDestroy {
   }
 
   getUpdate(): void {
-    this.txtLoad = this.initialState.txtLoad;
+    this.txtStatusSecUnit = this.initialState.txtLoad;
     this.getIdToParameterFromUrl();
-    this.loadPage = false;
-    this.unitService.editShowUnits(this.idUnit).subscribe(
-      resp => {
-        this.unit = resp;
-        this.assignValuesFormUnit();
-      },
-      () => {
-        this.toastr.error('Consulte con el Administrador', 'Error al mostrar el formulario para Actualizar el UNIDAD DE MEDIDA');
-        this.router.navigate(['administration/units/index']);
-      }
-    ).add(
-      () => this.loadPage = true
-    );
+    this.loadUnit = false;
+    this.unitService.editShowUnits(this.idUnit)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadUnit = true)
+      )
+      .subscribe(
+        resp => {
+          this.unit = resp;
+          this.assignValuesFormUnit();
+        },
+        () => {
+          this.toastr.error('Consulte con el Administrador', 'Error al mostrar el formulario para Actualizar el UNIDAD DE MEDIDA');
+          this.router.navigate(['administration/units/index']);
+        }
+      );
   }
 
   saveFormUnit(): void {
     if (this.formUnit.valid) {
-      this.loadPage = false;
-      if (!this.id.value) {
-        this.storeForm();
-      } else {
-        this.updateForm();
-      }
+      this.unit = Object.assign(new Unit, this.formUnit.value);
+      this.loadUnit = false;
+      !this.id.value ? this.storeForm() : this.updateForm();
     }
   }
 
   storeForm(): void {
-    this.txtLoad = 'Guardando Unidad de Medida';
-    this.unitService.storeUnits(this.formUnit.value).subscribe(
-      resp => {
-        this.toastr.success(resp.name, 'UNIDAD DE MEDIDA Creado Correctamente');
-        this.resetFormUnit();
-      },
-      () => this.toastr.error('Consulte con el Administrador.', 'Error al crear: UNIDAD DE MEDIDA.')
-    ).add(
-      () => this.loadPage = true
-    );
+    this.txtStatusSecUnit = 'Guardando Unidad de Medida';
+    this.unitService.storeUnits(this.unit)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadUnit = true)
+      )
+      .subscribe(
+        resp => {
+          this.toastr.success(resp.name, 'UNIDAD DE MEDIDA Creado Correctamente');
+          this.resetFormUnit();
+        },
+        () => this.toastr.error('Consulte con el Administrador.', 'Error al crear: UNIDAD DE MEDIDA.')
+      );
   }
 
   updateForm(): void {
-    this.txtLoad = 'Actualizando Unidad de Medida';
-    this.unitService.updateUnits(this.formUnit.value).subscribe(
-      resp => {
-        this.toastr.success(resp.name, 'UNIDAD DE MEDIDA Actualizado Correctamente');
-        this.router.navigate(['test/units/index']);
-      },
-      () => this.toastr.error('Consulte con el Administrador.', 'Error al actualizar: UNIDAD DE MEDIDA.'),
-    ).add(
-      () => this.loadPage = true
-    );
+    this.txtStatusSecUnit = 'Actualizando Unidad de Medida';
+    this.unitService.updateUnits(this.unit)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadUnit = true)
+      )
+      .subscribe(
+        resp => {
+          this.toastr.success(resp.name, 'UNIDAD DE MEDIDA Actualizado Correctamente');
+          this.router.navigate(['test/units/index']);
+        },
+        () => this.toastr.error('Consulte con el Administrador.', 'Error al actualizar: UNIDAD DE MEDIDA.'),
+      );
   }
 
   showDisplay(): void {
@@ -210,8 +224,8 @@ export class UnitsStoreUpdateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.initialState.type == UPDATE) {
-      this.gralService.changeDisabled(true);
-    }
+    if (this.initialState.type == UPDATE) this.gralService.changeDisabled(true);
+    this.onDestroy.next(true);
+    this.onDestroy.complete();
   }
 }

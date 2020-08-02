@@ -1,7 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Meta } from 'src/app/models/meta.model';
-import { Unit } from 'src/app/models/unit.model';
 import { ToastrService } from 'ngx-toastr';
 import { SwalService } from '../../../../services/common/swal.service';
 import { UnitsFilterComponent } from '../units-filter/units-filter.component';
@@ -10,25 +8,29 @@ import Swal from 'sweetalert2';
 import { GeneralService } from 'src/app/services/common/general.service';
 import { INDEX } from 'src/app/global-variables';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil, finalize } from 'rxjs/operators';
+import { Meta } from 'src/app/models/custom/meta.model';
+import { Unit } from 'src/app/models/unit/unit.model';
 
 @Component({
   selector: 'app-units-index',
   templateUrl: './units-index.component.html',
   styles: []
 })
-export class UnitsIndexComponent implements OnInit {
+export class UnitsIndexComponent implements OnInit, OnDestroy {
+  @ViewChild(UnitsFilterComponent, { static: true }) unitFilter: UnitsFilterComponent;
 
   public isCollapsed: boolean = false;
   public currentPage: number;
-  selectedRowIndex: number;
   formFilter: FormGroup;
   units: Unit[] = [];
   perPage: number = 25;
   maxSize: number = 3;
-  loadPage: boolean;
+  loadUnits: boolean;
   meta: Meta;
 
-  @ViewChild(UnitsFilterComponent, { static: true }) unitFilter: UnitsFilterComponent;
+  private onDestroy = new Subject();
 
   constructor(private unitService: UnitService,
     private toastr: ToastrService,
@@ -45,16 +47,19 @@ export class UnitsIndexComponent implements OnInit {
   }
 
   indexUnits(): void {
-    this.loadPage = false;
-    this.unitService.indexUnits(this.formFilter.value, this.perPage, this.currentPage).subscribe(
-      resp => {
-        this.units = resp.units;
-        this.meta = resp.meta;
-      },
-      () => this.toastr.error('Consulte con el administrador.', 'Error al listar las UNIDADES.')
-    ).add(
-      () => this.loadPage = true
-    );
+    this.loadUnits = false;
+    this.unitService.indexUnits(this.formFilter.value, this.perPage, this.currentPage)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadUnits = true)
+      )
+      .subscribe(
+        resp => {
+          this.units = resp.units;
+          this.meta = resp.meta;
+        },
+        () => this.toastr.error('Consulte con el administrador.', 'Error al listar las UNIDADES.')
+      );
   }
 
   changePerPage(): void {
@@ -88,17 +93,24 @@ export class UnitsIndexComponent implements OnInit {
     ).then((result) => {
       if (result.value) {
         this.swalService.deleteLoad(title);
-        this.unitService.destroyUnits(id).subscribe(
-          resp => {
-            Swal.close();
-            this.toastr.success(`${title} ${resp.name.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente.`);
-            this.indexUnits();
-          },
-          err => {
-            this.swalService.deleteError(err.status, title);
-          }
-        );
+        this.unitService.destroyUnits(id)
+          .pipe(
+            takeUntil(this.onDestroy),
+            finalize(() => Swal.close())
+          )
+          .subscribe(
+            resp => {
+              this.toastr.success(`${title} ${resp.name.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente.`);
+              this.indexUnits();
+            },
+            () => this.toastr.error('Consulte con el Administrador.', `Error al eliminar: UNIDADES DE MEDIDA`)
+          );
       }
     })
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next(true);
+    this.onDestroy.complete();
   }
 }

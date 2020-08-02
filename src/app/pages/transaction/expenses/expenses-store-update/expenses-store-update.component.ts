@@ -4,8 +4,7 @@ import { defineLocale } from 'ngx-bootstrap/chronos';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { esLocale } from 'ngx-bootstrap/locale';
 import { ToastrService } from 'ngx-toastr';
-import { Expense } from 'src/app/models/expense.model';
-import { TypeExpense } from 'src/app/models/type-expense.model';
+import { Expense } from 'src/app/models/expense/expense.model';
 import { DOCUMENTS, STORE, UPDATE } from '../../../../global-variables';
 import { ExpenseService } from '../../../../services/expense/expense.service';
 import { FunctionService } from '../../../../services/common/function.service';
@@ -13,6 +12,10 @@ import { TypeExpenseService } from '../../../../services/type-expense/type-expen
 import { ValidatorsGlobal } from '../../../../validators/validators-global';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GeneralService } from 'src/app/services/common/general.service';
+import { ValidatorsPattern } from 'src/app/validators/validators-pattern';
+import { takeUntil, finalize } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { TypeExpense } from 'src/app/models/type-expense/type-expense.model';
 defineLocale('es', esLocale);
 @Component({
   selector: 'app-expenses-store-update',
@@ -22,10 +25,10 @@ defineLocale('es', esLocale);
 export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
   formExpense: FormGroup;
   expense: Expense;
-  loadPage: boolean = true;
+  loadExpense: boolean = true;
   loadTypeExpense: boolean = false;
   loadCode: boolean = true;
-  txtLoad: string;
+  txtStatusSecExpense: string;
   typeExpensesDB: TypeExpense[] = [];
   minDate: Date;
   maxDate: Date;
@@ -40,6 +43,8 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
   documentDB: any = DOCUMENTS;
 
   initialState: any;
+
+  private onDestroy = new Subject();
 
   constructor(private expenseService: ExpenseService,
     private localService: BsLocaleService,
@@ -60,7 +65,7 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.formExpense = this.formGroupExpense();
     this.initialState = this.gralService.getDataInitialState(this.route);
-    this.txtLoad = this.initialState.txtLoad;
+    this.txtStatusSecExpense = this.initialState.txtLoad;
     this.loadTypeExpenseForm();
     this.selectTypeFormStoreOrUpdate();
   }
@@ -88,8 +93,11 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
         value: '',
         disabled: true
       }),
-      name_responsible: new FormControl('', [Validators.required, Validators.maxLength(100)])
-    });
+      name_responsible: new FormControl('', [Validators.required, Validators.maxLength(100), ValidatorsPattern.alphaSpacePattern])
+    },
+      {
+        updateOn: 'blur'
+      });
   }
 
   assignValuesFormExpense(): void {
@@ -108,79 +116,95 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
   getStore(): void {
     this.loadCode = false;
     this.date_expense_notFormat.setValue(new Date());
-    this.expenseService.codeExpenses().subscribe(
-      resp => this.code.setValue(resp),
-      () => this.toastr.error('Consulte con el Administrador', 'Error no se pudo obtener CODIGO para el formulario.')
-    ).add(
-      () => this.loadCode = true
-    );
+    this.expenseService.codeExpenses()
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadCode = true)
+      )
+      .subscribe(
+        resp => this.code.setValue(resp),
+        () => this.toastr.error('Consulte con el Administrador', 'Error no se pudo obtener CODIGO para el formulario.')
+      );
   }
 
   getUpdate(): void {
-    this.loadPage = false;
+    this.loadExpense = false;
     this.getIdToParameterFromUrl();
-    this.expenseService.editExpenses(this.idExpense).subscribe(
-      resp => {
-        this.expense = resp;
-        this.assignValuesFormExpense();
-      },
-      () => {
-        this.toastr.error('Consulte con el Administrador.', 'Error al mostrar el formulario para Actualizar Rol.');
-        this.router.navigate(['administration/roles/index']);
-      }
-    ).add(
-      () => this.loadPage = true
-    );
+    this.expenseService.editExpenses(this.idExpense)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadExpense = true)
+      )
+      .subscribe(
+        resp => {
+          this.expense = resp;
+          this.addIfTypeExpenseIsFalse();
+          this.assignValuesFormExpense();
+        },
+        () => {
+          this.toastr.error('Consulte con el Administrador.', 'Error al mostrar el formulario para Actualizar Rol.');
+          this.router.navigate(['administration/roles/index']);
+        }
+      );
+  }
+
+  addIfTypeExpenseIsFalse(): void {
+    !this.expense.typeExpense.status && this.typeExpensesDB.push(this.expense.typeExpense);
   }
 
   saveFormExpense(): void {
-    this.loadPage = false;
-    let expenseData: Expense = this.formExpense.value;
-    expenseData.date_expense = this.expenseService.convertDateToString(this.date_expense_notFormat.value);
+    this.loadExpense = false;
+    this.expense = Object.assign(new Expense, this.formExpense.value);
+    this.expense.date_expense = this.expenseService.convertDateToString(this.date_expense_notFormat.value);
     if (this.formExpense.valid) {
-      if (!this.id.value) {
-        this.storeForm();
-      } else {
-        this.updateForm();
-      }
+      (!this.id.value) ? this.storeForm() : this.updateForm();
     }
   }
 
   storeForm(): void {
-    this.txtLoad = 'Guardando Gasto';
-    this.expenseService.storeExpenses(this.formExpense.value).subscribe(
-      resp => {
-        this.formExpense.reset();
-        this.toastr.success(resp.code, 'GASTO Creado Correctamente');
-        this.getStore();
-      },
-      () => this.toastr.error('Consulte con el Administrador.', 'Error al crear: GASTO.')
-    ).add(
-      () => this.loadPage = true
-    );
+    this.txtStatusSecExpense = 'Guardando Gasto';
+    this.expenseService.storeExpenses(this.expense)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadExpense = true)
+      )
+      .subscribe(
+        resp => {
+          this.formExpense.reset();
+          this.toastr.success(resp.code, 'GASTO Creado Correctamente');
+          this.getStore();
+        },
+        () => this.toastr.error('Consulte con el Administrador.', 'Error al crear: GASTO.')
+      );
   }
 
   updateForm(): void {
-    this.txtLoad = 'Actualizando Gasto';
-    this.expenseService.updateExpenses(this.formExpense.value).subscribe(
-      resp => {
-        this.toastr.success(resp.code, 'GASTO Actualizado Correctamente');
-        this.router.navigate(['transaction/expenses/index']);
-      },
-      () => this.toastr.error('Consulte con el Administrador.', 'Error al actualizar: GASTO.')
-    ).add(
-      () => this.loadPage = true
-    );
+    this.txtStatusSecExpense = 'Actualizando Gasto';
+    this.expenseService.updateExpenses(this.expense)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadExpense = true)
+      )
+      .subscribe(
+        resp => {
+          this.toastr.success(resp.code, 'GASTO Actualizado Correctamente');
+          this.router.navigate(['transaction/expenses/index']);
+        },
+        () => this.toastr.error('Consulte con el Administrador.', 'Error al actualizar: GASTO.')
+      );
   }
 
   loadTypeExpenseForm(): void {
     this.loadTypeExpense = false;
-    this.typeExpenseService.listTypeExpenses().subscribe(
-      resp => this.typeExpensesDB = resp.typeExpenses,
-      () => this.toastr.error('Consulte con el Administrador', 'Error al Cargar los TIPOS DE GASTOS.')
-    ).add(
-      () => this.loadTypeExpense = true
-    );
+    this.typeExpenseService.listTypeExpenses()
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadTypeExpense = true)
+      )
+      .subscribe(
+        resp => this.typeExpensesDB = resp,
+        () => this.toastr.error('Consulte con el Administrador', 'Error al Cargar los TIPOS DE GASTOS.')
+      );
   }
 
   onChange(event) {
@@ -221,9 +245,8 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.initialState.type == UPDATE) {
-      this.gralService.changeDisabled(true);
-      this.expenseService.expense = null;
-    }
+    if (this.initialState.type == UPDATE) this.gralService.changeDisabled(true);
+    this.onDestroy.next(true);
+    this.onDestroy.complete();
   }
 }

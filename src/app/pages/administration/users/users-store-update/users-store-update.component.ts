@@ -1,12 +1,11 @@
-import { CompanyPosition } from './../../../../models/company-position.model';
-import { Component, OnInit } from '@angular/core';
+import { CompanyPosition } from './../../../../models/company-position/company-position.model';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RoleService } from '../../../../services/role/role.service';
 import { CompanyPositionService } from '../../../../services/company-position/company-position.service';
 import { UserService } from '../../../../services/user/user.service';
-import { User } from 'src/app/models/user.model';
+import { User } from 'src/app/models/user/user.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { IMAGES } from '../../../../config';
-import { Role } from 'src/app/models/role.model';
 import bsCustomFileInput from 'bs-custom-file-input';
 import { ValidationsUserDirective } from '../../../../directives/validations-user.directive';
 import { ValidatorsPattern } from '../../../../validators/validators-pattern';
@@ -15,12 +14,15 @@ import { TitleCasePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { STORE, UPDATE } from 'src/app/global-variables';
 import { GeneralService } from 'src/app/services/common/general.service';
+import { Subject } from 'rxjs';
+import { takeUntil, finalize } from 'rxjs/operators';
+import { Role } from 'src/app/models/role/role.model';
 @Component({
   selector: 'app-users-store-update',
   templateUrl: './users-store-update.component.html',
   providers: [ValidationsUserDirective]
 })
-export class UsersStoreUpdateComponent implements OnInit {
+export class UsersStoreUpdateComponent implements OnInit, OnDestroy {
   public rolesDB: Role[] = [];
   public companyPositionsDB: CompanyPosition[] = [];
   // User
@@ -35,13 +37,15 @@ export class UsersStoreUpdateComponent implements OnInit {
 
 
   // Init Component
-  txtLoad: string;
+  txtStatusSecUser: string;
 
   // Misc
-  loadPage: boolean = true;
+  loadUser: boolean = true;
   loadRoles: boolean = true;
   loadCompanyPositions: boolean = true;
   initialState: any;
+
+  private onDestroy = new Subject();
 
   constructor(private roleService: RoleService,
     private companyPositionService: CompanyPositionService,
@@ -82,13 +86,13 @@ export class UsersStoreUpdateComponent implements OnInit {
       ci: new FormControl('', {
         validators: [Validators.required, Validators.minLength(7), Validators.maxLength(50)],
         asyncValidators: [
-          this.validationsDirective.validateCi.bind(this.validationsDirective)
+          this.validationsDirective.validateUniqueCi()
         ]
       }),
       username: new FormControl('', {
         validators: [Validators.required, Validators.minLength(10), Validators.maxLength(15), ValidatorsPattern.usernameFormatPattern],
         asyncValidators: [
-          this.validationsDirective.validateUsername.bind(this.validationsDirective)
+          this.validationsDirective.validateUniqueUsername()
         ]
       }),
       first_name: new FormControl('', [Validators.required, Validators.maxLength(100), ValidatorsPattern.alphaSpacePattern]),
@@ -96,7 +100,7 @@ export class UsersStoreUpdateComponent implements OnInit {
       email: new FormControl('', {
         validators: [Validators.required, Validators.email, Validators.maxLength(150)],
         asyncValidators: [
-          this.validationsDirective.validateEmail.bind(this.validationsDirective)
+          this.validationsDirective.validateUniqueEmail()
         ]
       }),
       job_title: new FormControl('', [Validators.maxLength(100)]),
@@ -105,7 +109,10 @@ export class UsersStoreUpdateComponent implements OnInit {
       status: new FormControl(1),
       role_id: new FormControl(null, [Validators.required]),
       company_position_id: new FormControl(null, [Validators.required])
-    });
+    },
+      {
+        updateOn: 'blur'
+      });
   }
 
   assignValuesFormUser(): void {
@@ -125,64 +132,77 @@ export class UsersStoreUpdateComponent implements OnInit {
   }
 
   getUpdate(): void {
-    this.txtLoad = this.initialState.txtLoad;
+    this.txtStatusSecUser = this.initialState.txtLoad;
     this.getIdToParameterFromUrl();
-    this.loadPage = false;
-    this.userService.editShowUsers(this.idUser).subscribe(
-      resp => {
-        this.user = resp;
-        this.assignValuesFormUser();
-      },
-      () => {
-        this.toastr.error('Consulte con el Administrador', 'Error al mostrar el formulario para Actualizar el Usuario');
-        this.router.navigate(['administration/users/index']);
-      }
-    ).add(
-      () => this.loadPage = true
-    );
+    this.loadUser = false;
+    this.userService.editShowUsers(this.idUser)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadUser = true)
+      )
+      .subscribe(
+        resp => {
+          this.user = resp;
+          this.addIfRoleOrCompanyPositionIsFalse();
+          this.assignValuesFormUser();
+        },
+        () => {
+          this.toastr.error('Consulte con el Administrador', 'Error al mostrar el formulario para Actualizar el Usuario');
+          this.router.navigate(['administration/users/index']);
+        }
+      );
+  }
+
+  addIfRoleOrCompanyPositionIsFalse(): void {
+    !this.user.role.status && this.rolesDB.push(this.user.role);
+    !this.user.companyPosition.status && this.companyPositionsDB.push(this.user.companyPosition);
   }
 
   saveFormUser(): void {
-    this.loadPage = false;
+    this.loadUser = false;
 
     if (this.formUser.valid) {
-      let userData: User = this.formUser.value;
+      this.user = Object.assign(new User, this.formUser.value);
       if (this.loadImage) {
-        userData.image = this.loadImage;
+        this.user.image = this.loadImage;
       }
-      if (!this.formUser.value.id && this.initialState.type == STORE) {
-        this.storeForm(userData);
-      } else {
-        this.updateForm(userData);
-      }
+      (!this.formUser.value.id) ? this.storeForm() : this.updateForm();
     }
   }
 
-  storeForm(userData: User): void {
-    this.txtLoad = 'Guardando Usuario';
-    this.userService.storeUsers(userData).subscribe(
-      resp => {
-        this.resetFormUser();
-        this.responseSaveFormUser(resp, 'USUARIO Creado Correctamente!');
-      },
-      () => this.toastr.error('Consulte con el Administrador.', 'Error al crear: USUARIO.')
-    ).add(
-      () => this.loadPage = true
-    )
+  storeForm(): void {
+    this.txtStatusSecUser = 'Guardando Usuario';
+    this.userService.storeUsers(this.user)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadUser = true)
+      )
+      .subscribe(
+        resp => {
+          this.resetFormUser();
+          this.toastr.success(this.titleCasePipe.transform(resp.fullName), 'USUARIO Creado Correctamente!');
+        },
+        () => this.toastr.error('Consulte con el Administrador.', 'Error al crear: USUARIO.')
+      ).add(
+        () => this.loadUser = true
+      )
   }
 
-  updateForm(userData: User): void {
-    this.txtLoad = 'Actualizando Usuario';
+  updateForm(): void {
+    this.txtStatusSecUser = 'Actualizando Usuario';
 
-    this.userService.updateUsers(userData).subscribe(
-      resp => {
-        this.responseSaveFormUser(resp, 'USUARIO Actualizado Correctamente');
-        this.router.navigate(['administration/users/index']);
-      },
-      () => this.toastr.error('Consulte con el Administrador.', 'Error al actualizar: USUARIO.')
-    ).add(
-      () => this.loadPage = true
-    )
+    this.userService.updateUsers(this.user)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadUser = true)
+      )
+      .subscribe(
+        resp => {
+          this.toastr.success(this.titleCasePipe.transform(resp.fullName), 'USUARIO Actualizado Correctamente');
+          this.router.navigate(['administration/users/index']);
+        },
+        () => this.toastr.error('Consulte con el Administrador.', 'Error al actualizar: USUARIO.')
+      );
   }
 
   selectTypeFormStoreOrUpdate(): void {
@@ -200,29 +220,27 @@ export class UsersStoreUpdateComponent implements OnInit {
 
   loadRolesForm(): void {
     this.loadRoles = false;
-    this.roleService.listRoles().subscribe(
-      resp => {
-        this.rolesDB = resp.roles;
-      },
-      () => this.toastr.error('Consulte con el Administrador', 'Error al cargar los ROLES')
-    ).add(
-      () => this.loadRoles = true
-    );
+    this.roleService.listRoles()
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadRoles = true)
+      ).subscribe(
+        resp => this.rolesDB = resp,
+        () => this.toastr.error('Consulte con el Administrador', 'Error al cargar los ROLES')
+      );
   }
 
   loadCompanyPositionsForm(): void {
     this.loadCompanyPositions = false;
-    this.companyPositionService.listCompanyPositions().subscribe(
-      resp => this.companyPositionsDB = resp.companyPositions,
-      () => this.toastr.error('Consulte con el Administrador', 'Error al cargar los CARGOS')
-    ).add(
-      () => this.loadCompanyPositions = true
-    );
-  }
-
-  responseSaveFormUser(user: User, title: string): void {
-    let fullName = `${user.first_name} ${user.last_name}`;
-    this.toastr.success(this.titleCasePipe.transform(fullName), title);
+    this.companyPositionService.listCompanyPositions()
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadCompanyPositions = true)
+      )
+      .subscribe(
+        resp => this.companyPositionsDB = resp,
+        () => this.toastr.error('Consulte con el Administrador', 'Error al cargar los CARGOS')
+      );
   }
 
   selectImage(file: File) {
@@ -257,8 +275,8 @@ export class UsersStoreUpdateComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    if (this.initialState.type == UPDATE) {
-      this.gralService.changeDisabled(true);
-    }
+    if (this.initialState.type == UPDATE) this.gralService.changeDisabled(true);
+    this.onDestroy.next(true);
+    this.onDestroy.complete();
   }
 }

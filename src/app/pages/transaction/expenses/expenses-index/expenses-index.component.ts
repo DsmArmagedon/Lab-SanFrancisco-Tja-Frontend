@@ -1,7 +1,6 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild } from '@angular/core';
-import { Meta } from 'src/app/models/meta.model';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Expense } from 'src/app/models/expense.model';
+import { Expense } from 'src/app/models/expense/expense.model';
 import { ExpenseService } from '../../../../services/expense/expense.service';
 import { ToastrService } from 'ngx-toastr';
 import { ExpensesFilterComponent } from '../expenses-filter/expenses-filter.component';
@@ -12,13 +11,16 @@ import { SwalService } from 'src/app/services/common/swal.service';
 import { Router } from '@angular/router';
 import { INDEX } from '../../../../global-variables';
 import { GeneralService } from 'src/app/services/common/general.service';
+import { Subject } from 'rxjs';
+import { takeUntil, finalize } from 'rxjs/operators';
+import { Meta } from 'src/app/models/custom/meta.model';
 
 @Component({
   selector: 'app-expenses-index',
   templateUrl: './expenses-index.component.html',
   styles: []
 })
-export class ExpensesIndexComponent implements OnInit {
+export class ExpensesIndexComponent implements OnInit, OnDestroy {
   public isCollapsed: boolean = false;
   public currentPage: number;
 
@@ -26,10 +28,12 @@ export class ExpensesIndexComponent implements OnInit {
   formFilter: FormGroup;
   perPage: number = 25;
   loadPage: boolean;
-  expenses: Expense[] = [];
+  expenses: Array<Expense> = [];
   maxSize: number = 3;
 
   bsModalRef: BsModalRef;
+
+  private onDestroy = new Subject();
 
   @ViewChild(ExpensesFilterComponent, { static: true }) expenseFilter: ExpensesFilterComponent;
   constructor(private expenseService: ExpenseService,
@@ -49,15 +53,18 @@ export class ExpensesIndexComponent implements OnInit {
 
   indexExpenses(): void {
     this.loadPage = false;
-    this.expenseService.indexExpenses(this.formFilter, this.perPage, this.currentPage).subscribe(
-      resp => {
-        this.expenses = resp.expenses;
-        this.meta = resp.meta;
-      },
-      () => this.toastr.error('Consulte con el Administrador', 'Error al listar los GASTOS.')
-    ).add(
-      () => this.loadPage = true
-    );
+    this.expenseService.indexExpenses(this.formFilter, this.perPage, this.currentPage)
+      .pipe(
+        takeUntil(this.onDestroy),
+        finalize(() => this.loadPage = true)
+      )
+      .subscribe(
+        resp => {
+          this.expenses = resp.expenses;
+          this.meta = resp.meta;
+        },
+        () => this.toastr.error('Consulte con el Administrador', 'Error al listar los GASTOS.')
+      );
   }
 
   filter(event): void {
@@ -81,8 +88,8 @@ export class ExpensesIndexComponent implements OnInit {
   }
 
   showExpenses(expense: Expense): void {
-    this.expenseService.expense = expense;
-    this.bsModalRef = this.modalService.show(ExpensesShowComponent);
+    const initialState: any = { expense: expense };
+    this.bsModalRef = this.modalService.show(ExpensesShowComponent, { initialState: initialState });
   }
 
   updateExpenses(code: string): void {
@@ -114,15 +121,24 @@ export class ExpensesIndexComponent implements OnInit {
     ).then((result) => {
       if (result.value) {
         this.swalService.revokeRestoreLoad(title, type);
-        this.expenseService.revokeRestoreExpenses(code, type).subscribe(
-          resp => {
-            Swal.close();
-            this.toastr.success(`${title} ${resp.code}`, `${title} ${gerund} Correctamente.`);
-            this.indexExpenses();
-          },
-          () => this.swalService.revokeRestoreError(title, type)
-        );
+        this.expenseService.revokeRestoreExpenses(code, type)
+          .pipe(
+            takeUntil(this.onDestroy),
+            finalize(() => Swal.close())
+          )
+          .subscribe(
+            resp => {
+              this.toastr.success(`${title} ${resp.code}`, `${title} ${gerund} Correctamente.`);
+              this.indexExpenses();
+            },
+            () => this.toastr.error('Consulte con el Administrador.', `Error al ${type}: ${title.toUpperCase()}.`)
+          );
       }
     })
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next(true);
+    this.onDestroy.complete();
   }
 }
