@@ -38,7 +38,7 @@ export class TitleService {
     let url = `${URL_GLOBAL}/tests-composeds/${title.test_id}/titles`;
     return this.http.post<Title>(url, title).pipe(
       map((resp: any) => {
-        return resp.data;
+        return Object.assign(new Title, resp.data);
       })
     );
   }
@@ -47,7 +47,8 @@ export class TitleService {
     let url = `${URL_GLOBAL}/tests-composeds/${title.test_id}/titles/${title.id}`;
     return this.http.put<Title>(url, title).pipe(
       map((resp: any) => {
-        return resp.data;
+        console.log(resp.data);
+        return Object.assign(new Title, resp.data);
       })
     );
   }

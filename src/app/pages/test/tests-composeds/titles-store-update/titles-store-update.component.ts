@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
+import { FormGroup, FormControl, AbstractControl, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Title } from 'src/app/models/title.model';
 import { GeneralService } from 'src/app/services/common/general.service';
@@ -46,7 +46,7 @@ export class TitlesStoreUpdateComponent implements OnInit {
   formGroupTitle(): FormGroup {
     return new FormGroup({
       id: new FormControl(null),
-      name: new FormControl(''),
+      name: new FormControl('', [Validators.required]),
       print: new FormControl(1),
       note: new FormControl(''),
       status: new FormControl(1)
