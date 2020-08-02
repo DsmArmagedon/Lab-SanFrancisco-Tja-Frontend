@@ -9,23 +9,23 @@ import { throwError, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class LoginService {
-  
+
   constructor(private http: HttpClient, private router: Router) { }
-  login( username: string, password: string ): any {
+  login(username: string, password: string): any {
     let url = `${URL_GLOBAL}/login`;
     let login = {
-        'grant_type'    : GRANT_TYPE,
-        'client_id'     : CLIENT_ID,
-        'client_secret' : CLIENT_SECRET,
-        'username'      : username,
-        'password'      : password
+      'grant_type': GRANT_TYPE,
+      'client_id': CLIENT_ID,
+      'client_secret': CLIENT_SECRET,
+      'username': username,
+      'password': password
     };
-
-    return this.http.post(url,login).pipe(
-      map( resp => resp),
+    console.log(login);
+    return this.http.post(url, login).pipe(
+      map(resp => resp),
       catchError(
         (err: HttpErrorResponse) => {
-          return throwError( err );
+          return throwError(err);
         }
       )
     );
@@ -34,13 +34,13 @@ export class LoginService {
   privileges(): Observable<any> {
     let url = `${URL_GLOBAL}/privileges`;
     const headers: HttpHeaders = new HttpHeaders({
-      'Authorization' : `${localStorage.getItem('token_type')} ${localStorage.getItem('access_token')}`
+      'Authorization': `${localStorage.getItem('token_type')} ${localStorage.getItem('access_token')}`
     });
-    return this.http.get(url,{headers}).pipe(
-      map ((resp: any) => {
+    return this.http.get(url, { headers }).pipe(
+      map((resp: any) => {
         return resp.data;
       })
     );
   }
-  
+
 }

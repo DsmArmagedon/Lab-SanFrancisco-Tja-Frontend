@@ -113,11 +113,6 @@ import { NormalValuesComponent } from './normal-values/normal-values.component';
       useClass: TokenErrorInterceptorService,
       multi: true
     }
-  ],
-  entryComponents: [
-    TitlesStoreUpdateComponent,
-    ParametersStoreUpdateComponent,
-    TestsComposedsShowComponent
   ]
 })
 export class TestModule { }
