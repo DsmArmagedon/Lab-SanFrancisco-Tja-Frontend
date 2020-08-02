@@ -59,11 +59,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     BsDatepickerModule.forRoot(),
     ModalModule.forRoot(),
     NgSelectModule
-  ],
-  entryComponents: [
-    TypesExpensesFilterComponent,
-    ExpensesFilterComponent,
-    ExpensesShowComponent
   ]
 })
 export class TransactionModule { }

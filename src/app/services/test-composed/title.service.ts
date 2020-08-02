@@ -79,6 +79,7 @@ export class TitleService {
     let url = `${URL_GLOBAL}/tests-composeds/${testId}/titles/${id}`;
     return this.http.delete<Title>(url).pipe(
       map((resp: any) => {
+
         return Object.assign(new Title, resp.data);
       })
     );

@@ -113,11 +113,6 @@ import { TypeDataPipe } from '../../pipes/type-data.pipe';
       useClass: TokenErrorInterceptorService,
       multi: true
     }
-  ],
-  entryComponents: [
-    TitlesStoreUpdateComponent,
-    ParametersStoreUpdateComponent,
-    TestsComposedsShowComponent
   ]
 })
 export class TestModule { }

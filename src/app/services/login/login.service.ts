@@ -20,7 +20,6 @@ export class LoginService {
       'username': username,
       'password': password
     };
-
     return this.http.post(url, login).pipe(
       map(resp => resp),
       catchError(

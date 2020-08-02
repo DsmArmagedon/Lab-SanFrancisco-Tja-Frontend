@@ -91,14 +91,6 @@ import { LoadInputModule } from '../../components/load/load-input/load-input.mod
       useClass: TokenErrorInterceptorService,
       multi: true
     }
-  ],
-  entryComponents: [
-    UsersStoreUpdateComponent,
-    UsersShowComponent,
-    RolesShowComponent,
-    RolesStoreUpdateComponent,
-    CompaniesPositionsStoreUpdateComponent,
-    HealthCentersStoreUpdateComponent
   ]
 })
 export class AdministrationModule { }

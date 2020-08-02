@@ -70,7 +70,8 @@
 
 .main-container {
     background-color: #fff;
-    margin: 4px;
+    margin: 3px;
+    padding: 3px;
     min-height: calc(100vh - 83px);
 }
 
