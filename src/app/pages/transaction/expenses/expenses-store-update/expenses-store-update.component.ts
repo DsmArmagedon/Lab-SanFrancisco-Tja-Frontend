@@ -4,18 +4,18 @@ import { defineLocale } from 'ngx-bootstrap/chronos';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { esLocale } from 'ngx-bootstrap/locale';
 import { ToastrService } from 'ngx-toastr';
-import { Expense } from 'src/app/models/expense/expense.model';
-import { DOCUMENTS, STORE, UPDATE } from '../../../../global-variables';
-import { ExpenseService } from '../../../../services/expense/expense.service';
-import { FunctionService } from '../../../../services/common/function.service';
-import { TypeExpenseService } from '../../../../services/type-expense/type-expense.service';
-import { ValidatorsGlobal } from '../../../../validators/validators-global';
+import { Expense } from 'src/app/models/expense.model';
+import { DOCUMENTS, STORE, UPDATE } from 'src/app/global-variables';
+import { ExpenseService } from 'src/app/services/expense.service';
+import { FunctionService } from 'src/app/services/function.service';
+import { TypeExpenseService } from 'src/app/services/type-expense.service';
+import { ValidatorsGlobal } from 'src/app/validators/validators-global';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GeneralService } from 'src/app/services/common/general.service';
+import { GeneralService } from 'src/app/services/general.service';
 import { ValidatorsPattern } from 'src/app/validators/validators-pattern';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { TypeExpense } from 'src/app/models/type-expense/type-expense.model';
+import { TypeExpense } from 'src/app/models/type-expense.model';
 defineLocale('es', esLocale);
 @Component({
   selector: 'app-expenses-store-update',

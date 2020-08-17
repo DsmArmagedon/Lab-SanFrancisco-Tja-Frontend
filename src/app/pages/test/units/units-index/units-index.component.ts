@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { SwalService } from '../../../../services/common/swal.service';
+import { SwalService } from 'src/app/services/swal.service';
 import { UnitsFilterComponent } from '../units-filter/units-filter.component';
-import { UnitService } from 'src/app/services/unit/unit.service';
+import { UnitService } from 'src/app/services/unit.service';
 import Swal from 'sweetalert2';
-import { GeneralService } from 'src/app/services/common/general.service';
+import { GeneralService } from 'src/app/services/general.service';
 import { INDEX } from 'src/app/global-variables';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';
-import { Meta } from 'src/app/models/custom/meta.model';
-import { Unit } from 'src/app/models/unit/unit.model';
+import { Meta } from 'src/app/models/meta.model';
+import { Unit } from 'src/app/models/unit.model';
 
 @Component({
   selector: 'app-units-index',

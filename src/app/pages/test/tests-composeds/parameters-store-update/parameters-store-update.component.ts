@@ -1,18 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { TYPE_DATA, OBJECT_TYPE_DATA, POST, PUT } from '../../../../global-variables';
-import { UnitService } from '../../../../services/unit/unit.service';
+import { TYPE_DATA, OBJECT_TYPE_DATA, POST, PUT } from 'src/app/global-variables';
+import { UnitService } from 'src/app/services/unit.service';
 import { ToastrService } from 'ngx-toastr';
-import { Title } from 'src/app/models/title/title.model';
-import { TitleService } from '../../../../services/test-composed/title.service';
-import { GeneralService } from 'src/app/services/common/general.service';
-import { Parameter } from 'src/app/models/parameter/parameter.model';
+import { Title } from 'src/app/models/title.model';
+import { TitleService } from 'src/app/services/title.service';
+import { GeneralService } from 'src/app/services/general.service';
+import { Parameter } from 'src/app/models/parameter.model';
 import { ValidationsNameDirective } from 'src/app/directives/validations-name.directive';
-import { ParameterService } from 'src/app/services/test-composed/parameter.service';
+import { ParameterService } from 'src/app/services/parameter.service';
 import { takeUntil, finalize, take } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { Unit } from 'src/app/models/unit/unit.model';
+import { Unit } from 'src/app/models/unit.model';
 
 @Component({
   selector: 'app-parameters-store-update',

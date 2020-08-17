@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { CompanyPositionService } from '../../../../services/company-position/company-position.service';
-import { CompanyPosition } from 'src/app/models/company-position/company-position.model';
-import { ValidatorsPattern } from '../../../../validators/validators-pattern';
-import { ValidationsNameDirective } from '../../../../directives/validations-name.directive';
+import { CompanyPositionService } from 'src/app/services/company-position.service';
+import { CompanyPosition } from 'src/app/models/company-position.model';
+import { ValidatorsPattern } from 'src/app/validators/validators-pattern';
+import { ValidationsNameDirective } from 'src/app/directives/validations-name.directive';
 import { ToastrService } from 'ngx-toastr';
-import { GeneralService } from 'src/app/services/common/general.service';
+import { GeneralService } from 'src/app/services/general.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { STORE, UPDATE } from 'src/app/global-variables';
 import { Subject } from 'rxjs';

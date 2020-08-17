@@ -1,18 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
-import { PermissionService } from '../../../../services/permission/permission.service';
-import { RoleService } from '../../../../services/role/role.service';
+import { PermissionService } from 'src/app/services/permission.service';
+import { RoleService } from 'src/app/services/role.service';
 import { forkJoin, Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { ValidationCheckboxRequired } from 'src/app/validators/validators-array-required';
-import { ValidatorsPattern } from '../../../../validators/validators-pattern';
+import { ValidatorsPattern } from 'src/app/validators/validators-pattern';
 import { ValidationsNameDirective } from 'src/app/directives/validations-name.directive';
-import { STORE, UPDATE, INDEX } from '../../../../global-variables';
+import { STORE, UPDATE, INDEX } from 'src/app/global-variables';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GeneralService } from 'src/app/services/common/general.service';
-import { Permission } from 'src/app/models/permission/permission.model';
+import { GeneralService } from 'src/app/services/general.service';
+import { Permission } from 'src/app/models/permission.model';
 import { takeUntil, finalize } from 'rxjs/operators';
-import { Role } from 'src/app/models/role/role.model';
+import { Role } from 'src/app/models/role.model';
 
 @Component({
   selector: 'app-roles-store-update',

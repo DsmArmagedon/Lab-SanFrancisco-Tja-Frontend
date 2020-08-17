@@ -1,20 +1,20 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import Swal from 'sweetalert2';
-import { UserService } from 'src/app/services/service.index';
 import { Subject } from 'rxjs';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { FormGroup } from '@angular/forms';
-import { User } from 'src/app/models/user/user.model';
 import { UsersFilterComponent } from '../users-filter/users-filter.component';
 import { TitleCasePipe } from '@angular/common';
-import { SwalService } from 'src/app/services/common/swal.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { INDEX } from 'src/app/global-variables';
 import { UsersShowComponent } from '../users-show/users-show.component';
-import { GeneralService } from 'src/app/services/common/general.service';
+import { GeneralService } from 'src/app/services/general.service';
+import { UserService } from 'src/app/services/service.index';
+import { SwalService } from 'src/app/services/swal.service';
 import { takeUntil, finalize } from 'rxjs/operators';
-import { Meta } from 'src/app/models/custom/meta.model';
+import { Meta } from 'src/app/models/meta.model';
+import { User } from 'src/app/models/user.model';
 
 @Component({
   selector: 'app-users-index',

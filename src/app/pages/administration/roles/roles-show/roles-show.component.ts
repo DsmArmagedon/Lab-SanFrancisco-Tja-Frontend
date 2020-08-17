@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { RoleService } from '../../../../services/role/role.service';
+import { RoleService } from 'src/app/services/role.service';
 import { ToastrService } from 'ngx-toastr';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { Role } from 'src/app/models/role/role.model';
+import { Role } from 'src/app/models/role.model';
 @Component({
   selector: 'app-roles-show',
   templateUrl: './roles-show.component.html',

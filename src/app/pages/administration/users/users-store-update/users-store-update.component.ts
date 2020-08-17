@@ -1,22 +1,22 @@
-import { CompanyPosition } from './../../../../models/company-position/company-position.model';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { RoleService } from '../../../../services/role/role.service';
-import { CompanyPositionService } from '../../../../services/company-position/company-position.service';
-import { UserService } from '../../../../services/user/user.service';
-import { User } from 'src/app/models/user/user.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { IMAGES } from '../../../../config';
+import { IMAGES } from 'src/app/config';
 import bsCustomFileInput from 'bs-custom-file-input';
-import { ValidationsUserDirective } from '../../../../directives/validations-user.directive';
-import { ValidatorsPattern } from '../../../../validators/validators-pattern';
+import { ValidationsUserDirective } from 'src/app/directives/validations-user.directive';
+import { ValidatorsPattern } from 'src/app/validators/validators-pattern';
 import { ToastrService } from 'ngx-toastr';
 import { TitleCasePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { STORE, UPDATE } from 'src/app/global-variables';
-import { GeneralService } from 'src/app/services/common/general.service';
 import { Subject } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';
-import { Role } from 'src/app/models/role/role.model';
+import { User } from 'src/app/models/user.model';
+import { Role } from 'src/app/models/role.model';
+import { CompanyPosition } from 'src/app/models/company-position.model';
+import { UserService } from 'src/app/services/user.service';
+import { RoleService } from 'src/app/services/role.service';
+import { CompanyPositionService } from 'src/app/services/company-position.service';
+import { GeneralService } from 'src/app/services/general.service';
 @Component({
   selector: 'app-users-store-update',
   templateUrl: './users-store-update.component.html',

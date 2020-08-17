@@ -1,19 +1,19 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Expense } from 'src/app/models/expense/expense.model';
-import { ExpenseService } from '../../../../services/expense/expense.service';
+import { Expense } from 'src/app/models/expense.model';
+import { ExpenseService } from 'src/app/services/expense.service';
 import { ToastrService } from 'ngx-toastr';
 import { ExpensesFilterComponent } from '../expenses-filter/expenses-filter.component';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ExpensesShowComponent } from '../expenses-show/expenses-show.component';
 import Swal from 'sweetalert2';
-import { SwalService } from 'src/app/services/common/swal.service';
+import { SwalService } from 'src/app/services/swal.service';
 import { Router } from '@angular/router';
-import { INDEX } from '../../../../global-variables';
-import { GeneralService } from 'src/app/services/common/general.service';
+import { INDEX } from 'src/app/global-variables';
+import { GeneralService } from 'src/app/services/general.service';
 import { Subject } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';
-import { Meta } from 'src/app/models/custom/meta.model';
+import { Meta } from 'src/app/models/meta.model';
 
 @Component({
   selector: 'app-expenses-index',

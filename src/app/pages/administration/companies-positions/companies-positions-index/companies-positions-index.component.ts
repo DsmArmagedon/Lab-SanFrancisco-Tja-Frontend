@@ -2,16 +2,16 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
-import { CompanyPosition } from '../../../../models/company-position/company-position.model';
-import { CompanyPositionService } from '../../../../services/company-position/company-position.service';
+import { CompanyPosition } from 'src/app/models/company-position.model';
+import { CompanyPositionService } from 'src/app/services/company-position.service';
 import { CompaniesPositionsFilterComponent } from '../companies-positions-filter/companies-positions-filter.component';
-import { SwalService } from '../../../../services/common/swal.service';
-import { GeneralService } from 'src/app/services/common/general.service';
+import { SwalService } from 'src/app/services/swal.service';
+import { GeneralService } from 'src/app/services/general.service';
 import { INDEX } from 'src/app/global-variables';
 import { Router } from '@angular/router';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { Meta } from 'src/app/models/custom/meta.model';
+import { Meta } from 'src/app/models/meta.model';
 
 @Component({
   selector: 'app-companies-positions-index',

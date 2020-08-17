@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ExpenseService } from '../../../../services/expense/expense.service';
-import { Expense } from 'src/app/models/expense/expense.model';
+import { Expense } from 'src/app/models/expense.model';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({

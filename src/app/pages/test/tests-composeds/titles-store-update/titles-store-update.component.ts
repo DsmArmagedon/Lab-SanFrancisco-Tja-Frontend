@@ -2,9 +2,9 @@
 import { Component, OnInit, OnDestroy, Output } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { Title } from 'src/app/models/title/title.model';
-import { GeneralService } from 'src/app/services/common/general.service';
-import { TitleService } from 'src/app/services/test-composed/title.service';
+import { Title } from 'src/app/models/title.model';
+import { GeneralService } from 'src/app/services/general.service';
+import { TitleService } from 'src/app/services/title.service';
 import { ToastrService } from 'ngx-toastr';
 import { ValidationsNameDirective } from 'src/app/directives/validations-name.directive';
 import { POST, PUT } from 'src/app/global-variables';

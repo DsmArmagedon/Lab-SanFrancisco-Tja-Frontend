@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { GeneralService } from 'src/app/services/common/general.service';
+import { GeneralService } from 'src/app/services/general.service';
 import { delay } from 'rxjs/operators';
 
 @Component({

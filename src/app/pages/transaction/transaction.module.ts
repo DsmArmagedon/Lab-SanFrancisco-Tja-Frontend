@@ -33,6 +33,10 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
+/* INTERCEPTORS */
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { TokenErrorInterceptorService } from 'src/app/services/token-error-interceptor.service';
+
 @NgModule({
   declarations: [
     ExpensesComponent,
@@ -59,6 +63,13 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     BsDatepickerModule.forRoot(),
     ModalModule.forRoot(),
     NgSelectModule
+  ],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenErrorInterceptorService,
+      multi: true
+    }
   ]
 })
 export class TransactionModule { }

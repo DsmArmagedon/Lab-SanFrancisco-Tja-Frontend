@@ -7,7 +7,7 @@ import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     suppressScrollX: true
-  };
+};
 /* COMPONENTS */
 import { HeaderComponent } from './header/header.component';
 import { SharedComponent } from './shared.component';
@@ -17,7 +17,7 @@ import { RouterModule } from '@angular/router';
 
 /* INTERCEPTORS */
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { TokenErrorInterceptorService } from '../services/interceptors/token-error-interceptor.service';
+import { TokenErrorInterceptorService } from '../services/token-error-interceptor.service';
 import { ServiceModule } from '../services/service.module';
 @NgModule({
     declarations: [

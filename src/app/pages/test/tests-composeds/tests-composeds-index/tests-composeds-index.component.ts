@@ -1,18 +1,18 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { TestComposed } from 'src/app/models/test-simple-composed/test-composed.model';
+import { TestComposed } from 'src/app/models/test-composed.model';
 import { TestsComposedsFilterComponent } from '../tests-composeds-filter/tests-composeds-filter.component';
-import { TestComposedService } from '../../../../services/test-composed/test-composed.service';
+import { TestComposedService } from 'src/app/services/test-composed.service';
 import { ToastrService } from 'ngx-toastr';
 import { INDEX } from 'src/app/global-variables';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { SwalService } from '../../../../services/common/swal.service';
+import { SwalService } from 'src/app/services/swal.service';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Subject } from 'rxjs';
-import { GeneralService } from 'src/app/services/common/general.service';
+import { GeneralService } from 'src/app/services/general.service';
 import { takeUntil, finalize } from 'rxjs/operators';
-import { Meta } from 'src/app/models/custom/meta.model';
+import { Meta } from 'src/app/models/meta.model';
 
 @Component({
   selector: 'app-tests-composeds-index',
