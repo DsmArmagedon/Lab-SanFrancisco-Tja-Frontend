@@ -1,17 +1,17 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
-import { Parameter } from 'src/app/models/parameter/parameter.model';
-import { ParameterService } from '../../../../services/test-composed/parameter.service';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Parameter } from 'src/app/models/parameter.model';
+import { ParameterService } from 'src/app/services/parameter.service';
 import { ToastrService } from 'ngx-toastr';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ParametersStoreUpdateComponent } from '../parameters-store-update/parameters-store-update.component';
-import { TitleService } from 'src/app/services/test-composed/title.service';
-import { TestComposedService } from '../../../../services/test-composed/test-composed.service';
+import { TitleService } from 'src/app/services/title.service';
+import { TestComposedService } from 'src/app/services/test-composed.service';
 import { Subject } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { POST, OBJECT_TYPE_DATA } from 'src/app/global-variables';
-import { GeneralService } from 'src/app/services/common/general.service';
+import { GeneralService } from 'src/app/services/general.service';
 import Swal from 'sweetalert2';
-import { SwalService } from 'src/app/services/common/swal.service';
+import { SwalService } from 'src/app/services/swal.service';
 import { TitleCasePipe } from '@angular/common';
 import { ParametersShowComponent } from '../parameters-show/parameters-show.component';
 

@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { IMAGES } from 'src/app/config';
-import { UserService } from '../../../../services/user/user.service';
-import { User } from 'src/app/models/user/user.model';
+import { UserService } from 'src/app/services/user.service';
+import { User } from 'src/app/models/user.model';
 import { ToastrService } from 'ngx-toastr';
 import { Subject } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';

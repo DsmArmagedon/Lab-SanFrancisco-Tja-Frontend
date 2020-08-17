@@ -1,14 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { UnitService } from '../../../../services/unit/unit.service';
+import { UnitService } from 'src/app/services/unit.service';
 import { ToastrService } from 'ngx-toastr';
-import { GeneralService } from 'src/app/services/common/general.service';
+import { GeneralService } from 'src/app/services/general.service';
 import { ValidationsNameDirective } from 'src/app/directives/validations-name.directive';
 import { ActivatedRoute, Router } from '@angular/router';
 import { STORE, UPDATE } from 'src/app/global-variables';
 import { Subject } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';
-import { Unit } from 'src/app/models/unit/unit.model';
+import { Unit } from 'src/app/models/unit.model';
 
 @Component({
   selector: 'app-units-store-update',

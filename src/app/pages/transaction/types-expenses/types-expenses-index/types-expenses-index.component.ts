@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { TypesExpensesFilterComponent } from '../types-expenses-filter/types-expenses-filter.component';
-import { TypeExpenseService } from '../../../../services/type-expense/type-expense.service';
+import { TypeExpenseService } from 'src/app/services/type-expense.service';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
-import { SwalService } from '../../../../services/common/swal.service';
-import { GeneralService } from 'src/app/services/common/general.service';
+import { SwalService } from 'src/app/services/swal.service';
+import { GeneralService } from 'src/app/services/general.service';
 import { Router } from '@angular/router';
 import { INDEX } from 'src/app/global-variables';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { TypeExpense } from 'src/app/models/type-expense/type-expense.model';
-import { Meta } from 'src/app/models/custom/meta.model';
+import { TypeExpense } from 'src/app/models/type-expense.model';
+import { Meta } from 'src/app/models/meta.model';
 
 @Component({
   selector: 'app-types-expenses-index',

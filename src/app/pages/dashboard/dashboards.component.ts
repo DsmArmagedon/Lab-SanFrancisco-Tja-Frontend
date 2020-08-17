@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { GeneralService } from 'src/app/services/common/general.service';
+import { GeneralService } from 'src/app/services/general.service';
 import { TypeaheadMatch, TypeaheadConfig } from 'ngx-bootstrap/typeahead';
 import { Observable, Observer, of } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
-import { PatientService } from 'src/app/services/patient/patient.service';
+import { PatientService } from 'src/app/services/patient.service';
 export function getTypeaheadConfig(): TypeaheadConfig {
   return Object.assign(new TypeaheadConfig(), { cancelRequestOnFocusLost: true });
 }

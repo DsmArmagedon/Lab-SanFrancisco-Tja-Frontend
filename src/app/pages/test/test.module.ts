@@ -59,7 +59,7 @@ import { NormalValuesComponent } from './normal-values/normal-values.component';
 
 /* INTERCEPTORS */
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { TokenErrorInterceptorService } from 'src/app/services/interceptors/token-error-interceptor.service';
+import { TokenErrorInterceptorService } from 'src/app/services/token-error-interceptor.service';
 
 /* PIPES */
 import { TypeDataPipe } from '../../pipes/type-data.pipe';

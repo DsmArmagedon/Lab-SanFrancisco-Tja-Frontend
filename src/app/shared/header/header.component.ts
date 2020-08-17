@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, HostListener, OnDestroy } from '@angular/core';
-import { AuthenticationService } from '../../services/login/authentication.service';
-import { User } from '../../models/user/user.model';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { User } from 'src/app/models/user.model';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 

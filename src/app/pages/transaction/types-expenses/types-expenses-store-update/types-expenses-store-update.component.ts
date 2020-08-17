@@ -1,15 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { TypeExpenseService } from '../../../../services/type-expense/type-expense.service';
-import { ValidatorsPattern } from '../../../../validators/validators-pattern';
+import { TypeExpenseService } from 'src/app/services/type-expense.service';
+import { ValidatorsPattern } from 'src/app/validators/validators-pattern';
 import { ValidationsNameDirective } from 'src/app/directives/validations-name.directive';
 import { ToastrService } from 'ngx-toastr';
-import { GeneralService } from 'src/app/services/common/general.service';
+import { GeneralService } from 'src/app/services/general.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { STORE, UPDATE } from 'src/app/global-variables';
 import { Subject } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';
-import { TypeExpense } from 'src/app/models/type-expense/type-expense.model';
+import { TypeExpense } from 'src/app/models/type-expense.model';
 
 @Component({
   selector: 'app-types-expenses-store-update',

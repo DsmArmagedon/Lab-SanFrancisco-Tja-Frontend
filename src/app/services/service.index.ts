@@ -1,3 +1,3 @@
-export { LoginService } from './login/login.service';
-export { AuthenticationService } from './login/authentication.service';
-export { UserService } from './user/user.service';
+export { LoginService } from './login.service';
+export { AuthenticationService } from './authentication.service';
+export { UserService } from './user.service';

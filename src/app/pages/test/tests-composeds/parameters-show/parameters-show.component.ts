@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Parameter } from 'src/app/models/parameter/parameter.model';
+import { Parameter } from 'src/app/models/parameter.model';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({

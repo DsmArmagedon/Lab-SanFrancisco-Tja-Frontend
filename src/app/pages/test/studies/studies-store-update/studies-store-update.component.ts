@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Study } from 'src/app/models/study/study.model';
-import { StudyService } from '../../../../services/study/study.service';
-import { ValidationsNameDirective } from '../../../../directives/validations-name.directive';
+import { Study } from 'src/app/models/study.model';
+import { StudyService } from 'src/app/services/study.service';
+import { ValidationsNameDirective } from 'src/app/directives/validations-name.directive';
 import { ToastrService } from 'ngx-toastr';
-import { GeneralService } from 'src/app/services/common/general.service';
+import { GeneralService } from 'src/app/services/general.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UPDATE, STORE } from 'src/app/global-variables';
 import { ValidatorsPattern } from 'src/app/validators/validators-pattern';

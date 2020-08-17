@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { GeneralService } from 'src/app/services/common/general.service';
-import { TestComposedService } from 'src/app/services/test-composed/test-composed.service';
+import { GeneralService } from 'src/app/services/general.service';
+import { TestComposedService } from 'src/app/services/test-composed.service';
 import { delay } from 'rxjs/operators';
 
 @Component({

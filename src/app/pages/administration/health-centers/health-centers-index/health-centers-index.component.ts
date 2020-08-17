@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { HealthCentersFilterComponent } from '../health-centers-filter/health-centers-filter.component';
-import { HealthCenterService } from '../../../../services/health-center/health-center.service';
+import { HealthCenterService } from 'src/app/services/health-center.service';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
-import { SwalService } from '../../../../services/common/swal.service';
-import { GeneralService } from 'src/app/services/common/general.service';
+import { SwalService } from 'src/app/services/swal.service';
+import { GeneralService } from 'src/app/services/general.service';
 import { INDEX } from 'src/app/global-variables';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';
-import { Meta } from 'src/app/models/custom/meta.model';
-import { HealthCenter } from 'src/app/models/health-center/health-center.model';
+import { Meta } from 'src/app/models/meta.model';
+import { HealthCenter } from 'src/app/models/health-center.model';
 
 @Component({
   selector: 'app-health-centers-index',

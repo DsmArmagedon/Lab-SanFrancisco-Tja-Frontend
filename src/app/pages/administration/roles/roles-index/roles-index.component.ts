@@ -1,19 +1,19 @@
 import { Component, OnInit, ViewChild, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { RolesFilterComponent } from '../roles-filter/roles-filter.component';
-import { RoleService } from '../../../../services/role/role.service';
 import { FormGroup } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { RolesShowComponent } from '../roles-show/roles-show.component';
 import Swal from 'sweetalert2';
 import { ToastrService } from 'ngx-toastr';
-import { SwalService } from '../../../../services/common/swal.service';
+import { SwalService } from 'src/app/services/swal.service';
 import { Router } from '@angular/router';
-import { INDEX } from '../../../../global-variables';
-import { GeneralService } from 'src/app/services/common/general.service';
+import { INDEX } from 'src/app/global-variables';
+import { GeneralService } from 'src/app/services/general.service';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { Meta } from 'src/app/models/custom/meta.model';
-import { Role } from 'src/app/models/role/role.model';
+import { Meta } from 'src/app/models/meta.model';
+import { Role } from 'src/app/models/role.model';
+import { RoleService } from 'src/app/services/role.service';
 
 @Component({
   selector: 'app-roles-index',

@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { HealthCenterService } from '../../../../services/health-center/health-center.service';
+import { HealthCenterService } from 'src/app/services/health-center.service';
 import { ToastrService } from 'ngx-toastr';
-import { ValidatorsPattern } from '../../../../validators/validators-pattern';
-import { ValidationsNameDirective } from '../../../../directives/validations-name.directive';
-import { GeneralService } from 'src/app/services/common/general.service';
+import { ValidatorsPattern } from 'src/app/validators/validators-pattern';
+import { ValidationsNameDirective } from 'src/app/directives/validations-name.directive';
+import { GeneralService } from 'src/app/services/general.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { STORE, UPDATE } from 'src/app/global-variables';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { HealthCenter } from 'src/app/models/health-center/health-center.model';
+import { HealthCenter } from 'src/app/models/health-center.model';
 
 @Component({
   selector: 'app-health-centers-store-update',

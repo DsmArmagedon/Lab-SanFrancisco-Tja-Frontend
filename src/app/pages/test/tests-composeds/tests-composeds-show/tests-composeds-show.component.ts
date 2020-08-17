@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { TestComposed } from 'src/app/models/test-simple-composed/test-composed.model';
+import { TestComposed } from 'src/app/models/test-composed.model';
 import { ToastrService } from 'ngx-toastr';
-import { TestComposedService } from '../../../../services/test-composed/test-composed.service';
+import { TestComposedService } from 'src/app/services/test-composed.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SHOW } from '../../../../global-variables';
-import { GeneralService } from 'src/app/services/common/general.service';
+import { SHOW } from 'src/app/global-variables';
+import { GeneralService } from 'src/app/services/general.service';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { Study } from 'src/app/models/study/study.model';
+import { Study } from 'src/app/models/study.model';
 
 @Component({
   selector: 'app-tests-composeds-show',
