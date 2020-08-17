@@ -19,8 +19,8 @@ import { Meta } from 'src/app/models/custom/meta.model';
 })
 export class CompaniesPositionsIndexComponent implements OnInit, OnDestroy {
   @ViewChild(CompaniesPositionsFilterComponent, { static: true }) companyPositionFilter: CompaniesPositionsFilterComponent;
-  public isCollapsed: boolean = false;
-  public currentPage: number;
+  isCollapsed: boolean = false;
+  currentPage: number;
   formFilter: FormGroup;
   companyPositions: CompanyPosition[] = [];
   perPage: number = 25;

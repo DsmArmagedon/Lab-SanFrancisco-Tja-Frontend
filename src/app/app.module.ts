@@ -25,7 +25,7 @@ import { ValidationsNameDirective } from './directives/validations-name.directiv
 import { PatientComponent } from './pages/patient/patient.component';
 
 import { registerLocaleData } from '@angular/common';
-import  localeEs  from '@angular/common/locales/es';
+import localeEs from '@angular/common/locales/es';
 import localeEsExtra from '@angular/common/locales/extra/es';
 
 registerLocaleData(localeEs, 'es', localeEsExtra);

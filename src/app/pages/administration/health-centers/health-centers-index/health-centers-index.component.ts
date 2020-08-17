@@ -20,8 +20,8 @@ import { HealthCenter } from 'src/app/models/health-center/health-center.model';
 })
 export class HealthCentersIndexComponent implements OnInit, OnDestroy {
   @ViewChild(HealthCentersFilterComponent, { static: true }) healthCenterFilter: HealthCentersFilterComponent;
-  public isCollapsed: boolean = false;
-  public currentPage: number;
+  isCollapsed: boolean = false;
+  currentPage: number;
   formFilter: FormGroup;
   healthCenters: HealthCenter[] = [];
   perPage: number = 25;

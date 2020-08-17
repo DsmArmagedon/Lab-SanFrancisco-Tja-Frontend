@@ -15,7 +15,6 @@ import { UsersShowComponent } from '../users-show/users-show.component';
 import { GeneralService } from 'src/app/services/common/general.service';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { Meta } from 'src/app/models/custom/meta.model';
-import { IfStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-users-index',
@@ -32,8 +31,8 @@ export class UsersIndexComponent implements OnInit, OnDestroy {
   totalItems: number;
   formFilter: FormGroup;
   perPage: number = 25;
-  public currentPage: number;
-  public isCollapsed = false;
+  currentPage: number;
+  isCollapsed = false;
   page: number;
   bsModalRef: BsModalRef;
   private onDestroy = new Subject();

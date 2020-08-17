@@ -21,8 +21,8 @@ import { Unit } from 'src/app/models/unit/unit.model';
 export class UnitsIndexComponent implements OnInit, OnDestroy {
   @ViewChild(UnitsFilterComponent, { static: true }) unitFilter: UnitsFilterComponent;
 
-  public isCollapsed: boolean = false;
-  public currentPage: number;
+  isCollapsed: boolean = false;
+  currentPage: number;
   formFilter: FormGroup;
   units: Unit[] = [];
   perPage: number = 25;

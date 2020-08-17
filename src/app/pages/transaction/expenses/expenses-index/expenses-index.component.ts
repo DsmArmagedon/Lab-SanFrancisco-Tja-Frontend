@@ -21,8 +21,8 @@ import { Meta } from 'src/app/models/custom/meta.model';
   styles: []
 })
 export class ExpensesIndexComponent implements OnInit, OnDestroy {
-  public isCollapsed: boolean = false;
-  public currentPage: number;
+  isCollapsed: boolean = false;
+  currentPage: number;
 
   meta: Meta;
   formFilter: FormGroup;

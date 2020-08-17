@@ -20,8 +20,8 @@ import { Meta } from 'src/app/models/custom/meta.model';
 })
 export class TypesExpensesIndexComponent implements OnInit, OnDestroy {
   @ViewChild(TypesExpensesFilterComponent, { static: true }) typeExpenseFilter: TypesExpensesFilterComponent;
-  public isCollapsed: boolean = false;
-  public currentPage: number;
+  isCollapsed: boolean = false;
+  currentPage: number;
   formFilter: FormGroup;
   typeExpenses: TypeExpense[] = [];
   perPage: number = 25;

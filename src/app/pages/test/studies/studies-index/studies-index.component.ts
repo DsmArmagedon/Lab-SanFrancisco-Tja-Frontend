@@ -21,8 +21,8 @@ import { Meta } from 'src/app/models/custom/meta.model';
 export class StudiesIndexComponent implements OnInit {
   @ViewChild(StudiesFilterComponent, { static: true }) studyFilter: StudiesFilterComponent;
 
-  public isCollapsed: boolean = false;
-  public currentPage: number;
+  isCollapsed: boolean = false;
+  currentPage: number;
   formFilter: FormGroup;
   studies: Study[] = [];
   perPage: number = 25;

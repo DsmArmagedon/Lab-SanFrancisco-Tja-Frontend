@@ -22,8 +22,8 @@ import { Role } from 'src/app/models/role/role.model';
 })
 export class RolesIndexComponent implements OnInit, OnDestroy {
   @ViewChild(RolesFilterComponent, { static: true }) rolesFilter: RolesFilterComponent;
-  public isCollapsed: boolean = false;
-  public currentPage: number;
+  isCollapsed: boolean = false;
+  currentPage: number;
 
   meta: Meta;
   formFilter: FormGroup;

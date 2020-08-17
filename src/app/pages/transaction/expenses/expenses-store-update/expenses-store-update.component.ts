@@ -110,6 +110,11 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
     this.serial_document.setValue(this.expense.serial_document);
     this.amount.setValue(this.expense.amount);
     this.description.setValue(this.expense.description);
+
+    // TODO: Cambiar a patchValue todas las assign
+    // this.formExpense.patchValue({
+    //   id: this.expense.id
+    // });
     this.documentEnable();
   }
 
