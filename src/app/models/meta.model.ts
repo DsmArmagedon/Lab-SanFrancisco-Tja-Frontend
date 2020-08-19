@@ -17,6 +17,16 @@ export class Meta implements IMeta {
     private _to: number = null;
     private _total: number = null;
 
+    constructor(meta?: Meta) {
+        this._current_page = meta?.current_page;
+        this._from = meta?.from;
+        this._last_page = meta?.last_page;
+        this._path = meta?.path;
+        this._per_page = meta?.per_page;
+        this._to = meta?.to;
+        this._total = meta?.total;
+    }
+
     set current_page(value: number) {
         this._current_page = value;
     }

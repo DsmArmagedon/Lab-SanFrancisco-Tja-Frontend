@@ -12,8 +12,8 @@ export class LoginService {
 
   constructor(private http: HttpClient, private router: Router) { }
   login(username: string, password: string): any {
-    let url = `${URL_GLOBAL}/login`;
-    let login = {
+    const url = `${URL_GLOBAL}/login`;
+    const login = {
       'grant_type': GRANT_TYPE,
       'client_id': CLIENT_ID,
       'client_secret': CLIENT_SECRET,
@@ -21,7 +21,7 @@ export class LoginService {
       'password': password
     };
     return this.http.post(url, login).pipe(
-      map(resp => resp),
+      map(response => response),
       catchError(
         (err: HttpErrorResponse) => {
           return throwError(err);
@@ -31,13 +31,13 @@ export class LoginService {
   }
 
   privileges(): Observable<any> {
-    let url = `${URL_GLOBAL}/privileges`;
+    const url = `${URL_GLOBAL}/privileges`;
     const headers: HttpHeaders = new HttpHeaders({
       'Authorization': `${localStorage.getItem('token_type')} ${localStorage.getItem('access_token')}`
     });
     return this.http.get(url, { headers }).pipe(
-      map((resp: any) => {
-        return resp.data;
+      map((response: any) => {
+        return response.data;
       })
     );
   }

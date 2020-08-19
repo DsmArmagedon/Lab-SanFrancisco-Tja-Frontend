@@ -21,6 +21,17 @@ export class Title implements ITitle {
     private _test_id?: number = null;
     private _parameters?: Array<Parameter> = [];
 
+    constructor(title?: ITitle) {
+        this._id = title?.id;
+        this._name = title?.name;
+        this._slug = title?.slug;
+        this._print = title?.print;
+        this._note = title?.note;
+        this._status = title?.status;
+        this._test_id = title?.test_id;
+        this._parameters = title?.parameters;
+    }
+
     public get id(): number {
         return this._id;
     }

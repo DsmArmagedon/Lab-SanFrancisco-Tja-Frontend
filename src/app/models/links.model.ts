@@ -11,6 +11,13 @@ export class Links implements ILinks {
     private _prev: string = null;
     private _next: string = null;
 
+    constructor(links?: Links) {
+        this._first = links?.first;
+        this._last = links?.last;
+        this._prev = links?.prev;
+        this._next = links?.next;
+    }
+
     set first(value: string) {
         this._first = value;
     }

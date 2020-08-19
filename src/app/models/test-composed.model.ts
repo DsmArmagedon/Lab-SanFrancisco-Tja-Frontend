@@ -1,13 +1,27 @@
 import { Title } from "./title.model";
-import { Test } from './test.model';
+import { Test, TypeTest } from './test.model';
+import { Study } from './study.model';
 
 interface ITestComposed {
+    id?: number;
+    name?: string;
+    slug?: string;
+    price?: number;
+    type?: TypeTest;
+    study_id?: number;
+    status?: boolean;
+    study?: Study;
     titles?: Array<Title>;
 }
 
 export class TestComposed extends Test implements ITestComposed {
 
     private _titles?: Array<Title> = [];
+
+    constructor(testComposed?: ITestComposed) {
+        super(testComposed?.id, testComposed?.name, testComposed?.slug, testComposed?.price, testComposed?.type, testComposed?.study_id, testComposed?.status, testComposed?.study);
+        this._titles = testComposed?.titles ?? [];
+    }
 
     public get titles(): Array<Title> {
         return this._titles;

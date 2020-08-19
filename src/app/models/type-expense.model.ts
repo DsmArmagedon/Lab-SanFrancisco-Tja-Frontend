@@ -15,7 +15,16 @@ export class TypeExpense implements ITypeExpense {
     private _slug?: string = null;
     private _description?: string = null;
     private _status?: boolean = true;
-    private _expenses: Array<Expense> = [];
+    private _expenses?: Array<Expense> = [];
+
+    constructor(typeExpense?: ITypeExpense) {
+        this._id = typeExpense?.id;
+        this._name = typeExpense?.name;
+        this._slug = typeExpense?.slug;
+        this._description = typeExpense?.description;
+        this._status = typeExpense?.status;
+        this._expenses = typeExpense?.expenses;
+    }
 
     public get id(): number {
         return this._id;

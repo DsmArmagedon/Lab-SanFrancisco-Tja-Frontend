@@ -24,7 +24,6 @@ export class UnitsStoreUpdateComponent implements OnInit, OnDestroy {
   display: string;
   idUnit: number;
   initialState: any;
-
   private onDestroy = new Subject();
 
   constructor(private unitService: UnitService,
@@ -130,8 +129,8 @@ export class UnitsStoreUpdateComponent implements OnInit, OnDestroy {
       );
   }
 
-  showDisplay(): void {
-    let valueName: string = this.name.value;
+  showDisplay(element: HTMLInputElement): void {
+    let valueName: string = element.value;
     let valueNameHtml: string = '';
     let sup: string;
     let size: number = valueName.length;

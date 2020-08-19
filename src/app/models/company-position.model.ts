@@ -13,6 +13,14 @@ export class CompanyPosition implements ICompanyPosition {
     private _description?: string = null;
     private _status?: boolean = true;
 
+    constructor(companyPosition?: ICompanyPosition) {
+        this._id = companyPosition?.id;
+        this._name = companyPosition?.name;
+        this._slug = companyPosition?.slug;
+        this._description = companyPosition?.description;
+        this._status = companyPosition?.status;
+    }
+
     public get id(): number {
         return this._id;
     }

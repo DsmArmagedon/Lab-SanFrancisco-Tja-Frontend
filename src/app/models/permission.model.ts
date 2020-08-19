@@ -17,6 +17,16 @@ export class Permission implements IPermission {
     private _index?: number = null;
     private _status?: boolean = true;
 
+    constructor(permission?: IPermission) {
+        this._id = permission?.id;
+        this._name = permission?.name;
+        this._slug = permission?.slug;
+        this._description = permission?.description;
+        this._resource = permission?.resource;
+        this._index = permission?.index;
+        this._status = permission?.status;
+    }
+
     public get id(): number {
         return this._id;
     }

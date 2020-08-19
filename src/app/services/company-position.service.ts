@@ -6,6 +6,7 @@ import { Params } from '@angular/router';
 import { CompanyPositionCollection } from '../models/company-position-collection.model';
 import { URL_GLOBAL } from '../config';
 import { CompanyPosition } from '../models/company-position.model';
+import { FormGroup } from '@angular/forms';
 
 
 
@@ -16,8 +17,8 @@ export class CompanyPositionService {
 
   constructor(private http: HttpClient) { }
 
-  indexCompanyPositions(formFilter: any, per_page: number, page: number): Observable<CompanyPositionCollection> {
-    let url = `${URL_GLOBAL}/companies-positions`;
+  indexCompanyPositions(formFilter: FormGroup, per_page: number, page: number): Observable<CompanyPositionCollection> {
+    const url = `${URL_GLOBAL}/companies-positions`;
 
     const params: Params = {
       per_page: per_page,
@@ -28,16 +29,15 @@ export class CompanyPositionService {
     }
 
     return this.http.get<CompanyPositionCollection>(url, { params }).pipe(
-      map((resp: any) => {
-        resp.data = resp.data.map((companyPosition: CompanyPosition) => Object.assign(new CompanyPosition, companyPosition));
-        return Object.assign(new CompanyPositionCollection, resp)
+      map((response: any) => {
+        response.data = response.data.map((companyPosition: CompanyPosition) => new CompanyPosition(companyPosition));
+        return new CompanyPositionCollection(response);
       })
     );
   }
 
-
   listCompanyPositions(): Observable<CompanyPosition[]> {
-    let url = `${URL_GLOBAL}/companies-positions`;
+    const url = `${URL_GLOBAL}/companies-positions`;
     const params: Params = {
       company_position_select: 'name',
       paginate: 'disabled',
@@ -45,45 +45,45 @@ export class CompanyPositionService {
     }
 
     return this.http.get<CompanyPosition[]>(url, { params }).pipe(
-      map((resp: any) => {
-        return resp.data.map((companyPosition: CompanyPosition) => Object.assign(new CompanyPosition, companyPosition));
+      map((response: any) => {
+        return response.data.map((companyPosition: CompanyPosition) => new CompanyPosition(companyPosition));
       })
     );
   }
 
   storeCompanyPositions(companyPosition: CompanyPosition): Observable<CompanyPosition> {
-    let url = `${URL_GLOBAL}/companies-positions`;
+    const url = `${URL_GLOBAL}/companies-positions`;
     return this.http.post<CompanyPosition>(url, companyPosition).pipe(
-      map((resp: any) => {
-        return Object.assign(new CompanyPosition, resp.data);
+      map((response: any) => {
+        return new CompanyPosition(response.data);
       })
     );
   }
 
   editShowCompanyPositions(id: number): Observable<CompanyPosition> {
-    let url = `${URL_GLOBAL}/companies-positions/${id}`;
+    const url = `${URL_GLOBAL}/companies-positions/${id}`;
     return this.http.get<CompanyPosition>(url).pipe(
-      map((resp: any) => {
-        return Object.assign(new CompanyPosition, resp.data);
+      map((response: any) => {
+        return new CompanyPosition(response.data);
       })
     );
   }
 
   updateCompanyPositions(companyPosition: CompanyPosition): Observable<CompanyPosition> {
-    let url = `${URL_GLOBAL}/companies-positions/${companyPosition.id}`;
+    const url = `${URL_GLOBAL}/companies-positions/${companyPosition.id}`;
     return this.http.put<CompanyPosition>(url, companyPosition).pipe(
-      map((resp: any) => {
-        return Object.assign(new CompanyPosition, resp.data);
+      map((response: any) => {
+        return new CompanyPosition(response.data);
       })
     );
   }
 
   destroyCompanyPositions(id: number): Observable<CompanyPosition> {
-    let url = `${URL_GLOBAL}/companies-positions/${id}`;
+    const url = `${URL_GLOBAL}/companies-positions/${id}`;
 
     return this.http.delete<CompanyPosition>(url).pipe(
-      map((resp: any) => {
-        return Object.assign(new CompanyPosition, resp.data);
+      map((response: any) => {
+        return new CompanyPosition(response.data);
       })
     );
   }
