@@ -1,8 +1,17 @@
 
-import { TypeData, Test } from './test.model';
+import { TypeData, Test, TypeTest } from './test.model';
 import { Unit } from './unit.model';
+import { Study } from './study.model';
 
 interface ITestSimple {
+    id?: number;
+    name?: string;
+    slug?: string;
+    price?: number;
+    type?: TypeTest;
+    study_id?: number;
+    status?: boolean;
+    study?: Study;
     unit_id?: number;
     unit?: Unit;
     type_data?: TypeData;
@@ -20,6 +29,17 @@ export class TestSimple extends Test implements ITestSimple {
     private _note?: string = null;
     private _options?: Array<string> = [];
     private _default_values?: string = null;
+
+    constructor(testSimple?: ITestSimple) {
+        super(testSimple?.id, testSimple?.name, testSimple?.slug, testSimple?.price, testSimple?.type, testSimple?.study_id, testSimple?.status, testSimple?.study);
+        this._unit_id = testSimple?.unit_id;
+        this._unit = testSimple?.unit;
+        this._type_data = testSimple?.type_data;
+        this._reference_values = testSimple?.reference_values;
+        this._note = testSimple?.note;
+        this._options = testSimple?.options;
+        this._default_values = testSimple?.default_values;
+    }
 
     public get unit_id(): number {
         return this._unit_id;

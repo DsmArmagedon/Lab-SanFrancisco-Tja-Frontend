@@ -10,6 +10,7 @@ import { TestComposedCollection } from '../models/test-composed-collection.model
 import { Title } from 'src/app/models/title.model';
 import { Parameter } from '../models/parameter.model';
 import { Unit } from '../models/unit.model';
+import { FormGroup } from '@angular/forms';
 
 interface IIdNameTestSelected {
   id: number,
@@ -40,8 +41,8 @@ export class TestComposedService {
     this.idNameTestSelectedSubject.next({ id: id, name: name });
   }
 
-  indexTests(formFilter: any, per_page: number, page: number): Observable<TestComposedCollection> {
-    let url = `${URL_GLOBAL}/tests-composeds`;
+  indexTests(formFilter: FormGroup, per_page: number, page: number): Observable<TestComposedCollection> {
+    const url = `${URL_GLOBAL}/tests-composeds`;
 
     const params: Params = {
       per_page: per_page,
@@ -53,14 +54,14 @@ export class TestComposedService {
       ...formFilter
     }
     return this.http.get<TestComposedCollection>(url, { params }).pipe(
-      map((resp: any) => {
-        return Object.assign(new TestComposedCollection, resp);
+      map((response: any) => {
+        return new TestComposedCollection(response);
       })
     );
   }
 
   editTests(id: number): Observable<TestComposed> {
-    let url = `${URL_GLOBAL}/tests-composeds/${id}`;
+    const url = `${URL_GLOBAL}/tests-composeds/${id}`;
 
     const params: Params = {
       titles: 'load',
@@ -69,17 +70,17 @@ export class TestComposedService {
     }
 
     return this.http.get<TestComposed>(url, { params }).pipe(
-      map((resp: any) => {
-        resp.data.study = Object.assign(new Study, resp.data.study);
-        resp.data.study_id = resp.data.study.id;
-        resp.data.titles = resp.data.titles.map((title: Title) => Object.assign(new Title, title))
-        return Object.assign(new TestComposed, resp.data);
+      map((response: any) => {
+        response.data.study = new Study(response.data.study);
+        response.data.study_id = response.data.study.id;
+        response.data.titles = response.data.titles.map((title: Title) => new Title(title))
+        return new TestComposed(response.data);
       })
     );
   }
 
   showTests(id: number): Observable<TestComposed> {
-    let url = `${URL_GLOBAL}/tests-composeds/${id}`;
+    const url = `${URL_GLOBAL}/tests-composeds/${id}`;
 
     const params: Params = {
       study: 'load',
@@ -93,43 +94,43 @@ export class TestComposedService {
     }
 
     return this.http.get<TestComposed>(url, { params }).pipe(
-      map((resp: any) => {
-        resp.data.study = Object.assign(new Study, resp.data.study);
-        resp.data.titles = resp.data.titles.map((title: Title) => {
+      map((response: any) => {
+        response.data.study = new Study(response.data.study);
+        response.data.titles = response.data.titles.map((title: Title) => {
           title.parameters = title.parameters.map((parameter: Parameter) => {
-            parameter.unit = Object.assign(new Unit, parameter.unit);
-            return Object.assign(new Parameter, parameter);
+            parameter.unit = new Unit(parameter.unit);
+            return new Parameter(parameter);
           });
-          return Object.assign(new Title, title);
+          return new Title(title);
         })
-        return Object.assign(new TestComposed, resp.data);
+        return new TestComposed(response.data);
       })
     );
   }
 
   storeTests(test: TestComposed): Observable<TestComposed> {
-    let url = `${URL_GLOBAL}/tests-composeds`;
+    const url = `${URL_GLOBAL}/tests-composeds`;
     return this.http.post<TestComposed>(url, test).pipe(
-      map((resp: any) => {
-        return Object.assign(new TestComposed, resp.data);
+      map((response: any) => {
+        return new TestComposed(response.data);
       })
     );
   }
 
   updateTests(test: TestComposed): Observable<TestComposed> {
-    let url = `${URL_GLOBAL}/tests-composeds/${test.id}`;
+    const url = `${URL_GLOBAL}/tests-composeds/${test.id}`;
     return this.http.put<TestComposed>(url, test).pipe(
-      map((resp: any) => {
-        return Object.assign(new TestComposed, resp.data);
+      map((response: any) => {
+        return new TestComposed(response.data);
       })
     );
   }
 
   destroyTests(id: number): Observable<TestComposed> {
-    let url = `${URL_GLOBAL}/tests-composeds/${id}`;
+    const url = `${URL_GLOBAL}/tests-composeds/${id}`;
     return this.http.delete<TestComposed>(url).pipe(
-      map((resp: any) => {
-        return Object.assign(new TestComposed, resp.data);
+      map((response: any) => {
+        return new TestComposed(response.data);
       })
     );
   }

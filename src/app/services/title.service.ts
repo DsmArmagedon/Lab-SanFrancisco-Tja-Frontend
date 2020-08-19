@@ -49,51 +49,50 @@ export class TitleService {
   }
 
   indexTitles(testId: number): Observable<Title[]> {
-    let url = `${URL_GLOBAL}/tests-composeds/${testId}/titles`;
+    const url = `${URL_GLOBAL}/tests-composeds/${testId}/titles`;
     return this.http.get<Title[]>(url).pipe(
-      map((resp: any) => {
-        return resp.data.map((title: Title) => Object.assign(new Title, title));
+      map((response: any) => {
+        return response.data.map((title: Title) => new Title(title));
       })
     );
   }
 
   storeTitles(title: Title): Observable<Title> {
-    let url = `${URL_GLOBAL}/tests-composeds/${title.test_id}/titles`;
+    const url = `${URL_GLOBAL}/tests-composeds/${title.test_id}/titles`;
     return this.http.post<Title>(url, title).pipe(
-      map((resp: any) => {
-        return Object.assign(new Title, resp.data);
+      map((response: any) => {
+        return new Title(response.data);
       })
     );
   }
 
   updateTitles(title: Title): Observable<Title> {
-    let url = `${URL_GLOBAL}/tests-composeds/${title.test_id}/titles/${title.id}`;
+    const url = `${URL_GLOBAL}/tests-composeds/${title.test_id}/titles/${title.id}`;
     return this.http.put<Title>(url, title).pipe(
-      map((resp: any) => {
-        return Object.assign(new Title, resp.data);
+      map((response: any) => {
+        return new Title(response.data);
       })
     );
   }
 
   destroyTitles(testId: number, id: number): Observable<Title> {
-    let url = `${URL_GLOBAL}/tests-composeds/${testId}/titles/${id}`;
+    const url = `${URL_GLOBAL}/tests-composeds/${testId}/titles/${id}`;
     return this.http.delete<Title>(url).pipe(
-      map((resp: any) => {
-
-        return Object.assign(new Title, resp.data);
+      map((response: any) => {
+        return new Title(response.data);
       })
     );
   }
 
   listTitles(testId: number): Observable<Title[]> {
-    let url = `${URL_GLOBAL}/tests-composeds/${testId}/titles`;
+    const url = `${URL_GLOBAL}/tests-composeds/${testId}/titles`;
     const params: Params = {
       title_select: 'name',
       title_status: 1
     }
     return this.http.get<Title[]>(url, { params }).pipe(
-      map((resp: any) => {
-        return resp.data.map((title: Title) => Object.assign(new Title, title));
+      map((response: any) => {
+        return response.data.map((title: Title) => new Title(title));
       })
     );
   }

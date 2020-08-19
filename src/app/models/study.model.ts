@@ -18,6 +18,15 @@ export class Study implements IStudy {
     private _status?: boolean = true;
     private _tests: Array<Test> = [];
 
+    constructor(study?: IStudy) {
+        this._id = study?.id;
+        this._name = study?.name;
+        this._slug = study?.slug;
+        this._description = study?.description;
+        this._status = study?.status;
+        this._tests = study?.tests;
+    }
+
     public get id(): number {
         return this._id;
     }

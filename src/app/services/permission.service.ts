@@ -36,7 +36,7 @@ export class PermissionService {
   }
 
   listPermissions(): Observable<Permission[]> {
-    let url = `${URL_GLOBAL}/permissions`;
+    const url = `${URL_GLOBAL}/permissions`;
     this.initializeObjListPermissions();
     const params: Params = {
       permission_select: 'name,description,slug',
@@ -44,8 +44,8 @@ export class PermissionService {
       paginate: 'disabled'
     }
     return this.http.get<Permission[]>(url, { params }).pipe(
-      map((resp: any) => {
-        let permissionsApp: Permission[] = this.filterPermissionsToShow(resp.data);
+      map((response: any) => {
+        const permissionsApp: Permission[] = this.filterPermissionsToShow(response.data);
         this.addIndexPermissionAndChangeToList(permissionsApp);
         return this.objectListPermissions;
       })
@@ -60,8 +60,8 @@ export class PermissionService {
   addIndexPermissionAndChangeToList(data: Array<any>) {
     this.index = 0;
     data.forEach(permission => {
-      let objPermission: Permission = this.addIndexToObjectAssignPermission(permission);
-      let type: string = objPermission.slug.split('.')[0];
+      const objPermission: Permission = this.addIndexToObjectAssignPermission(permission);
+      const type: string = objPermission.slug.split('.')[0];
       this.switchResources(type, objPermission);
     });
 
@@ -98,7 +98,7 @@ export class PermissionService {
   }
 
   addIndexToObjectAssignPermission(permission: any): Permission {
-    let obj: Permission = Object.assign(new Permission, permission);
+    const obj: Permission = new Permission(permission);
     obj.index = this.index;
     this.index++;
     return obj;

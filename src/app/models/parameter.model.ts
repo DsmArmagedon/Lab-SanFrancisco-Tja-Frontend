@@ -4,6 +4,15 @@ import { TypeData } from './test.model';
 import { Title } from './title.model';
 
 interface IParameter {
+    id?: number;
+    name?: string;
+    type_data?: TypeData;
+    reference_values?: string;
+    options?: Array<string>;
+    default_value?: string;
+    status?: boolean;
+    unit_id?: number;
+    title_id?: number;
     unit?: Unit;
     title?: Title;
 }
@@ -20,6 +29,20 @@ export class Parameter implements IParameter {
     private _title_id?: number = null;
     private _unit?: Unit;
     private _title?: Title;
+
+    constructor(parameter?: IParameter) {
+        this._id = parameter?.id;
+        this._name = parameter?.name;
+        this._type_data = parameter?.type_data;
+        this._reference_values = parameter?.reference_values;
+        this._options = parameter?.options;
+        this._default_value = parameter?.default_value;
+        this._status = parameter?.status;
+        this._unit_id = parameter?.unit_id;
+        this._unit = parameter?.unit;
+        this._title_id = parameter?.title_id;
+        this._title = parameter?.title;
+    }
 
     public get id(): number {
         return this._id;

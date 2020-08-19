@@ -8,6 +8,7 @@ import { Role } from '../models/role.model';
 import { CompanyPosition } from '../models/company-position.model';
 import { UserCollection } from '../models/user-collection.model';
 import { URL_GLOBAL } from '../config';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +17,8 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  indexUsers(formFilter: any, per_page: number, page: number = 1): Observable<UserCollection> {
-    let url = `${URL_GLOBAL}/users`;
+  indexUsers(formFilter: FormGroup, per_page: number, page: number = 1): Observable<UserCollection> {
+    const url = `${URL_GLOBAL}/users`;
     const params: Params = {
       role: 'load',
       company_position: 'load',
@@ -30,19 +31,19 @@ export class UserService {
       ...formFilter
     }
     return this.http.get<UserCollection>(url, { params }).pipe(
-      map((resp: any) => {
-        resp.data = resp.data.map((user: User) => {
-          user.companyPosition = Object.assign(new CompanyPosition, user.companyPosition);
-          user.role = Object.assign(new Role, user.role);
-          return Object.assign(new User, user);
+      map((response: any) => {
+        response.data = response.data.map((user: User) => {
+          user.companyPosition = new CompanyPosition(user.companyPosition);
+          user.role = new Role(user.role);
+          return new User(user);
         });
-        return Object.assign(new UserCollection, resp);
+        return new UserCollection(response);
       })
     );
   }
 
   editShowUsers(ci: string): Observable<User> {
-    let url = `${URL_GLOBAL}/users/${ci}`;
+    const url = `${URL_GLOBAL}/users/${ci}`;
     const params: Params = {
       role: 'load',
       role_select: 'name,status',
@@ -50,45 +51,45 @@ export class UserService {
       company_position_select: 'name,status'
     }
     return this.http.get<User>(url, { params }).pipe(
-      map((resp: any) => {
-        resp.data.companyPosition = Object.assign(new CompanyPosition, resp.data.companyPosition);
-        resp.data.role = Object.assign(new Role, resp.data.role);
-        return Object.assign(new User, resp.data);
+      map((response: any) => {
+        response.data.companyPosition = new CompanyPosition(response.data.companyPosition);
+        response.data.role = new Role(response.data.role);
+        return new User(response.data);
       })
     );
   }
 
   storeUsers(user: User): Observable<User> {
-    let url = `${URL_GLOBAL}/users`;
+    const url = `${URL_GLOBAL}/users`;
     return this.http.post<User>(url, this.toFormData(user.toJSON())).pipe(
-      map((resp: any) => {
-        return Object.assign(new User, resp.data);
+      map((response: any) => {
+        return new User(response.data);
       })
     );
   }
 
   updateUsers(user: User): Observable<User> {
-    let url = `${URL_GLOBAL}/users/${user.id}`;
-    let formDataUser = this.toFormData(user.toJSON());
+    const url = `${URL_GLOBAL}/users/${user.id}`;
+    const formDataUser = this.toFormData(user.toJSON());
     formDataUser.append('_method', 'PUT');
     return this.http.post<User>(url, formDataUser).pipe(
-      map((resp: any) => {
-        return Object.assign(new User, resp.data);
+      map((response: any) => {
+        return new User(response.data);
       })
     );
   }
 
   destroyUsers(ci: string): Observable<User> {
-    let url = `${URL_GLOBAL}/users/${ci}`;
+    const url = `${URL_GLOBAL}/users/${ci}`;
     return this.http.delete<User>(url).pipe(
-      map((resp: any) => {
-        return Object.assign(new User, resp.data);
+      map((response: any) => {
+        return new User(response.data);
       })
     );
   }
 
   toFormData<T>(formValue: T) {
-    let formData = new FormData();
+    const formData = new FormData();
     for (const key of Object.keys(formValue)) {
       const value = formValue[key];
       formData.append(key, value);

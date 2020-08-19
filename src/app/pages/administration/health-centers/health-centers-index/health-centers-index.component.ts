@@ -55,7 +55,6 @@ export class HealthCentersIndexComponent implements OnInit, OnDestroy {
       .subscribe(
         resp => {
           this.healthCenters = resp.healthCenters;
-          console.log(this.healthCenters);
           this.meta = resp.meta;
         },
         () => this.toastr.error('Consulte con el Administrador.', 'Error al listar los CENTROS DE SALUD.')

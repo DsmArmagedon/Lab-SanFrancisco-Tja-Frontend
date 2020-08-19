@@ -32,6 +32,22 @@ export class Expense implements IExpense {
     private _typeExpense?: TypeExpense;
     private _user: User;
 
+    constructor(expense?: IExpense) {
+        this._id = expense?.id;
+        this._code = expense?.code;
+        this._type_expense_id = expense?.type_expense_id;
+        this._description = expense?.description;
+        this._date_expense = expense?.date_expense;
+        this._amount = expense?.amount;
+        this._document = expense?.document;
+        this._serial_document = expense?.serial_document;
+        this._name_responsible = expense?.name_responsible;
+        this._user_id = expense?.user_id;
+        this._status = expense?.status;
+        this._typeExpense = expense?.typeExpense;
+        this._user = expense?.user;
+    }
+
     public get id(): string {
         return this._id;
     }

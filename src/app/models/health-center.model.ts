@@ -18,6 +18,16 @@ export class HealthCenter implements IHealthCenter {
     private _phone?: string = null;
     private _status?: boolean = true;
 
+    constructor(healthCenter?: IHealthCenter) {
+        this._id = healthCenter?.id;
+        this._name = healthCenter?.name;
+        this._slug = healthCenter?.slug;
+        this._information = healthCenter?.information;
+        this._deduction = healthCenter?.deduction;
+        this._phone = healthCenter?.phone;
+        this._status = healthCenter?.status;
+    }
+
     public get id(): number {
         return this._id;
     }

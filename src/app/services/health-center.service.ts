@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { Params } from '@angular/router';
 import { HealthCenter } from '../models/health-center.model';
 import { HealthCenterCollection } from '../models/health-center-collection.model';
+import { FormGroup } from '@angular/forms';
 
 
 @Injectable({
@@ -15,8 +16,8 @@ export class HealthCenterService {
 
   constructor(private http: HttpClient) { }
 
-  indexHealthCenters(formFilter: any, per_page: number, page: number): Observable<HealthCenterCollection> {
-    let url = `${URL_GLOBAL}/health-centers`;
+  indexHealthCenters(formFilter: FormGroup, per_page: number, page: number): Observable<HealthCenterCollection> {
+    const url = `${URL_GLOBAL}/health-centers`;
 
     const params: Params = {
       per_page: per_page,
@@ -26,46 +27,46 @@ export class HealthCenterService {
       ...formFilter
     }
     return this.http.get<HealthCenterCollection>(url, { params }).pipe(
-      map((resp: any) => {
-        resp.data = resp.data.map((healthCenter: HealthCenter) => Object.assign(new HealthCenter, healthCenter));
-        return Object.assign(new HealthCenterCollection, resp);
+      map((response: any) => {
+        response.data = response.data.map((healthCenter: HealthCenter) => new HealthCenter(healthCenter));
+        return new HealthCenterCollection(response);
       })
     );
   }
 
   storeHealthCenters(healthCenter: HealthCenter): Observable<HealthCenter> {
-    let url = `${URL_GLOBAL}/health-centers`;
+    const url = `${URL_GLOBAL}/health-centers`;
     return this.http.post<HealthCenter>(url, healthCenter).pipe(
-      map((resp: any) => {
-        return Object.assign(new HealthCenter, resp.data);
+      map((response: any) => {
+        return new HealthCenter(response.data);
       })
     );
   }
 
   editShowHealthCenters(id: number): Observable<HealthCenter> {
-    let url = `${URL_GLOBAL}/health-centers/${id}`;
+    const url = `${URL_GLOBAL}/health-centers/${id}`;
     return this.http.get<HealthCenter>(url).pipe(
-      map((resp: any) => {
-        return Object.assign(new HealthCenter, resp.data);
+      map((response: any) => {
+        return new HealthCenter(response.data);
       })
     );
   }
 
   updateHealthCenters(healthCenter: HealthCenter): Observable<HealthCenter> {
-    let url = `${URL_GLOBAL}/health-centers/${healthCenter.id}`;
+    const url = `${URL_GLOBAL}/health-centers/${healthCenter.id}`;
     return this.http.put<HealthCenter>(url, healthCenter).pipe(
-      map((resp: any) => {
-        return Object.assign(new HealthCenter, resp.data);
+      map((response: any) => {
+        return new HealthCenter(response.data);
       })
     );
   }
 
   destroyHealthCenters(id: number): Observable<HealthCenter> {
-    let url = `${URL_GLOBAL}/health-centers/${id}`;
+    const url = `${URL_GLOBAL}/health-centers/${id}`;
 
     return this.http.delete<HealthCenter>(url).pipe(
-      map((resp: any) => {
-        return Object.assign(new HealthCenter, resp.data);
+      map((response: any) => {
+        return new HealthCenter(response.data);
       })
     );
   }

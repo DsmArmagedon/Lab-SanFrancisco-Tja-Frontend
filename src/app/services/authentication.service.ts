@@ -18,20 +18,21 @@ export class AuthenticationService {
 
   loadUserAuth(flag: boolean = false): void {
     if (flag) {
-      this.userAuth().subscribe(resp => {
-        this.user = resp;
-        localStorage.setItem('user', JSON.stringify(resp));
+      this.userAuth().subscribe(response => {
+        this.user = response;
+        localStorage.setItem('user', JSON.stringify(response));
         this.userAuthenticate.next(this.user);
       });
     } else {
       let userJson = JSON.parse(localStorage.getItem('user'));
-      this.user = Object.assign(new User, userJson);
+      this.user = new User(userJson);
+
       this.userAuthenticate.next(this.user);
     }
   }
 
   userAuth(): Observable<User> {
-    let url = `${URL_GLOBAL}/profile`;
+    const url = `${URL_GLOBAL}/profile`;
     const params = {
       role: 'load',
       role_select: 'name',
@@ -40,29 +41,29 @@ export class AuthenticationService {
       user_select: 'first_name,last_name,email,images'
     }
     return this.http.get(url, { params }).pipe(
-      map((resp: any) => {
-        return resp.data;
+      map((response: any) => {
+        return response.data;
       })
     );
   }
 
   privilegesAuthHeaders(): Observable<any> {
-    let url = `${URL_GLOBAL}/privileges`;
+    const url = `${URL_GLOBAL}/privileges`;
     return this.http.get(url).pipe(
-      map((resp: any) => {
-        return resp.data;
+      map((response: any) => {
+        return response.data;
       })
     );
   }
 
   privilegesAuth(): Observable<any> {
-    let url = `${URL_GLOBAL}/privileges`;
+    const url = `${URL_GLOBAL}/privileges`;
     const headers = new HttpHeaders({
       'Authorization': `${localStorage.getItem('token_type')} ${localStorage.getItem('access_token')}`
     });
     return this.http.get(url, { headers }).pipe(
-      map((resp: any) => {
-        return resp.data;
+      map((response: any) => {
+        return response.data;
       })
     );
   }

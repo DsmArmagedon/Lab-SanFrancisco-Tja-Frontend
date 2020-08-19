@@ -13,6 +13,14 @@ export class Unit implements IUnit {
     private _note?: string = null;
     private _status?: boolean = null;
 
+    constructor(unit?: IUnit) {
+        this._id = unit?.id;
+        this._name = unit?.name;
+        this._display = unit?.display;
+        this._note = unit?.note;
+        this._status = unit?.status;
+    }
+
     public get id(): number {
         return this._id;
     }

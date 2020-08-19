@@ -12,7 +12,7 @@ export class PatientService {
   constructor(private http: HttpClient) { }
 
   indexPatients(value: string): Observable<any> {
-    let url = `${URL_GLOBAL}/patients`;
+    const url = `${URL_GLOBAL}/patients`;
     const params: Params = {
       patient_first_name: value
     }

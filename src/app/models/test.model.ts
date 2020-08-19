@@ -24,6 +24,17 @@ export class Test implements ITest {
     protected _status?: boolean = true;
     protected _study?: Study;
 
+    constructor(id?: number, name?: string, slug?: string, price?: number, type?: TypeTest, study_id?: number, status?: boolean, study?: Study) {
+        this._id = id;
+        this._name = name;
+        this._slug = slug;
+        this._price = price;
+        this._type = type;
+        this._study_id = study_id;
+        this._status = status;
+        this._study = study;
+    }
+
     public set id(value: number) {
         this._id = value;
     }

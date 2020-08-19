@@ -7,8 +7,9 @@ interface IRole {
     slug?: string;
     description?: string;
     status?: boolean;
-    permissions_id?: number[];
-    permissions?: Permission[];
+    permissions_id?: Array<number>;
+    permissions?: Array<Permission>;
+    users?: Array<User>
 }
 
 export class Role implements IRole {
@@ -20,6 +21,17 @@ export class Role implements IRole {
     private _permissions_id?: Array<number> = [];
     private _permissions?: Array<Permission> = [];
     private _users?: Array<User> = [];
+
+    constructor(role?: IRole) {
+        this._id = role?.id;
+        this._name = role?.name;
+        this._slug = role?.slug;
+        this._description = role?.description;
+        this._status = role?.status;
+        this._permissions_id = role?.permissions_id;
+        this._permissions = role?.permissions;
+        this._users = role?.users;
+    }
 
     public get id(): number {
         return this._id;

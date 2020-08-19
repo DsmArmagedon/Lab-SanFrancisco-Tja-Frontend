@@ -14,8 +14,9 @@
                             <input type="hidden" formControlName="id">
                             <label for="name">Nombre *</label>
                             <div class="input-group">
-                                <input class="form-control" [ngClass]="{'invalid': gralService.validation(name)}"
-                                    formControlName="name" id="name" type="text" (keyup)="showDisplay()">
+                                <input class="form-control" #nameUnit
+                                    [ngClass]="{'invalid': gralService.validation(name)}" formControlName="name"
+                                    id="name" type="text" (input)="showDisplay(nameUnit)">
                                 <div class="input-group-append">
                                     <ng-template #popTemplate>Agregar superindice con el símbolo '^', se recomienda usar
                                         corchetes para agrupar más de un termino en el
