@@ -8,7 +8,7 @@ import { TitleService } from 'src/app/services/title.service';
 import { TestComposedService } from 'src/app/services/test-composed.service';
 import { Subject } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';
-import { POST, OBJECT_TYPE_DATA } from 'src/app/global-variables';
+import { POST, OBJECT_TYPE_DATA, PUT } from 'src/app/global-variables';
 import { GeneralService } from 'src/app/services/general.service';
 import Swal from 'sweetalert2';
 import { SwalService } from 'src/app/services/swal.service';
@@ -56,9 +56,9 @@ export class ParametersIndexComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         resp => {
-          if (resp.kind === POST) {
+          if (resp.kind === POST && this.idTitleSelected === resp.parameter.title_id) {
             this.parameters.push(resp.parameter);
-          } else if (this.idTitleSelected === resp.parameter.title_id) {
+          } else if (resp.kind === PUT && this.idTitleSelected === resp.parameter.title_id) {
             this.gralService.updateArray(this.parameters, resp.parameter);
           } else {
             this.gralService.deleteArray(this.parameters, resp.parameter.id);
