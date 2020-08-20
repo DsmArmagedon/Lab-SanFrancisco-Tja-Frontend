@@ -96,7 +96,7 @@ export class ParametersStoreUpdateComponent implements OnInit, OnDestroy {
     this.id.setValue(this.parameter.id);
     this.name.setValue(this.parameter.name);
     this.unit_id.setValue(this.parameter.unit.id);
-    this.title_id.setValue(this.parameter.title.id);
+    this.title_id.setValue(this.parameter.title_id);
     this.type_data.setValue(this.parameter.type_data);
     this.reference_values.setValue(this.parameter.reference_values);
     this.options.setValue(this.parameter.options);
@@ -116,7 +116,7 @@ export class ParametersStoreUpdateComponent implements OnInit, OnDestroy {
   saveFormParameter(): void {
     this.loadParameter = false;
     if (this.formParameter.valid) {
-      this.parameter = Object.assign(new Parameter, this.formParameter.value);
+      this.parameter = new Parameter(this.formParameter.value);
       !this.id.value ? this.storeForm() : this.updateForm();
     }
   }
@@ -172,7 +172,7 @@ export class ParametersStoreUpdateComponent implements OnInit, OnDestroy {
         takeUntil(this.onDestroy),
         finalize(() => this.loadUnits = true)
       ).subscribe(
-        resp => this.unitsDB = resp.units,
+        resp => this.unitsDB = resp,
         () => this.toastr.error('Consulte con el Administrador', 'Error al cargar las UNIDADES DE MEDIDA')
       )
   }

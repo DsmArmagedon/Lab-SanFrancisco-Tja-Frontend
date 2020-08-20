@@ -41,6 +41,7 @@ export class ParameterService {
       map((response: any) => {
         return response.data.map(parameter => {
           parameter.title = new Title(parameter.title);
+          parameter.title_id = parameter.title.id;
           parameter.unit = new Unit(parameter.unit);
           return new Parameter(parameter)
         });

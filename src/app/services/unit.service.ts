@@ -26,8 +26,8 @@ export class UnitService {
 
     return this.http.get<UnitCollection>(url, { params }).pipe(
       map((response: any) => {
-        response.data = response.data.map((unit: Unit) => Object.assign(new Unit, unit));
-        return Object.assign(new UnitCollection, response);
+        response.data = response.data.map((unit: Unit) => new Unit(unit));
+        return new UnitCollection(response);
       })
     );
   }
@@ -36,7 +36,7 @@ export class UnitService {
     const url = `${URL_GLOBAL}/units`;
     return this.http.post<Unit>(url, unit).pipe(
       map((response: any) => {
-        return Object.assign(new Unit, response.data);
+        return new Unit(response.data);
       })
     );
   }
@@ -45,7 +45,7 @@ export class UnitService {
     const url = `${URL_GLOBAL}/units/${id}`;
     return this.http.get<Unit>(url).pipe(
       map((response: any) => {
-        return Object.assign(new Unit, response.data);
+        return new Unit(response.data);
       })
     );
   }
@@ -54,7 +54,7 @@ export class UnitService {
     const url = `${URL_GLOBAL}/units/${unit.id}`;
     return this.http.put<Unit>(url, unit).pipe(
       map((response: any) => {
-        return Object.assign(new Unit, response.data);
+        return new Unit(response.data);
       })
     );
   }
@@ -63,12 +63,12 @@ export class UnitService {
     const url = `${URL_GLOBAL}/units/${id}`;
     return this.http.delete<Unit>(url).pipe(
       map((response: any) => {
-        return Object.assign(new Unit, response.data);
+        return new Unit(response.data);
       })
     );
   }
 
-  listUnits(): Observable<UnitCollection> {
+  listUnits(): Observable<Unit[]> {
     const url = `${URL_GLOBAL}/units`;
     const params: Params = {
       unit_select: 'name,display',
@@ -77,9 +77,9 @@ export class UnitService {
       unit_order_by: 'name',
       unit_order_option: 'ASC'
     }
-    return this.http.get<UnitCollection>(url, { params }).pipe(
+    return this.http.get<Unit[]>(url, { params }).pipe(
       map((response: any) => {
-        return response.data.map((unit: Unit) => Object.assign(new Unit, unit));
+        return response.data.map((unit: Unit) => new Unit(unit));
       })
     );
   }
