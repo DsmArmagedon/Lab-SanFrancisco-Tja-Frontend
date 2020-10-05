@@ -73,7 +73,7 @@ export class StudyService {
     const url = `${URL_GLOBAL}/studies`;
 
     const params: Params = {
-      study_select: 'name',
+      study_fields: 'name',
       study_status: 1,
       paginate: 'disabled',
       study_order_by: 'name',

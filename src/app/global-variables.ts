@@ -1,3 +1,4 @@
+
 export const PUT = 'put';
 export const GET = 'get';
 export const POST = 'post';
@@ -7,50 +8,77 @@ export const UPDATE = 'update';
 export const STORE = 'store';
 export const INDEX = 'index';
 export const SHOW = 'show';
+
+export const enum Documents {
+  INVOICE = 'invoice',
+  SALE_NOTE = 'sale_note',
+  OTHER = 'other',
+  CHECK = 'check',
+  RECEIPT = 'receipt',
+  NO_DOCUMENT = 'no_document'
+}
 export const DOCUMENTS = [
   {
-    id: 'factura',
+    id: Documents.INVOICE,
     name: 'FACTURA'
   },
   {
-    id: 'recibo',
-    name: 'RECIBO'
-  },
-  {
-    id: 'nota de venta',
+    id: Documents.SALE_NOTE,
     name: 'NOTA DE VENTA'
   },
   {
-    id: 'cheque',
+    id: Documents.OTHER,
+    name: 'OTROS'
+  },
+  {
+    id: Documents.CHECK,
     name: 'CHEQUE'
   },
   {
-    id: 'otro',
-    name: 'OTRO'
+    id: Documents.RECEIPT,
+    name: 'RECIBO'
+  },
+  {
+    id: Documents.NO_DOCUMENT,
+    name: 'SIN DOCUMENTO'
   }
 ]
-export const OBJECT_TYPE_DATA = {
-  texto: 'texto',
-  parrafo: 'parrafo',
-  numerico: 'numerico',
-  opciones: 'opciones'
+
+export const enum TypeData {
+  TEXT = 'text',
+  PARAGRAPH = 'paragraph',
+  OPTIONS = 'options',
+  NUMERIC = 'numeric'
 }
 export const TYPE_DATA = [
   {
-    id: OBJECT_TYPE_DATA.texto,
-    name: 'Texto'
+    id: TypeData.TEXT,
+    name: 'TEXTO'
   },
   {
-    id: OBJECT_TYPE_DATA.numerico,
-    name: 'Numérico'
+    id: TypeData.PARAGRAPH,
+    name: 'PARRAFO'
   },
   {
-    id: OBJECT_TYPE_DATA.parrafo,
-    name: 'Párrafo'
+    id: TypeData.OPTIONS,
+    name: 'OPCIONES'
   },
   {
-    id: OBJECT_TYPE_DATA.opciones,
-    name: 'Opciones'
+    id: TypeData.NUMERIC,
+    name: 'NUMERICO'
   }
 ]
 export type KindHttp = 'post' | 'put' | 'delete' | 'get';
+
+export const DATE_FORMAT = 'DD-MM-YYYY';
+export const CONFIG_RANGE_DATEPICKER: any = {
+  rangeInputFormat: 'DD/MM/YYYY',
+  isAnimated: true,
+  containerClass: 'theme-blue'
+}
+
+export const CONFIG_DATEPICKER: any = {
+  dateInputFormat: 'DD/MM/YYYY',
+  isAnimated: true,
+  containerClass: 'theme-blue'
+}

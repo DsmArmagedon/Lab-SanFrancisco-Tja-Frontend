@@ -7,18 +7,18 @@ interface ICompanyPosition {
 }
 
 export class CompanyPosition implements ICompanyPosition {
-    private _id?: number = null;
-    private _name?: string = null;
-    private _slug?: string = null;
-    private _description?: string = null;
-    private _status?: boolean = true;
+    private _id?: number;
+    private _name?: string;
+    private _slug?: string;
+    private _description?: string;
+    private _status?: boolean;
 
     constructor(companyPosition?: ICompanyPosition) {
-        this._id = companyPosition?.id;
-        this._name = companyPosition?.name;
-        this._slug = companyPosition?.slug;
-        this._description = companyPosition?.description;
-        this._status = companyPosition?.status;
+        this._id = companyPosition?.id ?? null;
+        this._name = companyPosition?.name ?? null;
+        this._slug = companyPosition?.slug ?? null;
+        this._description = companyPosition?.description ?? null;
+        this._status = companyPosition?.status ?? true;
     }
 
     public get id(): number {

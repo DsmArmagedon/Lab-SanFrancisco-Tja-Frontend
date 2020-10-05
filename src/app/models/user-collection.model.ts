@@ -1,19 +1,17 @@
-import { BaseMetaLinks } from './base-meta-links.model';
+import { BaseMeta } from './base-meta.model';
 import { User } from './user.model';
 import { Meta } from './meta.model';
-import { Links } from './links.model';
 
 interface IUserCollection {
     data: Array<User>;
     meta?: Meta;
-    links?: Links;
 }
 
-export class UserCollection extends BaseMetaLinks implements IUserCollection {
+export class UserCollection extends BaseMeta implements IUserCollection {
     private _users: Array<User>;
 
     constructor(userCollection?: UserCollection) {
-        super(userCollection?.meta, userCollection?.links);
+        super(userCollection?.meta);
         this._users = userCollection?.data;
     }
 

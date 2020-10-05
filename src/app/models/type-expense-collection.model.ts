@@ -1,19 +1,17 @@
 import { TypeExpense } from './type-expense.model';
-import { BaseMetaLinks } from './base-meta-links.model';
+import { BaseMeta } from './base-meta.model';
 import { Meta } from './meta.model';
-import { Links } from './links.model';
 
 interface ITypeExpenseCollection {
     data: Array<TypeExpense>;
     meta?: Meta;
-    links?: Links;
 }
 
-export class TypeExpenseCollection extends BaseMetaLinks implements ITypeExpenseCollection {
+export class TypeExpenseCollection extends BaseMeta implements ITypeExpenseCollection {
     private _typeExpenses: Array<TypeExpense>;
 
     constructor(typeExpenseCollection?: ITypeExpenseCollection) {
-        super(typeExpenseCollection?.meta, typeExpenseCollection?.links);
+        super(typeExpenseCollection?.meta);
         this._typeExpenses = typeExpenseCollection?.data;
     }
     public get typeExpenses(): Array<TypeExpense> {

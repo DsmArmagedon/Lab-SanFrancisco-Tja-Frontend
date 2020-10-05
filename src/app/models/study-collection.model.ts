@@ -1,19 +1,17 @@
-import { BaseMetaLinks } from './base-meta-links.model';
+import { BaseMeta } from './base-meta.model';
 import { Study } from './study.model';
 import { Meta } from './meta.model';
-import { Links } from './links.model';
 
 interface IStudyCollection {
     data?: Array<Study>;
     meta?: Meta;
-    links?: Links;
 }
 
-export class StudyCollection extends BaseMetaLinks implements IStudyCollection {
+export class StudyCollection extends BaseMeta implements IStudyCollection {
     private _studies: Array<Study>;
 
     constructor(studyCollection?: IStudyCollection) {
-        super(studyCollection?.meta, studyCollection?.links);
+        super(studyCollection?.meta);
         this._studies = studyCollection?.data;
     }
 

@@ -9,22 +9,22 @@ interface IPermission {
 }
 
 export class Permission implements IPermission {
-    private _id?: number = null;
-    private _name?: string = null;
-    private _slug?: string = null;
-    private _description?: string = null;
-    private _resource?: string = null;
-    private _index?: number = null;
-    private _status?: boolean = true;
+    private _id?: number;
+    private _name?: string;
+    private _slug?: string;
+    private _description?: string;
+    private _resource?: string;
+    private _index?: number;
+    private _status?: boolean;
 
     constructor(permission?: IPermission) {
-        this._id = permission?.id;
-        this._name = permission?.name;
-        this._slug = permission?.slug;
-        this._description = permission?.description;
-        this._resource = permission?.resource;
-        this._index = permission?.index;
-        this._status = permission?.status;
+        this._id = permission?.id ?? null;
+        this._name = permission?.name ?? null;
+        this._slug = permission?.slug ?? null;
+        this._description = permission?.description ?? null;
+        this._resource = permission?.resource ?? null;
+        this._index = permission?.index ?? null;
+        this._status = permission?.status ?? true;
     }
 
     public get id(): number {

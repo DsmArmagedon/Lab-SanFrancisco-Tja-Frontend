@@ -8,16 +8,16 @@ interface IResource {
 }
 
 export class Resource implements IResource {
-    private _display?: string = null;
-    private _total?: number = null;
-    private _select?: number = null;
-    private _permissions?: Array<Permission> = [];
+    private _display?: string;
+    private _total?: number;
+    private _select?: number;
+    private _permissions?: Array<Permission>;
 
     constructor(resource?: IResource) {
-        this._display = resource?.display;
-        this._total = resource?.total;
-        this._select = resource?.select;
-        this._permissions = resource?.permissions;
+        this._display = resource?.display ?? null;
+        this._total = resource?.total ?? null;
+        this._select = resource?.select ?? null;
+        this._permissions = resource?.permissions ?? [];
     }
 
     public get display(): string {

@@ -21,7 +21,7 @@ export class SiderbarComponent implements OnInit {
                     localStorage.setItem('privileges', JSON.stringify(resp));
                 },
                 () => {
-                    console.log('Error consulte con el administrador.');
+                    console.log('Error consulte con el administrador.'); // TODO: Revisar posibles bugs de authentication.
                 }
             )
         }

@@ -109,7 +109,7 @@ export class UsersIndexComponent implements OnInit, OnDestroy {
             finalize(() => Swal.close())
           ).subscribe(
             resp => {
-              this.toastr.success(`${title} ${resp.fullName.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente.`);
+              this.toastr.success(resp.fullName.toUpperCase(), `${title.toUpperCase()} Eliminado Correctamente.`);
               this.indexUsers();
             },
             err => {

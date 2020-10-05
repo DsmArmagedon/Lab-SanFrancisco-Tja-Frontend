@@ -1,19 +1,17 @@
-import { BaseMetaLinks } from './base-meta-links.model';
+import { BaseMeta } from './base-meta.model';
 import { Role } from './role.model';
-import { Links } from './links.model';
 import { Meta } from './meta.model';
 
 interface IRoleCollection {
     data?: Array<Role>;
     meta?: Meta;
-    links?: Links;
 }
 
-export class RoleCollection extends BaseMetaLinks implements IRoleCollection {
+export class RoleCollection extends BaseMeta implements IRoleCollection {
     private _roles: Array<Role>;
 
     constructor(roleCollection?: IRoleCollection) {
-        super(roleCollection?.meta, roleCollection?.links);
+        super(roleCollection?.meta);
         this._roles = roleCollection?.data;
     }
 

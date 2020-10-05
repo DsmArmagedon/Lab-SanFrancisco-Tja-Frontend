@@ -1,12 +1,15 @@
 import { TypeExpense } from './type-expense.model';
 import { User } from './user.model';
+import * as moment from 'moment';
+import { Moment } from 'moment';
+import { DATE_FORMAT } from '../global-variables';
 
 interface IExpense {
     id?: string;
     code?: string;
     type_expense_id?: number;
     description?: string;
-    date_expense?: string;
+    date_expense?: Moment;
     amount?: number;
     document?: string;
     serial_document?: string;
@@ -18,32 +21,32 @@ interface IExpense {
 }
 
 export class Expense implements IExpense {
-    private _id?: string = null;
-    private _code?: string = null;
-    private _type_expense_id?: number = null;
-    private _description?: string = null;
-    private _date_expense?: string = null;
-    private _amount?: number = null;
-    private _document?: string = null;
-    private _serial_document?: string = null;
-    private _name_responsible?: string = null;
-    private _user_id?: string = null;
-    private _status?: boolean = true;
+    private _id?: string;
+    private _code?: string;
+    private _type_expense_id?: number;
+    private _description?: string;
+    private _date_expense?: Moment;
+    private _amount?: number;
+    private _document?: string;
+    private _serial_document?: string;
+    private _name_responsible?: string;
+    private _user_id?: string;
+    private _status?: boolean;
     private _typeExpense?: TypeExpense;
     private _user: User;
 
     constructor(expense?: IExpense) {
-        this._id = expense?.id;
-        this._code = expense?.code;
-        this._type_expense_id = expense?.type_expense_id;
-        this._description = expense?.description;
-        this._date_expense = expense?.date_expense;
-        this._amount = expense?.amount;
-        this._document = expense?.document;
-        this._serial_document = expense?.serial_document;
-        this._name_responsible = expense?.name_responsible;
-        this._user_id = expense?.user_id;
-        this._status = expense?.status;
+        this._id = expense?.id ?? null;
+        this._code = expense?.code ?? null;
+        this._type_expense_id = expense?.type_expense_id ?? null;
+        this._description = expense?.description ?? null;
+        this._date_expense = moment(expense?.date_expense, DATE_FORMAT) ?? null;
+        this._amount = expense?.amount ?? null;
+        this._document = expense?.document ?? null;
+        this._serial_document = expense?.serial_document ?? null;
+        this._name_responsible = expense?.name_responsible ?? null;
+        this._user_id = expense?.user_id ?? null;
+        this._status = expense?.status ?? true;
         this._typeExpense = expense?.typeExpense;
         this._user = expense?.user;
     }
@@ -76,11 +79,11 @@ export class Expense implements IExpense {
         this._description = value;
     }
 
-    public get date_expense(): string {
+    public get date_expense(): Moment {
         return this._date_expense;
     }
-    public set date_expense(value: string) {
-        this._date_expense = value;
+    public set date_expense(value: Moment) {
+        this._date_expense = moment(value, DATE_FORMAT);
     }
 
     public get amount(): number {
@@ -143,7 +146,7 @@ export class Expense implements IExpense {
         return {
             type_expense_id: this._type_expense_id,
             description: this._description,
-            date_expense: this._date_expense,
+            date_expense: this._date_expense.format('DD-MM-YYYY'),
             amount: this._amount,
             name_responsible: this._name_responsible,
             serial_document: this._serial_document,

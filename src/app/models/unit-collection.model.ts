@@ -1,19 +1,17 @@
 import { Unit } from './unit.model';
-import { BaseMetaLinks } from './base-meta-links.model';
+import { BaseMeta } from './base-meta.model';
 import { Meta } from './meta.model';
-import { Links } from './links.model';
 
 interface IUnitCollection {
     data: Array<Unit>;
     meta?: Meta;
-    links?: Links;
 }
 
-export class UnitCollection extends BaseMetaLinks implements IUnitCollection {
+export class UnitCollection extends BaseMeta implements IUnitCollection {
     private _units: Array<Unit>;
 
     constructor(unitCollection?: IUnitCollection) {
-        super(unitCollection?.meta, unitCollection?.links);
+        super(unitCollection?.meta);
         this._units = unitCollection?.data;
     }
 

@@ -72,7 +72,7 @@ export class TypeExpenseService {
   listTypeExpenses(): Observable<TypeExpense[]> {
     const url = `${URL_GLOBAL}/types-expenses`;
     const params: Params = {
-      type_expense_select: 'name',
+      type_expense_fields: 'name',
       type_expense_status: 1,
       paginate: 'disabled',
       type_expense_order_by: 'name',

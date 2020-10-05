@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import Swal from 'sweetalert2';
-import { ToastrService } from 'ngx-toastr';
 
 interface IParameters {
   name: string;
@@ -12,7 +11,7 @@ interface IParameters {
   providedIn: 'root'
 })
 export class SwalService {
-  constructor(private toastr: ToastrService) { }
+  constructor() { }
   deleteOptions(name: string, title: string): {} {
     return this.options({ name: name, title: title, verb: 'Eliminar' });
   }

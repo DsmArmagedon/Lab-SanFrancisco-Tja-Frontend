@@ -89,7 +89,7 @@ export class RolesIndexComponent implements OnInit, OnDestroy {
           )
           .subscribe(
             resp => {
-              this.toastr.success(`${title} ${resp.name.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente.`);
+              this.toastr.success(resp.name.toUpperCase(), `${title.toUpperCase()} Eliminado Correctamente.`);
               this.indexRoles();
             },
             err => {

@@ -35,10 +35,10 @@ export class AuthenticationService {
     const url = `${URL_GLOBAL}/profile`;
     const params = {
       role: 'load',
-      role_select: 'name',
+      role_fields: 'name',
       company_position: 'load',
-      company_position_select: 'name',
-      user_select: 'first_name,last_name,email,images'
+      company_position_fields: 'name',
+      user_fields: 'first_name,last_name,email,images'
     }
     return this.http.get(url, { params }).pipe(
       map((response: any) => {

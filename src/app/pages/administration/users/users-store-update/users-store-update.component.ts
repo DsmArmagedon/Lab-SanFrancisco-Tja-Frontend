@@ -162,7 +162,7 @@ export class UsersStoreUpdateComponent implements OnInit, OnDestroy {
     this.loadUser = false;
 
     if (this.formUser.valid) {
-      this.user = Object.assign(new User, this.formUser.value);
+      this.user = new User(this.formUser.value);
       if (this.loadImage) {
         this.user.image = this.loadImage;
       }

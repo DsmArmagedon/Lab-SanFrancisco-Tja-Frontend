@@ -1,18 +1,16 @@
 import { HealthCenter } from './health-center.model';
-import { BaseMetaLinks } from './base-meta-links.model';
-import { Links } from './links.model';
+import { BaseMeta } from './base-meta.model';
 import { Meta } from './meta.model';
 
 interface IHealthCenterCollection {
     data?: Array<HealthCenter>;
     meta?: Meta;
-    links?: Links;
 }
 
-export class HealthCenterCollection extends BaseMetaLinks implements IHealthCenterCollection {
+export class HealthCenterCollection extends BaseMeta implements IHealthCenterCollection {
     private _healthCenters: Array<HealthCenter>;
     constructor(healthCenterCollection?: IHealthCenterCollection) {
-        super(healthCenterCollection?.meta, healthCenterCollection?.links);
+        super(healthCenterCollection?.meta);
         this._healthCenters = healthCenterCollection?.data;
     }
     public get healthCenters(): Array<HealthCenter> {

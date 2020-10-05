@@ -22,8 +22,8 @@ export class UserService {
     const params: Params = {
       role: 'load',
       company_position: 'load',
-      role_select: 'name',
-      company_position_select: 'name',
+      role_fields: 'name',
+      company_position_fields: 'name',
       page: page,
       per_page: per_page,
       user_order_by: 'updated_at',
@@ -46,9 +46,9 @@ export class UserService {
     const url = `${URL_GLOBAL}/users/${ci}`;
     const params: Params = {
       role: 'load',
-      role_select: 'name,status',
+      role_fields: 'name,status',
       company_position: 'load',
-      company_position_select: 'name,status'
+      company_position_fields: 'name,status'
     }
     return this.http.get<User>(url, { params }).pipe(
       map((response: any) => {

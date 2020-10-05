@@ -98,7 +98,7 @@ export class HealthCentersIndexComponent implements OnInit, OnDestroy {
             finalize(() => Swal.close())
           ).subscribe(
             resp => {
-              this.toastr.success(`${title} ${resp.name.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente.`);
+              this.toastr.success(resp.name.toUpperCase(), `${title.toUpperCase()} Eliminado Correctamente.`);
               this.indexHealthCenters();
             },
             () => this.toastr.error('Consulte con el Administrador.', `Error al eliminar: CENTRO DE SALUD.`)

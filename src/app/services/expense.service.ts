@@ -9,7 +9,8 @@ import { Params } from '@angular/router';
 import { BaseService } from './base.service';
 import { TypeExpense } from '../models/type-expense.model';
 import { ExpenseCollection } from '../models/expense-collection.model';
-
+import * as moment from 'moment';
+import { DATE_FORMAT } from '../global-variables';
 @Injectable({
   providedIn: 'root'
 })
@@ -32,19 +33,17 @@ export class ExpenseService extends BaseService {
     let dateInitialFormat: string = null;
     let dateFinalFormat: string = null;
     delete paramsFormFilter.expense_date;
-    let dateInitial = formFilter.get('expense_date').value[0];
-    let dateFinal = formFilter.get('expense_date').value[1];
-    if (dateInitial) {
-      dateInitialFormat = this.convertDateToString(dateInitial);
-    }
-    if (dateFinal) {
-      dateFinalFormat = this.convertDateToString(dateFinal);
+    const dateInitial = formFilter.get('expense_date').value[0];
+    const dateFinal = formFilter.get('expense_date').value[1];
+    if (dateInitial && dateFinal) {
+      dateInitialFormat = moment(dateInitial).format(DATE_FORMAT);
+      dateFinalFormat = moment(dateFinal).format(DATE_FORMAT);
     }
     const params: Params = {
       per_page: per_page,
       page: page,
       type_expense: 'load',
-      type_expense_select: 'name',
+      type_expense_fields: 'name',
       expense_date_initial: dateInitialFormat,
       expense_date_final: dateFinalFormat,
       expense_order_by: 'date_expense',
@@ -75,7 +74,7 @@ export class ExpenseService extends BaseService {
     const url = `${URL_GLOBAL}/expenses/${code}`;
     const params: Params = {
       type_expense: 'load',
-      type_expense_select: 'name,status',
+      type_expense_fields: 'name,status',
     }
     return this.http.get<Expense>(url, { params }).pipe(
       map((response: any) => {

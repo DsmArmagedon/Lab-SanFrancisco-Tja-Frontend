@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Type } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { TYPE_DATA, OBJECT_TYPE_DATA, POST, PUT } from 'src/app/global-variables';
+import { TYPE_DATA, TypeData, POST, PUT } from 'src/app/global-variables';
 import { UnitService } from 'src/app/services/unit.service';
 import { ToastrService } from 'ngx-toastr';
 import { Title } from 'src/app/models/title.model';
@@ -196,15 +196,15 @@ export class ParametersStoreUpdateComponent implements OnInit, OnDestroy {
 
   resetDefaultValue(event: any): void {
     switch (event.id) {
-      case OBJECT_TYPE_DATA.numerico:
-      case OBJECT_TYPE_DATA.parrafo:
-      case OBJECT_TYPE_DATA.texto:
+      case TypeData.NUMERIC:
+      case TypeData.PARAGRAPH:
+      case TypeData.TEXT:
         this.default_value.setValue('');
         this.options.clearValidators();
         this.options.reset();
         this.options.updateValueAndValidity({ onlySelf: true });
         break;
-      case OBJECT_TYPE_DATA.opciones:
+      case TypeData.OPTIONS:
         this.default_value.setValue(null);
         this.options.setValidators([Validators.required, Validators.maxLength(255)]);
         this.options.updateValueAndValidity({ onlySelf: true });

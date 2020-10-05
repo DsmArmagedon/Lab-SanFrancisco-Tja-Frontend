@@ -23,7 +23,11 @@ import { ToastrModule } from 'ngx-toastr';
 import { TitleCasePipe } from '@angular/common';
 import { ValidationsNameDirective } from './directives/validations-name.directive';
 import { PatientComponent } from './pages/patient/patient.component';
-
+// Configuración idioma de Timepicker ngx-bootstrap
+import { defineLocale } from 'ngx-bootstrap/chronos';
+import { esLocale } from 'ngx-bootstrap/locale';
+esLocale.invalidDate = 'Fecha Inválida';
+defineLocale('es', esLocale);
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import localeEsExtra from '@angular/common/locales/extra/es';

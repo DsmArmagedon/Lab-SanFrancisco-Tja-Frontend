@@ -50,7 +50,7 @@ export class TestComposedService {
       test_order_by: 'name',
       test_order_option: 'DESC',
       study: 'load',
-      study_select: 'name',
+      study_fields: 'name',
       ...formFilter
     }
     return this.http.get<TestComposedCollection>(url, { params }).pipe(
@@ -66,7 +66,7 @@ export class TestComposedService {
     const params: Params = {
       titles: 'load',
       study: 'load',
-      study_select: 'name,status'
+      study_fields: 'name,status'
     }
 
     return this.http.get<TestComposed>(url, { params }).pipe(
@@ -87,10 +87,10 @@ export class TestComposedService {
       titles: 'load',
       parameters: 'load',
       unit: 'load',
-      study_select: 'name,status',
-      title_select: 'name,print,note,status',
-      test_select: 'name,price,status',
-      parameter_select: 'name,type_data,reference_values,options,default_value,status'
+      study_fields: 'name,status',
+      title_fields: 'name,print,note,status',
+      test_fields: 'name,price,status',
+      parameter_fields: 'name,type_data,reference_values,options,default_value,status'
     }
 
     return this.http.get<TestComposed>(url, { params }).pipe(
