@@ -61,6 +61,7 @@ export class ExpensesIndexComponent implements OnInit, OnDestroy {
       .subscribe(
         resp => {
           this.expenses = resp.expenses;
+          this.expenseService.valShowResourceOfDate(this.expenses, 'date_expense');
           this.meta = resp.meta;
         },
         () => this.toastr.error('Consulte con el Administrador', 'Error al listar los GASTOS.')
@@ -99,9 +100,6 @@ export class ExpensesIndexComponent implements OnInit, OnDestroy {
   revokeExpenses(code: string): void {
     this.swalRevokeRestoreExpenses(code, 'revoke', 'Anular', 'Anulando');
   }
-  valUpdateDeleteForDate(date_expense: string) {
-    return this.expenseService.valUpdateDeleteForDate(date_expense);
-  }
 
   restoreExpenses(code: string): void {
     this.swalRevokeRestoreExpenses(code, 'restore', 'Restaurar', 'Restaurando');
@@ -128,7 +126,7 @@ export class ExpensesIndexComponent implements OnInit, OnDestroy {
           )
           .subscribe(
             resp => {
-              this.toastr.success(`${title} ${resp.code}`, `${title} ${gerund} Correctamente.`);
+              this.toastr.success(resp.code, `${title} ${gerund} Correctamente.`);
               this.indexExpenses();
             },
             () => this.toastr.error('Consulte con el Administrador.', `Error al ${type}: ${title.toUpperCase()}.`)

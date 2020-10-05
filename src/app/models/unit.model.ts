@@ -7,18 +7,18 @@ interface IUnit {
 }
 
 export class Unit implements IUnit {
-    private _id?: number = null;
-    private _name?: string = null;
-    private _display?: string = null;
-    private _note?: string = null;
-    private _status?: boolean = null;
+    private _id?: number;
+    private _name?: string;
+    private _display?: string;
+    private _note?: string;
+    private _status?: boolean;
 
     constructor(unit?: IUnit) {
-        this._id = unit?.id;
-        this._name = unit?.name;
-        this._display = unit?.display;
-        this._note = unit?.note;
-        this._status = unit?.status;
+        this._id = unit?.id ?? null;
+        this._name = unit?.name ?? null;
+        this._display = unit?.display ?? null;
+        this._note = unit?.note ?? null;
+        this._status = unit?.status ?? null;
     }
 
     public get id(): number {

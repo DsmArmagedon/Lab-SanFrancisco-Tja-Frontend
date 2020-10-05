@@ -11,20 +11,20 @@ interface IStudy {
 }
 
 export class Study implements IStudy {
-    private _id?: number = null;
-    private _name?: string = null;
-    private _slug?: string = null;
-    private _description?: string = null;
-    private _status?: boolean = true;
-    private _tests: Array<Test> = [];
+    private _id?: number;
+    private _name?: string;
+    private _slug?: string;
+    private _description?: string;
+    private _status?: boolean;
+    private _tests: Array<Test>;
 
     constructor(study?: IStudy) {
-        this._id = study?.id;
-        this._name = study?.name;
-        this._slug = study?.slug;
-        this._description = study?.description;
-        this._status = study?.status;
-        this._tests = study?.tests;
+        this._id = study?.id ?? null;
+        this._name = study?.name ?? null;
+        this._slug = study?.slug ?? null;
+        this._description = study?.description ?? null;
+        this._status = study?.status ?? true;
+        this._tests = study?.tests ?? [];
     }
 
     public get id(): number {

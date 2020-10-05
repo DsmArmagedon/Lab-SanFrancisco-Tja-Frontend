@@ -1,13 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { defineLocale } from 'ngx-bootstrap/chronos';
-import { BsLocaleService } from 'ngx-bootstrap/datepicker';
-import { esLocale } from 'ngx-bootstrap/locale';
+import { BsLocaleService } from 'ngx-bootstrap/datepicker';;
 import { ToastrService } from 'ngx-toastr';
 import { Expense } from 'src/app/models/expense.model';
-import { DOCUMENTS, STORE, UPDATE } from 'src/app/global-variables';
+import { DOCUMENTS, STORE, UPDATE, CONFIG_DATEPICKER, DATE_FORMAT } from 'src/app/global-variables';
 import { ExpenseService } from 'src/app/services/expense.service';
-import { FunctionService } from 'src/app/services/function.service';
 import { TypeExpenseService } from 'src/app/services/type-expense.service';
 import { ValidatorsGlobal } from 'src/app/validators/validators-global';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,7 +13,7 @@ import { ValidatorsPattern } from 'src/app/validators/validators-pattern';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { TypeExpense } from 'src/app/models/type-expense.model';
-defineLocale('es', esLocale);
+import * as moment from 'moment';
 @Component({
   selector: 'app-expenses-store-update',
   templateUrl: './expenses-store-update.component.html',
@@ -32,14 +29,9 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
   typeExpensesDB: TypeExpense[] = [];
   minDate: Date;
   maxDate: Date;
-  missingDays: number;
   idExpense: string;
   // Date Expense
-  configDateExpense: any = {
-    inputFormat: 'DD/MM/YYYY',
-    isAnimated: true,
-    containerClass: 'theme-blue'
-  }
+  configDateExpense: any = CONFIG_DATEPICKER;
   documentDB: any = DOCUMENTS;
 
   initialState: any;
@@ -50,16 +42,12 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
     private localService: BsLocaleService,
     private toastr: ToastrService,
     private typeExpenseService: TypeExpenseService,
-    private functionService: FunctionService,
     private route: ActivatedRoute,
     private router: Router,
     public gralService: GeneralService) {
     this.localService.use('es');
-    this.missingDays = this.functionService.getMissingDays();
-    this.minDate = new Date;
-    this.maxDate = new Date;
-    this.minDate.setDate(this.minDate.getDate() - this.missingDays);
-    this.maxDate.setDate(this.maxDate.getDate());
+    this.minDate = moment().subtract(1, 'month').startOf('month').toDate();
+    this.maxDate = new Date();
   }
 
   ngOnInit() {
@@ -74,7 +62,7 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
   get code() { return this.formExpense.get('code'); }
   get type_expense_id() { return this.formExpense.get('type_expense_id'); }
   get description() { return this.formExpense.get('description'); }
-  get date_expense_notFormat() { return this.formExpense.get('date_expense_notFormat'); }
+  get date_expense() { return this.formExpense.get('date_expense'); }
   get amount() { return this.formExpense.get('amount'); }
   get document() { return this.formExpense.get('document'); }
   get serial_document() { return this.formExpense.get('serial_document'); }
@@ -86,13 +74,9 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
       code: new FormControl('', [Validators.required]),
       type_expense_id: new FormControl(null, [Validators.required]),
       description: new FormControl('', [Validators.required, Validators.maxLength(255)]),
-      date_expense_notFormat: new FormControl(''),
+      date_expense: new FormControl(''),
       amount: new FormControl(0, [Validators.required, ValidatorsGlobal.valueMin(0)]),
-      document: new FormControl(null),
-      serial_document: new FormControl({
-        value: '',
-        disabled: true
-      }),
+      document: new FormControl(null, [Validators.required]),
       name_responsible: new FormControl('', [Validators.required, Validators.maxLength(100), ValidatorsPattern.alphaSpacePattern])
     },
       {
@@ -102,25 +86,18 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
 
   assignValuesFormExpense(): void {
     this.id.setValue(this.expense.code);
-    this.date_expense_notFormat.setValue(this.expenseService.convertStringToDate(this.expense.date_expense));
+    this.date_expense.setValue(this.expense.date_expense.format(DATE_FORMAT));
     this.name_responsible.setValue(this.expense.name_responsible);
     this.code.setValue(this.expense.code);
     this.type_expense_id.setValue(this.expense.typeExpense.id);
     this.document.setValue((this.expense.document) ? this.expense.document.toLowerCase() : null);
-    this.serial_document.setValue(this.expense.serial_document);
     this.amount.setValue(this.expense.amount);
     this.description.setValue(this.expense.description);
-
-    // TODO: Cambiar a patchValue todas las assign
-    // this.formExpense.patchValue({
-    //   id: this.expense.id
-    // });
-    this.documentEnable();
   }
 
   getStore(): void {
     this.loadCode = false;
-    this.date_expense_notFormat.setValue(new Date());
+    this.date_expense.setValue(new Date());
     this.expenseService.codeExpenses()
       .pipe(
         takeUntil(this.onDestroy),
@@ -159,8 +136,7 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
 
   saveFormExpense(): void {
     this.loadExpense = false;
-    this.expense = Object.assign(new Expense, this.formExpense.value);
-    this.expense.date_expense = this.expenseService.convertDateToString(this.date_expense_notFormat.value);
+    this.expense = new Expense(this.formExpense.value);
     if (this.formExpense.valid) {
       (!this.id.value) ? this.storeForm() : this.updateForm();
     }
@@ -212,17 +188,6 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
       );
   }
 
-  onChange(event) {
-    if (event) {
-      this.serial_document.setValidators([Validators.required, Validators.maxLength(100)]);
-      this.serial_document.enable();
-    } else {
-      this.serial_document.reset();
-      this.serial_document.clearValidators();
-      this.serial_document.disable();
-    }
-  }
-
   selectTypeFormStoreOrUpdate(): void {
     switch (this.initialState.type) {
       case STORE:
@@ -234,12 +199,6 @@ export class ExpensesStoreUpdateComponent implements OnInit, OnDestroy {
         this.gralService.changeSelectBtn(UPDATE);
         this.getUpdate();
         break;
-    }
-  }
-
-  documentEnable() {
-    if (this.document.value) {
-      this.serial_document.enable();
     }
   }
 

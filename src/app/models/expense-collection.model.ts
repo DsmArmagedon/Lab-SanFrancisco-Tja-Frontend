@@ -1,19 +1,18 @@
 import { Expense } from "./expense.model";
-import { BaseMetaLinks } from './base-meta-links.model';
-import { Links } from './links.model';
+import { BaseMeta } from './base-meta.model';
+
 import { Meta } from './meta.model';
 
 interface IExpenseCollection {
     data?: Array<Expense>;
     meta?: Meta;
-    links?: Links;
 }
 
-export class ExpenseCollection extends BaseMetaLinks implements IExpenseCollection {
+export class ExpenseCollection extends BaseMeta implements IExpenseCollection {
     private _expenses: Array<Expense>;
 
     constructor(expenseCollection?: IExpenseCollection) {
-        super(expenseCollection?.meta, expenseCollection?.links);
+        super(expenseCollection?.meta);
         this._expenses = expenseCollection?.data;
     }
 

@@ -94,7 +94,7 @@ export class TypesExpensesIndexComponent implements OnInit, OnDestroy {
             )
             .subscribe(
               resp => {
-                this.toastr.success(`${title} ${resp.name.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente.`);
+                this.toastr.success(resp.name.toUpperCase(), `${title.toUpperCase()} Eliminado Correctamente.`);
                 this.indexTypeExpenses();
               },
               () => this.toastr.error('Consulte con el Administrador.', `Error al eliminar: TIPO DE GASTO`)

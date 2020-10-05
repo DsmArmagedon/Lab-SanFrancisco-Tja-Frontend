@@ -1,19 +1,17 @@
 import { TestComposed } from './test-composed.model';
-import { BaseMetaLinks } from './base-meta-links.model';
+import { BaseMeta } from './base-meta.model';
 import { Meta } from './meta.model';
-import { Links } from './links.model';
 
 interface ITestComposedCollection {
     data: Array<TestComposed>;
     meta?: Meta;
-    links?: Links;
 }
 
-export class TestComposedCollection extends BaseMetaLinks implements ITestComposedCollection {
+export class TestComposedCollection extends BaseMeta implements ITestComposedCollection {
     private _testComposeds: Array<TestComposed> = [];
 
     constructor(testComposedCollection?: ITestComposedCollection) {
-        super(testComposedCollection?.meta, testComposedCollection?.links);
+        super(testComposedCollection?.meta);
         this._testComposeds = testComposedCollection?.data;
     }
 

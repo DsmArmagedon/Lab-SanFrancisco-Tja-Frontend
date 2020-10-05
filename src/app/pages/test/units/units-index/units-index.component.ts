@@ -100,7 +100,7 @@ export class UnitsIndexComponent implements OnInit, OnDestroy {
           )
           .subscribe(
             resp => {
-              this.toastr.success(`${title} ${resp.name.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente.`);
+              this.toastr.success(resp.name.toUpperCase(), `${title.toUpperCase()} Eliminado Correctamente.`);
               this.indexUnits();
             },
             () => this.toastr.error('Consulte con el Administrador.', `Error al eliminar: UNIDADES DE MEDIDA`)

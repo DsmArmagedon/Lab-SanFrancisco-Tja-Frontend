@@ -19,7 +19,7 @@ export class RoleService {
   indexRoles(formFilter: FormGroup, per_page: number, page: number): Observable<RoleCollection> {
     const url = `${URL_GLOBAL}/roles`;
     const params: Params = {
-      role_select: 'name,description,status',
+      role_fields: 'name,description,status',
       per_page: per_page,
       page: page,
       role_order_by: 'updated_at',
@@ -37,7 +37,7 @@ export class RoleService {
   listRoles(): Observable<Role[]> {
     const url = `${URL_GLOBAL}/roles`;
     const params: Params = {
-      role_select: 'name',
+      role_fields: 'name',
       role_status: 1,
       paginate: 'disabled'
     }
@@ -53,7 +53,7 @@ export class RoleService {
 
     const params = {
       permission: 'load',
-      permission_select: 'name,slug'
+      permission_fields: 'name,slug'
     }
 
     return this.http.get<Role>(url, { params }).pipe(

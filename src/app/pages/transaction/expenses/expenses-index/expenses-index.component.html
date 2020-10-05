@@ -72,7 +72,7 @@
                         {{ expense.code }}
                     </td>
                     <td>
-                        {{ expense.date_expense }}
+                        {{ expense.date_expense | date:'dd/MM/yyyy' }}
                     </td>
                     <td>
                         {{ expense.description }}
@@ -81,7 +81,7 @@
                         {{ expense.typeExpense.name }}
                     </td>
                     <td class="text-right pr-4">
-                        {{ expense.amount | number:'1.2-2':'es'}}
+                        {{ expense.amount | currency:'BOB':'Bs.':'1.2-2':'es'}}
                     </td>
                     <td>
                         <ng-container *ngIf="expense.status; then habilitado; else deshabilitado">
@@ -95,16 +95,19 @@
                     </td>
                     <td>
                         <button type="button" class="btn btn-success btn-sm mr-1" (click)="showExpenses(expense)"><i
-                                class="fa fa-fw fa-eye fa-xs"></i></button>
-                        <button type="button" class="btn btn-info btn-sm mr-1" (click)="updateExpenses(expense.code)"
-                            *ngIf="valUpdateDeleteForDate(expense.date_expense)"><i class="fa fa-fw fa-edit fa-xs"></i>
+                                class="fa fa-fw fa-eye fa-xs"></i>
+                        </button>
+                        <button type="button" class="btn btn-info btn-sm mr-1" *ngIf="expense['show']"
+                            (click)="updateExpenses(expense.code)"><i class="fa fa-fw fa-edit fa-xs"></i>
                         </button>
                         <button type="button" class="btn btn-danger btn-sm" (click)="revokeExpenses(expense.code)"
-                            *ngIf="expense.status && valUpdateDeleteForDate(expense.date_expense)" title="Anular"><i
-                                class="fa fa-fw fa-close fa-xs"></i> </button>
+                            *ngIf="expense.status && expense['show']" title="Anular"><i
+                                class="fa fa-fw fa-close fa-xs"></i>
+                        </button>
                         <button type="button" class="btn btn-success btn-sm" (click)="restoreExpenses(expense.code)"
-                            *ngIf="!expense.status  && valUpdateDeleteForDate(expense.date_expense)"
-                            title="Restaurar"><i class="fa fa-fw fa-check fa-xs"></i> </button>
+                            *ngIf="!expense.status  && expense['show']" title="Restaurar"><i
+                                class="fa fa-fw fa-check fa-xs"></i>
+                        </button>
                     </td>
                 </tr>
             </tbody>
@@ -114,7 +117,7 @@
                 <td colspan="8">
                     <div class="alert alert-success">
                         <div class="row justify-content-center">
-                            <h5>{{expenses.length}} Gastos encontrados</h5>
+                            <h5>Ningun Gasto encontrado</h5>
                         </div>
                     </div>
                 </td>

@@ -39,7 +39,7 @@ export class PermissionService {
     const url = `${URL_GLOBAL}/permissions`;
     this.initializeObjListPermissions();
     const params: Params = {
-      permission_select: 'name,description,slug',
+      permission_fields: 'name,description,slug',
       permission_status: 1,
       paginate: 'disabled'
     }

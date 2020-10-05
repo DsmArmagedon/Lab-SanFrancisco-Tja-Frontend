@@ -10,22 +10,22 @@ interface IHealthCenter {
 }
 
 export class HealthCenter implements IHealthCenter {
-    private _id?: number = null;
-    private _name?: string = null;
-    private _slug?: string = null;
-    private _information?: string = null;
-    private _deduction?: number = null;
-    private _phone?: string = null;
-    private _status?: boolean = true;
+    private _id?: number;
+    private _name?: string;
+    private _slug?: string;
+    private _information?: string;
+    private _deduction?: number;
+    private _phone?: string;
+    private _status?: boolean;
 
     constructor(healthCenter?: IHealthCenter) {
-        this._id = healthCenter?.id;
-        this._name = healthCenter?.name;
-        this._slug = healthCenter?.slug;
-        this._information = healthCenter?.information;
-        this._deduction = healthCenter?.deduction;
-        this._phone = healthCenter?.phone;
-        this._status = healthCenter?.status;
+        this._id = healthCenter?.id ?? null;
+        this._name = healthCenter?.name ?? null;
+        this._slug = healthCenter?.slug ?? null;
+        this._information = healthCenter?.information ?? null;
+        this._deduction = healthCenter?.deduction ?? null;
+        this._phone = healthCenter?.phone ?? null;
+        this._status = healthCenter?.status ?? true;
     }
 
     public get id(): number {

@@ -10,20 +10,20 @@ interface ITypeExpense {
 }
 
 export class TypeExpense implements ITypeExpense {
-    private _id?: number = null;
-    private _name?: string = null;
-    private _slug?: string = null;
-    private _description?: string = null;
-    private _status?: boolean = true;
-    private _expenses?: Array<Expense> = [];
+    private _id?: number;
+    private _name?: string;
+    private _slug?: string;
+    private _description?: string;
+    private _status?: boolean;
+    private _expenses?: Array<Expense>;
 
     constructor(typeExpense?: ITypeExpense) {
-        this._id = typeExpense?.id;
-        this._name = typeExpense?.name;
-        this._slug = typeExpense?.slug;
-        this._description = typeExpense?.description;
-        this._status = typeExpense?.status;
-        this._expenses = typeExpense?.expenses;
+        this._id = typeExpense?.id ?? null;
+        this._name = typeExpense?.name ?? null;
+        this._slug = typeExpense?.slug ?? null;
+        this._description = typeExpense?.description ?? null;
+        this._status = typeExpense?.status ?? true;
+        this._expenses = typeExpense?.expenses ?? [];
     }
 
     public get id(): number {

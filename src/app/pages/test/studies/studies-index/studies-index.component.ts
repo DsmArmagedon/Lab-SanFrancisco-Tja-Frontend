@@ -100,7 +100,7 @@ export class StudiesIndexComponent implements OnInit {
           )
           .subscribe(
             resp => {
-              this.toastr.success(`${title} ${resp.name.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente.`);
+              this.toastr.success(resp.name.toUpperCase(), `${title.toUpperCase()} Eliminado Correctamente.`);
               this.indexStudies();
             },
             () => this.toastr.error('Consulte con el Administrador.', `Error al eliminar: ESTUDIO.`)

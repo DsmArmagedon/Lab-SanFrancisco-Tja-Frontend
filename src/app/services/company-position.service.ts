@@ -39,7 +39,7 @@ export class CompanyPositionService {
   listCompanyPositions(): Observable<CompanyPosition[]> {
     const url = `${URL_GLOBAL}/companies-positions`;
     const params: Params = {
-      company_position_select: 'name',
+      company_position_fields: 'name',
       paginate: 'disabled',
       company_position_status: 1
     }

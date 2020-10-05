@@ -71,7 +71,7 @@ export class UnitService {
   listUnits(): Observable<Unit[]> {
     const url = `${URL_GLOBAL}/units`;
     const params: Params = {
-      unit_select: 'name,display',
+      unit_fields: 'name,display',
       unit_status: 1,
       paginate: 'disabled',
       unit_order_by: 'name',

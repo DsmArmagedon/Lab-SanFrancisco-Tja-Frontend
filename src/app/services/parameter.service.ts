@@ -33,9 +33,9 @@ export class ParameterService {
     const url = `${URL_GLOBAL}/tests-composeds-titles/${titleTestId}/parameters`;
     const params: Params = {
       unit: 'load',
-      unit_select: 'name,display',
+      unit_fields: 'name,display',
       title: 'load',
-      title_select: 'name'
+      title_fields: 'name'
     }
     return this.http.get<Parameter[]>(url, { params }).pipe(
       map((response: any) => {
@@ -69,7 +69,7 @@ export class ParameterService {
     const url = `${URL_GLOBAL}/tests-composeds-titles/${titleTestId}/parameters/${id}`;
     const params: Params = {
       unit: 'load',
-      unit_select: 'display',
+      unit_fields: 'display',
     }
     return this.http.get<Parameter>(url, { params }).pipe(
       map((response: any) => {

@@ -13,24 +13,24 @@ interface IRole {
 }
 
 export class Role implements IRole {
-    private _id?: number = null;
-    private _name?: string = null;
-    private _slug?: string = null;
-    private _description?: string = null;
-    private _status?: boolean = true;
+    private _id?: number;
+    private _name?: string;
+    private _slug?: string;
+    private _description?: string;
+    private _status?: boolean;
     private _permissions_id?: Array<number> = [];
     private _permissions?: Array<Permission> = [];
     private _users?: Array<User> = [];
 
     constructor(role?: IRole) {
-        this._id = role?.id;
-        this._name = role?.name;
-        this._slug = role?.slug;
-        this._description = role?.description;
-        this._status = role?.status;
-        this._permissions_id = role?.permissions_id;
-        this._permissions = role?.permissions;
-        this._users = role?.users;
+        this._id = role?.id ?? null;
+        this._name = role?.name ?? null;
+        this._slug = role?.slug ?? null;
+        this._description = role?.description ?? null;
+        this._status = role?.status ?? true;
+        this._permissions_id = role?.permissions_id ?? [];
+        this._permissions = role?.permissions ?? [];
+        this._users = role?.users ?? [];
     }
 
     public get id(): number {

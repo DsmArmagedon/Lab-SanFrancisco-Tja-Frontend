@@ -8,7 +8,7 @@ import { TitleService } from 'src/app/services/title.service';
 import { TestComposedService } from 'src/app/services/test-composed.service';
 import { Subject } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';
-import { POST, OBJECT_TYPE_DATA, PUT } from 'src/app/global-variables';
+import { POST, TYPE_DATA, PUT, TypeData } from 'src/app/global-variables';
 import { GeneralService } from 'src/app/services/general.service';
 import Swal from 'sweetalert2';
 import { SwalService } from 'src/app/services/swal.service';
@@ -26,7 +26,7 @@ export class ParametersIndexComponent implements OnInit, OnDestroy {
   parameters: Array<Parameter> = [];
   idTitleSelected: number = null;
   nameTitleSelected: string = null;
-  typeData: string = OBJECT_TYPE_DATA.numerico;
+  typeData: string = TypeData.NUMERIC;
   idTestSelected: number;
 
   bsModalRef: BsModalRef;
@@ -167,7 +167,7 @@ export class ParametersIndexComponent implements OnInit, OnDestroy {
           )
           .subscribe(
             resp => {
-              this.toastr.success(`${title} ${resp.name.toUpperCase()}`, `${title.toUpperCase()} Eliminado Correctamente`);
+              this.toastr.success(resp.name.toUpperCase(), `${title.toUpperCase()} Eliminado Correctamente`);
               this.gralService.deleteArray(this.parameters, id);
             },
             () => this.toastr.error('Consulte con el Administrador.', `Error al eliminar: PARAMETROS.`)

@@ -15,23 +15,23 @@ export type TypeData = 'numerico' | 'texto' | 'parrafo' | 'opciones';
 export type TypeTest = 'simple' | 'compuesto';
 
 export class Test implements ITest {
-    protected _id?: number = null;
-    protected _name?: string = null;
-    protected _slug?: string = null;
-    protected _price?: number = null;
-    protected _type?: TypeTest = null;
-    protected _study_id?: number = null;
-    protected _status?: boolean = true;
+    protected _id?: number;
+    protected _name?: string;
+    protected _slug?: string;
+    protected _price?: number;
+    protected _type?: TypeTest;
+    protected _study_id?: number;
+    protected _status?: boolean;
     protected _study?: Study;
 
     constructor(id?: number, name?: string, slug?: string, price?: number, type?: TypeTest, study_id?: number, status?: boolean, study?: Study) {
-        this._id = id;
-        this._name = name;
-        this._slug = slug;
-        this._price = price;
-        this._type = type;
-        this._study_id = study_id;
-        this._status = status;
+        this._id = id ?? null;
+        this._name = name ?? null;
+        this._slug = slug ?? null;
+        this._price = price ?? null;
+        this._type = type ?? null;
+        this._study_id = study_id ?? null;
+        this._status = status ?? true;
         this._study = study;
     }
 

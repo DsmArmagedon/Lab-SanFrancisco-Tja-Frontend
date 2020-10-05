@@ -1,7 +1,7 @@
 <div class="modal-header">
     <h4 class="modal-title pull-left">Gasto</h4>
     <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
-      <span aria-hidden="true">&times;</span>
+        <span aria-hidden="true">&times;</span>
     </button>
 </div>
 <div class="modal-body">
@@ -14,7 +14,7 @@
                             <b>Código:</b> <span> {{ expense.code }}</span>
                         </div>
                         <div class="col-md-6">
-                            <b>Fecha:</b> <span> {{ expense.date_expense }}</span>
+                            <b>Fecha:</b> <span> {{ expense.date_expense | date:'dd/MM/yyyy'  }}</span>
                         </div>
                     </div>
                 </li>

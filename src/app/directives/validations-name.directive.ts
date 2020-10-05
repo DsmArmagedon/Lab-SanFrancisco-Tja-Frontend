@@ -2,7 +2,7 @@
 import { URL_GLOBAL } from '../config';
 import { HttpClient } from '@angular/common/http';
 import { Directive } from '@angular/core';
-import { AbstractControl, ValidationErrors, NG_ASYNC_VALIDATORS, AsyncValidatorFn, ValidatorFn } from '@angular/forms';
+import { AbstractControl, ValidationErrors, NG_ASYNC_VALIDATORS, AsyncValidatorFn } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 

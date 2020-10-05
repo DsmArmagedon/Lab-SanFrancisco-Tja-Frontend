@@ -9,22 +9,22 @@ interface IMeta {
 }
 
 export class Meta implements IMeta {
-    private _current_page: number = null;
-    private _from: number = null;
-    private _last_page: number = null;
-    private _path: string = null;
-    private _per_page: number = null;
-    private _to: number = null;
-    private _total: number = null;
+    private _current_page: number;
+    private _from: number;
+    private _last_page: number;
+    private _path: string;
+    private _per_page: number;
+    private _to: number;
+    private _total: number;
 
     constructor(meta?: Meta) {
-        this._current_page = meta?.current_page;
-        this._from = meta?.from;
-        this._last_page = meta?.last_page;
-        this._path = meta?.path;
-        this._per_page = meta?.per_page;
-        this._to = meta?.to;
-        this._total = meta?.total;
+        this._current_page = meta?.current_page ?? null;
+        this._from = meta?.from ?? null;
+        this._last_page = meta?.last_page ?? null;
+        this._path = meta?.path ?? null;
+        this._per_page = meta?.per_page ?? null;
+        this._to = meta?.to ?? null;
+        this._total = meta?.total ?? null;
     }
 
     set current_page(value: number) {
