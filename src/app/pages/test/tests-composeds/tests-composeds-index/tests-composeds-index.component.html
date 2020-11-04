@@ -69,7 +69,7 @@
                         {{ test.study.name | uppercase }}
                     </td>
                     <td>
-                        {{ test.price | number:'1.2-2':'es' }}
+                        {{ test.price | currency:'BOB':'Bs.':'1.2-2':'es' }}
                     </td>
                     <td>
                         <ng-container *ngIf="test.status; then habilitado; else deshabilitado">

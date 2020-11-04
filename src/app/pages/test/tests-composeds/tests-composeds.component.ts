@@ -13,9 +13,9 @@ export class TestsComposedsComponent implements OnInit {
   disabledUpdate: boolean = true;
   disabledShow: boolean = true;
 
-  routeIndex = 'test/tests-composeds/index';
-  routeStore = 'test/tests-composeds/store';
-  routeUpdate = 'test/tests-composeds/update';
+  routeIndex = 'test/tests-composed/index';
+  routeStore = 'test/tests-composed/store';
+  routeUpdate = 'test/tests-composed/update';
 
   constructor(private gralService: GeneralService,
     private testComposedService: TestComposedService,

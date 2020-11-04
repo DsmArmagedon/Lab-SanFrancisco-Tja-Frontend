@@ -4,13 +4,13 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { TYPE_DATA, TypeData, POST, PUT } from 'src/app/global-variables';
 import { UnitService } from 'src/app/services/unit.service';
 import { ToastrService } from 'ngx-toastr';
-import { Title } from 'src/app/models/title.model';
-import { TitleService } from 'src/app/services/title.service';
+import { Category } from 'src/app/models/category.model';
+import { CategoryService } from 'src/app/services/category.service';
 import { GeneralService } from 'src/app/services/general.service';
 import { Parameter } from 'src/app/models/parameter.model';
 import { ValidationsNameDirective } from 'src/app/directives/validations-name.directive';
 import { ParameterService } from 'src/app/services/parameter.service';
-import { takeUntil, finalize, take } from 'rxjs/operators';
+import { takeUntil, finalize } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { Unit } from 'src/app/models/unit.model';
 
@@ -27,9 +27,9 @@ export class ParametersStoreUpdateComponent implements OnInit, OnDestroy {
   loadParameter: boolean = true;
   btnStoreUpdate: string;
   titleModal: string = '';
-  idTitle: number;
+  idCategory: number;
 
-  nameTitle: string;
+  nameCategory: string;
   idTest: number;
   parameter: Parameter;
 
@@ -40,14 +40,14 @@ export class ParametersStoreUpdateComponent implements OnInit, OnDestroy {
   loadUnits: boolean;
   unitsDB: Array<Unit>;
 
-  loadTitles: boolean;
-  titlesDB: Array<Title> = [];
+  loadCategories: boolean;
+  categoriesDB: Array<Category> = [];
 
   private onDestroy = new Subject();
 
   constructor(public bsModalRef: BsModalRef,
     private unitService: UnitService,
-    private titleService: TitleService,
+    private categoryService: CategoryService,
     private toastr: ToastrService,
     private validationsDirective: ValidationsNameDirective,
     private parameterService: ParameterService,
@@ -57,15 +57,15 @@ export class ParametersStoreUpdateComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.formParameter = this.formGroupParameter();
     this.loadUnitsForm();
-    this.loadTitlesForm();
-    this.selectedTitleForShowForm();
+    this.loadCategoriesForm();
+    this.selectedCategoryForShowForm();
     this.selectTypeFormStoreOrUpdate();
   }
 
   get id() { return this.formParameter.get('id'); }
   get name() { return this.formParameter.get('name'); }
   get unit_id() { return this.formParameter.get('unit_id'); }
-  get title_id() { return this.formParameter.get('title_id'); }
+  get category_id() { return this.formParameter.get('category_id'); }
   get type_data() { return this.formParameter.get('type_data'); }
   get reference_values() { return this.formParameter.get('reference_values'); }
   get options() { return this.formParameter.get('options'); }
@@ -77,11 +77,11 @@ export class ParametersStoreUpdateComponent implements OnInit, OnDestroy {
       id: new FormControl(null),
       name: new FormControl('', {
         validators: [Validators.required, Validators.maxLength(100)],
-        asyncValidators: [this.validationsDirective.validateUniqueParameter(this.idTitle)]
+        asyncValidators: [this.validationsDirective.validateUniqueParameter(this.idCategory)]
       }),
       unit_id: new FormControl(null),
-      title_id: new FormControl(null, Validators.required),
-      type_data: new FormControl('texto', Validators.required),
+      category_id: new FormControl(null, Validators.required),
+      type_data: new FormControl(null, Validators.required),
       reference_values: new FormControl(null, Validators.maxLength(255)),
       options: new FormControl([], { updateOn: 'change' }),
       default_value: new FormControl(null, Validators.maxLength(255)),
@@ -96,7 +96,7 @@ export class ParametersStoreUpdateComponent implements OnInit, OnDestroy {
     this.id.setValue(this.parameter.id);
     this.name.setValue(this.parameter.name);
     this.unit_id.setValue(this.parameter.unit.id);
-    this.title_id.setValue(this.parameter.title_id);
+    this.category_id.setValue(this.parameter.category_id);
     this.type_data.setValue(this.parameter.type_data);
     this.reference_values.setValue(this.parameter.reference_values);
     this.options.setValue(this.parameter.options);
@@ -109,8 +109,8 @@ export class ParametersStoreUpdateComponent implements OnInit, OnDestroy {
 
   }
 
-  selectedTitleForShowForm(): void {
-    if (this.idTitle !== undefined) this.title_id.setValue(this.idTitle);
+  selectedCategoryForShowForm(): void {
+    if (this.idCategory !== undefined) this.category_id.setValue(this.idCategory);
   }
 
   saveFormParameter(): void {
@@ -122,7 +122,7 @@ export class ParametersStoreUpdateComponent implements OnInit, OnDestroy {
   }
 
   storeForm(): void {
-    this.txtStatusSecParameter = 'Guardando Parametro';
+    this.txtStatusSecParameter = 'Guardando Parámetro';
     this.parameterService.storeParameters(this.parameter)
       .pipe(
         takeUntil(this.onDestroy),
@@ -130,11 +130,11 @@ export class ParametersStoreUpdateComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         resp => {
-          this.toastr.success(resp.name.toUpperCase(), 'PARAMETRO Creado Correctamente');
+          this.toastr.success(resp.name.toUpperCase(), 'PARÁMETRO Creado Correctamente');
           this.parameterService.addParameterToIndexFromModal(resp, POST);
           this.resetFormParameter();
         },
-        () => this.toastr.error('Consulte con el Administrador', 'Error al crear: PARAMETRO')
+        () => this.toastr.error('Consulte con el Administrador', 'Error al crear: PARÁMETRO')
       )
   }
 
@@ -142,16 +142,15 @@ export class ParametersStoreUpdateComponent implements OnInit, OnDestroy {
     this.txtStatusSecParameter = 'Actualizando Parámetro';
     this.parameterService.updateParameters(this.parameter)
       .pipe(
-        takeUntil(this.onDestroy),
-        finalize(() => this.loadParameter = true)
+        takeUntil(this.onDestroy)
       )
       .subscribe(
         resp => {
-          this.toastr.success(resp.name.toUpperCase(), 'PARAMETRO Actualizado correctamente');
+          this.toastr.success(resp.name.toUpperCase(), 'PARÁMETRO Actualizado correctamente');
           this.parameterService.addParameterToIndexFromModal(resp, PUT);
           this.bsModalRef.hide();
         },
-        () => this.toastr.error('Consulte con el Administrador', 'Error al actualizar: PARAMETRO')
+        () => this.toastr.error('Consulte con el Administrador', 'Error al actualizar: PARÁMETRO')
       );
   }
 
@@ -177,20 +176,20 @@ export class ParametersStoreUpdateComponent implements OnInit, OnDestroy {
       )
   }
 
-  loadTitlesForm(): void {
-    this.loadTitles = false;
-    this.titleService.listTitles(this.idTest)
+  loadCategoriesForm(): void {
+    this.loadCategories = false;
+    this.categoryService.listCategories(this.idTest)
       .pipe(
         takeUntil(this.onDestroy),
-        finalize(() => this.loadTitles = true)
+        finalize(() => this.loadCategories = true)
       ).subscribe(
         resp => {
-          this.titlesDB = resp;
-          this.titlesDB.sort((a, b) => {
+          this.categoriesDB = resp;
+          this.categoriesDB.sort((a, b) => {
             return a.name > b.name ? 1 : -1;
           })
         },
-        () => this.toastr.error('Consulte con el Administrador', 'Error al cargar los TÍTULOS')
+        () => this.toastr.error('Consulte con el Administrador', 'Error al cargar las CATEGORÍAS')
       )
   }
 
@@ -229,9 +228,9 @@ export class ParametersStoreUpdateComponent implements OnInit, OnDestroy {
 
   onChange(event) {
     this.name.markAsDirty();
-    let idTitleUpdated: number = (event.id === this.idTitle) ? this.idTitle : event.id;
+    let idCategoryUpdated: number = (event.id === this.idCategory) ? this.idCategory : event.id;
     this.name.clearAsyncValidators();
-    this.name.setAsyncValidators(this.validationsDirective.validateUniqueParameter(idTitleUpdated))
+    this.name.setAsyncValidators(this.validationsDirective.validateUniqueParameter(idCategoryUpdated))
     this.name.updateValueAndValidity({ onlySelf: true });
   }
 }

@@ -8,6 +8,8 @@ import { GeneralService } from 'src/app/services/general.service';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { Study } from 'src/app/models/study.model';
+import { Parameter } from 'src/app/models/parameter.model';
+import { Category } from 'src/app/models/category.model';
 
 @Component({
   selector: 'app-tests-composeds-show',
@@ -45,8 +47,12 @@ export class TestsComposedsShowComponent implements OnInit, OnDestroy {
         finalize(() => this.loadTestComposed = true)
       )
       .subscribe(
-        resp => this.testComposed = resp,
-        () => this.toastr.error('Consulte con el Administrador.', 'Error al mostrar la Prueba Compuesta.')
+        resp => {
+          console.log(resp.categories.map((category: Category) => category.parameters.map((parameter: Parameter) => console.log(parameter.name, parameter.reference_values))));
+          this.testComposed = resp;
+          console.log(this.testComposed)
+        },
+        () => this.toastr.error('Consulte con el Administrador.', 'Error al mostrar la PRUEBA COMPUESTA.')
       );
   }
 
@@ -63,6 +69,6 @@ export class TestsComposedsShowComponent implements OnInit, OnDestroy {
   }
 
   finish(): void {
-    this.router.navigate(['/test/tests-composeds/index']);
+    this.router.navigate(['/test/tests-composed/index']);
   }
 }

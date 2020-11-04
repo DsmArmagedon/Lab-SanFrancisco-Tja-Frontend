@@ -12,7 +12,7 @@
                     <b>Nombre:</b> <span> {{ parameter.name }}</span>
                 </li>
                 <li class="list-group-item">
-                    <b>Título:</b> <span> {{ parameter.title.name }}</span>
+                    <b>Categoría:</b> <span> {{ parameter.category.name }}</span>
                 </li>
                 <li class="list-group-item">
                     <div class="row">
@@ -25,7 +25,8 @@
                     </div>
                 </li>
                 <li class="list-group-item">
-                    <b>Valores de Referencia:</b> <span> {{ parameter.reference_values }}</span>
+                    <b>Valores de Referencia:</b>
+                    <div [innerText]="parameter.reference_values"></div>
                 </li>
                 <li class="list-group-item">
                     <b>Valor por Defecto:</b> <span> {{ parameter.default_value }}</span>

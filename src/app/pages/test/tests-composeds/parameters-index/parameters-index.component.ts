@@ -4,16 +4,17 @@ import { ParameterService } from 'src/app/services/parameter.service';
 import { ToastrService } from 'ngx-toastr';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ParametersStoreUpdateComponent } from '../parameters-store-update/parameters-store-update.component';
-import { TitleService } from 'src/app/services/title.service';
+import { CategoryService } from 'src/app/services/category.service';
 import { TestComposedService } from 'src/app/services/test-composed.service';
 import { Subject } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';
-import { POST, TYPE_DATA, PUT, TypeData } from 'src/app/global-variables';
+import { POST, PUT, TypeData } from 'src/app/global-variables';
 import { GeneralService } from 'src/app/services/general.service';
 import Swal from 'sweetalert2';
 import { SwalService } from 'src/app/services/swal.service';
 import { TitleCasePipe } from '@angular/common';
 import { ParametersShowComponent } from '../parameters-show/parameters-show.component';
+import { NormalValuesComponent } from '../../normal-values/normal-values.component';
 
 @Component({
   selector: 'app-parameters-index',
@@ -24,17 +25,15 @@ export class ParametersIndexComponent implements OnInit, OnDestroy {
   @Output() statusLoadParameteres: EventEmitter<boolean> = new EventEmitter<boolean>();
   loadParameters: boolean = true;
   parameters: Array<Parameter> = [];
-  idTitleSelected: number = null;
-  nameTitleSelected: string = null;
-  typeData: string = TypeData.NUMERIC;
+  idCategorySelected: number = null;
+  nameCategorySelected: string = null;
+  typeDataNumeric: string = TypeData.NUMERIC;
   idTestSelected: number;
-
-  bsModalRef: BsModalRef;
 
   private onDestroy = new Subject();
 
   constructor(private parameterService: ParameterService,
-    private titleService: TitleService,
+    private categoryService: CategoryService,
     private testComposedService: TestComposedService,
     private gralService: GeneralService,
     private toastr: ToastrService,
@@ -44,7 +43,7 @@ export class ParametersIndexComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subIdNameTitleSelected();
+    this.subIdNameCategorySelected();
     this.subIdNameTestSelected();
     this.subUpdatedIndexToResourceFromModal();
   }
@@ -56,15 +55,15 @@ export class ParametersIndexComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         resp => {
-          if (resp.kind === POST && this.idTitleSelected === resp.parameter.title_id) {
+          if (resp.kind === POST && this.idCategorySelected === resp.parameter.category_id) {
             this.parameters.push(resp.parameter);
-          } else if (resp.kind === PUT && this.idTitleSelected === resp.parameter.title_id) {
+          } else if (resp.kind === PUT && this.idCategorySelected === resp.parameter.category_id) {
             this.gralService.updateArray(this.parameters, resp.parameter);
           } else {
             this.gralService.deleteArray(this.parameters, resp.parameter.id);
           }
         },
-        () => this.toastr.info('Error al Actualizar la lista de PARAMETROS', 'Por favor, presione el boton "Actualizar"')
+        () => this.toastr.info('Error al Actualizar la lista de PARÁMETROS', 'Por favor, presione el boton "Actualizar"')
       )
   }
 
@@ -73,19 +72,19 @@ export class ParametersIndexComponent implements OnInit, OnDestroy {
     const initialState: any = {
       parameter: parameter
     }
-    this.bsModalRef = this.modalService.show(ParametersShowComponent, { initialState: initialState });
+    this.modalService.show(ParametersShowComponent, { initialState: initialState });
   }
 
-  subIdNameTitleSelected(): void {
-    this.titleService.idNameTitleSelectedObservable
+  subIdNameCategorySelected(): void {
+    this.categoryService.idNameCategorySelectedObservable
       .pipe(
         takeUntil(this.onDestroy)
       )
       .subscribe(
         resp => {
-          this.nameTitleSelected = resp.name;
-          this.idTitleSelected = resp.id;
-          (this.idTitleSelected && this.nameTitleSelected) ? this.indexParameters() : this.parameters = [];
+          this.nameCategorySelected = resp.name;
+          this.idCategorySelected = resp.id;
+          (this.idCategorySelected && this.nameCategorySelected) ? this.indexParameters() : this.parameters = [];
         }
       );
   }
@@ -101,7 +100,7 @@ export class ParametersIndexComponent implements OnInit, OnDestroy {
   indexParameters(): void {
     this.loadParameters = false;
 
-    this.parameterService.indexParameters(this.idTitleSelected)
+    this.parameterService.indexParameters(this.idCategorySelected)
       .pipe(
         takeUntil(this.onDestroy),
         finalize(() => {
@@ -111,7 +110,7 @@ export class ParametersIndexComponent implements OnInit, OnDestroy {
       )
       .subscribe(
         resp => this.parameters = resp,
-        () => this.toastr.error('Consulte con el Administrador.', 'Error al listar los PARAMETROS.')
+        () => this.toastr.error('Consulte con el Administrador.', 'Error al listar los PARÁMETROS.')
       );
 
   }
@@ -119,29 +118,29 @@ export class ParametersIndexComponent implements OnInit, OnDestroy {
   storeParameters(): void {
     const initialState: any = {
       titleModal: 'Crear Parámetro',
-      idTitle: this.idTitleSelected,
-      nameTitle: this.nameTitleSelected,
+      idCategory: this.idCategorySelected,
+      nameCategory: this.nameCategorySelected,
       parameter: null,
       btnStoreUpdate: 'Guardar',
       idTest: this.idTestSelected
     }
-    this.bsModalRef = this.modalService.show(ParametersStoreUpdateComponent, { initialState: initialState, ignoreBackdropClick: true });
+    this.modalService.show(ParametersStoreUpdateComponent, { initialState: initialState, ignoreBackdropClick: true });
   }
 
   updateParameters(parameter: Parameter) {
     const initialState: any = {
       titleModal: 'Actualizar Parámetro',
-      idTitle: this.idTitleSelected,
-      nameTitle: this.nameTitleSelected,
+      idCategory: this.idCategorySelected,
+      nameCategory: this.nameCategorySelected,
       parameter: parameter,
       btnStoreUpdate: 'Actualizar',
       idTest: this.idTestSelected
     }
-    this.bsModalRef = this.modalService.show(ParametersStoreUpdateComponent, { initialState: initialState, ignoreBackdropClick: true });
+    this.modalService.show(ParametersStoreUpdateComponent, { initialState: initialState, ignoreBackdropClick: true });
   }
 
   normalValuesParameters(): void {
-
+    this.modalService.show(NormalValuesComponent, { ignoreBackdropClick: true, class: 'modal-lg' });
   }
 
   toUpdateParameters(): void {
@@ -154,13 +153,13 @@ export class ParametersIndexComponent implements OnInit, OnDestroy {
   }
 
   destroyParameters(id: number, name: string): void {
-    let title: string = 'Parametro';
+    let title: string = 'Parámetro';
     Swal.fire(
       this.swalService.deleteOptions(this.titleCase.transform(name), title)
     ).then(result => {
       if (result.value) {
         this.swalService.deleteLoad(title);
-        this.parameterService.destroyParameters(this.idTitleSelected, id)
+        this.parameterService.destroyParameters(this.idCategorySelected, id)
           .pipe(
             takeUntil(this.onDestroy),
             finalize(() => Swal.close())
@@ -170,7 +169,7 @@ export class ParametersIndexComponent implements OnInit, OnDestroy {
               this.toastr.success(resp.name.toUpperCase(), `${title.toUpperCase()} Eliminado Correctamente`);
               this.gralService.deleteArray(this.parameters, id);
             },
-            () => this.toastr.error('Consulte con el Administrador.', `Error al eliminar: PARAMETROS.`)
+            () => this.toastr.error('Consulte con el Administrador.', `Error al eliminar: PARÁMETROS.`)
           );
       }
     });

@@ -62,15 +62,15 @@ export class ValidationsNameDirective {
     }
   }
 
-  validateUniqueTitle(testId: number): AsyncValidatorFn {
-    this.url = `${URL_GLOBAL}/tests-composeds/${testId}/titles-validate-unique`;
+  validateUniqueCategory(testId: number): AsyncValidatorFn {
+    this.url = `${URL_GLOBAL}/tests-composed/${testId}/categories-validate-unique`;
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       return this.getValidations(control);
     };
   }
 
-  validateUniqueParameter(titleId: number): AsyncValidatorFn {
-    this.url = `${URL_GLOBAL}/tests-composeds-titles/${titleId}/parameters-validate-unique`;
+  validateUniqueParameter(categoryId: number): AsyncValidatorFn {
+    this.url = `${URL_GLOBAL}/categories/${categoryId}/parameters-validate-unique`;
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       return this.getValidations(control);
     }

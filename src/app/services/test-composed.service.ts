@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Study } from '../models/study.model';
 import { TestComposedCollection } from '../models/test-composed-collection.model';
-import { Title } from 'src/app/models/title.model';
+import { Category } from 'src/app/models/category.model';
 import { Parameter } from '../models/parameter.model';
 import { Unit } from '../models/unit.model';
 import { FormGroup } from '@angular/forms';
@@ -42,7 +42,7 @@ export class TestComposedService {
   }
 
   indexTests(formFilter: FormGroup, per_page: number, page: number): Observable<TestComposedCollection> {
-    const url = `${URL_GLOBAL}/tests-composeds`;
+    const url = `${URL_GLOBAL}/tests-composed`;
 
     const params: Params = {
       per_page: per_page,
@@ -55,16 +55,17 @@ export class TestComposedService {
     }
     return this.http.get<TestComposedCollection>(url, { params }).pipe(
       map((response: any) => {
+        console.log(response);
         return new TestComposedCollection(response);
       })
     );
   }
 
   editTests(id: number): Observable<TestComposed> {
-    const url = `${URL_GLOBAL}/tests-composeds/${id}`;
+    const url = `${URL_GLOBAL}/tests-composed/${id}`;
 
     const params: Params = {
-      titles: 'load',
+      categories: 'load',
       study: 'load',
       study_fields: 'name,status'
     }
@@ -73,35 +74,35 @@ export class TestComposedService {
       map((response: any) => {
         response.data.study = new Study(response.data.study);
         response.data.study_id = response.data.study.id;
-        response.data.titles = response.data.titles.map((title: Title) => new Title(title))
+        response.data.categories = response.data.categories.map((category: Category) => new Category(category))
         return new TestComposed(response.data);
       })
     );
   }
 
   showTests(id: number): Observable<TestComposed> {
-    const url = `${URL_GLOBAL}/tests-composeds/${id}`;
+    const url = `${URL_GLOBAL}/tests-composed/${id}`;
 
     const params: Params = {
       study: 'load',
-      titles: 'load',
+      categories: 'load',
       parameters: 'load',
       unit: 'load',
       study_fields: 'name,status',
-      title_fields: 'name,print,note,status',
+      category_fields: 'name,print,note,status',
       test_fields: 'name,price,status',
-      parameter_fields: 'name,type_data,reference_values,options,default_value,status'
+      composed_parameter_fields: 'name,type_data,reference_values,options,default_value,status'
     }
 
     return this.http.get<TestComposed>(url, { params }).pipe(
       map((response: any) => {
         response.data.study = new Study(response.data.study);
-        response.data.titles = response.data.titles.map((title: Title) => {
-          title.parameters = title.parameters.map((parameter: Parameter) => {
+        response.data.categories = response.data.categories.map((category: Category) => {
+          category.parameters = category.parameters.map((parameter: Parameter) => {
             parameter.unit = new Unit(parameter.unit);
             return new Parameter(parameter);
           });
-          return new Title(title);
+          return new Category(category);
         })
         return new TestComposed(response.data);
       })
@@ -109,7 +110,7 @@ export class TestComposedService {
   }
 
   storeTests(test: TestComposed): Observable<TestComposed> {
-    const url = `${URL_GLOBAL}/tests-composeds`;
+    const url = `${URL_GLOBAL}/tests-composed`;
     return this.http.post<TestComposed>(url, test).pipe(
       map((response: any) => {
         return new TestComposed(response.data);
@@ -118,7 +119,7 @@ export class TestComposedService {
   }
 
   updateTests(test: TestComposed): Observable<TestComposed> {
-    const url = `${URL_GLOBAL}/tests-composeds/${test.id}`;
+    const url = `${URL_GLOBAL}/tests-composed/${test.id}`;
     return this.http.put<TestComposed>(url, test).pipe(
       map((response: any) => {
         return new TestComposed(response.data);
@@ -127,7 +128,7 @@ export class TestComposedService {
   }
 
   destroyTests(id: number): Observable<TestComposed> {
-    const url = `${URL_GLOBAL}/tests-composeds/${id}`;
+    const url = `${URL_GLOBAL}/tests-composed/${id}`;
     return this.http.delete<TestComposed>(url).pipe(
       map((response: any) => {
         return new TestComposed(response.data);
