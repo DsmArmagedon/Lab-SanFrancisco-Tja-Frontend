@@ -7,16 +7,16 @@ export class TypeDataPipe implements PipeTransform {
 
   transform(value: any, ...args: any[]): any {
     switch (value) {
-      case 'numerico':
+      case 'numeric':
         return 'Numérico';
         break;
-      case 'parrafo':
+      case 'paragraph':
         return 'Párrafo';
         break;
-      case 'opciones':
+      case 'options':
         return 'Opciones';
         break;
-      case 'texto':
+      case 'text':
         return 'Texto';
         break;
       default:

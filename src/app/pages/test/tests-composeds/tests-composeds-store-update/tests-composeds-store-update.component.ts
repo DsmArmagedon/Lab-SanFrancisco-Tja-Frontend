@@ -2,8 +2,7 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { TestComposedService } from 'src/app/services/test-composed.service';
 import { STORE, UPDATE } from 'src/app/global-variables';
-import { ActivatedRoute, Router } from '@angular/router';
-import { TitlesIndexComponent } from '../titles-index/titles-index.component';
+import { ActivatedRoute } from '@angular/router';
 import { GeneralService } from 'src/app/services/general.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -15,6 +14,7 @@ import { StudyService } from 'src/app/services/study.service';
 import { ValidatorsPattern } from 'src/app/validators/validators-pattern';
 import { Subject } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';
+import { CategoriesIndexComponent } from '../categories-index/categories-index.component';
 
 @Component({
   selector: 'app-tests-composeds-store-update',
@@ -25,7 +25,7 @@ import { takeUntil, finalize } from 'rxjs/operators';
 export class TestsComposedsStoreUpdateComponent implements OnInit, OnDestroy {
 
   @ViewChild('tabsTestComposed', { static: true }) tabsTestComposed: TabsetComponent;
-  @ViewChild(TitlesIndexComponent, { static: true }) titleIndexComponent: TitlesIndexComponent;
+  @ViewChild(CategoriesIndexComponent, { static: true }) categoryIndexComponent: CategoriesIndexComponent;
 
   studiesDB: Array<Study> = []; // Lista de estudios de la base de datos
   formTest: FormGroup;
@@ -59,7 +59,7 @@ export class TestsComposedsStoreUpdateComponent implements OnInit, OnDestroy {
     this.initialState = this.gralService.getDataInitialState(this.route);
     this.formTest = this.formGroupTest();
     this.loadStudiesForm();
-    this.titleIndexComponent.type = this.initialState.type;
+    this.categoryIndexComponent.type = this.initialState.type;
     this.selectTypeFormStoreOrUpdate();
   }
 
@@ -115,7 +115,7 @@ export class TestsComposedsStoreUpdateComponent implements OnInit, OnDestroy {
     this.loadTestComposed = false;
     this.txtStatusSecTestComposed = 'Cargando Prueba';
 
-    this.titleIndexComponent.loadTitles = false;
+    this.categoryIndexComponent.loadCategories = false;
     this.testComposedService.editTests(this.idTestComposed)
       .pipe(
         takeUntil(this.onDestroy),
@@ -129,8 +129,8 @@ export class TestsComposedsStoreUpdateComponent implements OnInit, OnDestroy {
           this.loadTestComposed = true;
 
           this.testComposedService.changeIdNameTestSelected(resp.id, resp.name); // Habilitar los botones de agregar y actualizar de listar títulos.
-          this.titleIndexComponent.loadTitles = this.loadTestComposed;
-          this.titleIndexComponent.loadListTitles();
+          this.categoryIndexComponent.loadCategories = this.loadTestComposed;
+          this.categoryIndexComponent.loadListCategories();
         },
         () => this.toastr.error('Consulte con el Administrador', 'Error al mostrar el formulario para Actualizar la Prueba')
       );

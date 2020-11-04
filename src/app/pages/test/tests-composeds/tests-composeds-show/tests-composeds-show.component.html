@@ -34,40 +34,41 @@
                         </div>
                     </li>
                     <li class="list-group-item">
-                        <b>Títulos:</b>
-                        <div class="alert alert-info" *ngIf="testComposed.titles.length <= 0 && loadTestComposed">No
+                        <b>Categorias:</b>
+                        <div class="alert alert-info" *ngIf="testComposed.categories.length <= 0 && loadTestComposed">No
                             existen
-                            Títulos</div>
+                            Categorias</div>
                     </li>
                 </ul>
             </div>
         </div>
-        <div *ngIf="testComposed.titles.length > 0">
-            <div *ngFor="let title of testComposed?.titles" class="p-1 m-2"
+        <div *ngIf="testComposed.categories.length > 0">
+            <div *ngFor="let category of testComposed?.categories" class="p-1 m-2"
                 style="border: 1px solid #c8ced3; border-top-width: 3px; border-radius: .3rem;">
                 <div class="row">
                     <div class="col-md-12 mt-3">
-                        <b>Título: </b> <i>{{ title.name }}</i>
+                        <b>Categoria: </b> <i>{{ category.name }}</i>
                     </div>
                     <div class="col-md-12">
-                        <b>Nota: </b> <i>{{ title.note }}</i>
+                        <b>Nota: </b> <i>{{ category.note }}</i>
                     </div>
                     <div class="col-md-6 mb-3">
                         <b>Estado: </b> <i>
-                            <div class="badge badge-success" *ngIf="title.status == true">Habilitado</div>
-                            <div class="badge badge-danger" *ngIf="title.status == false">Deshabilitado</div>
+                            <div class="badge badge-success" *ngIf="category.status == true">Habilitado</div>
+                            <div class="badge badge-danger" *ngIf="category.status == false">Deshabilitado</div>
                         </i>
                     </div>
                     <div class="col-md-6 mb-2">
                         <b>Mostrar en el Formulario:</b><i>
-                            <div class="badge badge-success" *ngIf="title.print == true">Sí</div>
-                            <div class="badge badge-danger" *ngIf="title.print == false">No</div>
+                            <div class="badge badge-success" *ngIf="category.print == true">Sí</div>
+                            <div class="badge badge-danger" *ngIf="category.print == false">No</div>
                         </i>
                     </div>
-                    <ng-container *ngIf="title.parameters.length > 0 ;then enabledParameters ;else disabledParameters">
+                    <ng-container
+                        *ngIf="category.parameters.length > 0 ;then enabledParameters ;else disabledParameters">
                     </ng-container>
                     <ng-template #enabledParameters>
-                        <div class="col-md-12" *ngFor="let parameter of title.parameters">
+                        <div class="col-md-12" *ngFor="let parameter of category.parameters">
 
                             <table class="table table-bordered table-sm">
                                 <tr>
@@ -82,10 +83,12 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2"><b>Valores de Referencia: </b>
-                                        <i>{{ parameter.reference_values }}</i></td>
+                                        <div [innerText]="parameter.reference_values"></div>
+                                    </td>
                                     <td><b>Estado: </b>
-                                        <div class="badge badge-success" *ngIf="title.status == true">Habilitado</div>
-                                        <div class="badge badge-danger" *ngIf="title.status == false">Deshabilitado
+                                        <div class="badge badge-success" *ngIf="category.status == true">Habilitado
+                                        </div>
+                                        <div class="badge badge-danger" *ngIf="category.status == false">Deshabilitado
                                         </div>
                                     </td>
                                 </tr>
@@ -94,7 +97,7 @@
                     </ng-template>
                     <ng-template #disabledParameters>
                         <div class="col-md-12">
-                            <div class="alert alert-info"><b>No existen Parámetros</b></div>
+                            <div class="alert alert-info"><b>No existen Categorias</b></div>
                         </div>
                     </ng-template>
                 </div>

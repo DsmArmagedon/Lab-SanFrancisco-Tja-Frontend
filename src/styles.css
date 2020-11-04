@@ -17,7 +17,7 @@
 }
 
 .sidebar {
-    background: #fff;
+    background: rgba(0, 0, 0, .01);
 }
 
 .sidebar .nav-link {
@@ -26,12 +26,8 @@
 }
 
 .sidebar .nav-dropdown.open {
-    background: rgb(86, 192, 216, .1);
-    border-left: 4px solid rgb(86, 192, 216, .8);
-}
-
-.sidebar .nav-dropdown.open>span.nav-link {
-    border-left: 6px solid rgb(86, 192, 216, .8);
+    background: rgba(0, 0, 0, .05);
+    border-left: 6px solid rgba(0, 0, 0, .9);
 }
 
 .sidebar .nav-dropdown.open .nav-link {
@@ -40,27 +36,21 @@
     border-bottom: .2px solid white;
 }
 
-.sidebar .nav-link.nav-dropdown-toggle.active {
-    color: #fff;
-    background: rgb(86, 192, 216);
-}
-
-.sidebar .nav-link.active {
-    color: #fff;
-    background: rgb(86, 192, 216);
-}
-
 .sidebar .nav-dropdown.open .nav-link.active {
     color: #fff;
 }
 
 .sidebar .nav-link:hover {
     color: #fff;
-    background: rgb(86, 192, 216, .7);
+    background: rgba(0, 0, 0, .4);
 }
 
 .sidebar .nav-link {
     padding: .4rem .75rem;
+}
+
+.sidebar .nav-dropdown.open .nav-link:hover {
+    color: #fff;
 }
 
 .alert-validations>.alert.alert-danger {

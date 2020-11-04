@@ -4,8 +4,8 @@
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
-<form [formGroup]="formTitle" (ngSubmit)="saveFormTitle()" autocomplete="off">
-    <div class="modal-body" [ngClass]="{'load-page-visibility':!loadTitle}">
+<form [formGroup]="formCategory" (ngSubmit)="saveFormCategory()" autocomplete="off">
+    <div class="modal-body" [ngClass]="{'load-page-visibility':!loadCategory}">
         <h6>Prueba: {{nameTest}}</h6>
         <div class="row">
             <div class="col-sm-12 ">
@@ -66,20 +66,21 @@
                 <div class="custom-control custom-checkbox">
                     <input class="custom-control-input" [ngClass]="{'invalid': gralService.validation(print)}"
                         formControlName="print" id="print" type="checkbox">
-                    <label class="custom-control-label" for="print">Mostrar Título en Formularios</label>
+                    <label class="custom-control-label" for="print">Mostrar Categoría en Formularios</label>
                 </div>
             </div>
         </div>
     </div>
-    <div class="align-middle-load" *ngIf="!loadTitle">
+    <div class="align-middle-load" *ngIf="!loadCategory">
         <div class="d-inline-block">
-            <app-load [txtLoad]="txtStatusSecTitle"></app-load>
+            <app-load [txtLoad]="txtStatusSecCategory"></app-load>
         </div>
     </div>
-    <div class="modal-footer" [ngClass]="{'load-page-visibility': !loadTitle}">
+    <div class="modal-footer" [ngClass]="{'load-page-visibility': !loadCategory}">
         <button type="button" class="btn btn-outline-danger btn-sm" (click)="bsModalRef.hide()"><i
                 class="fa fa-fw fa-times"></i>Cerrar</button>
-        <button type="submit" class="btn btn-primary btn-sm" [disabled]="formTitle.invalid || formTitle.pending"><i
-                class="fa fa-save"></i> {{ btnStoreUpdate }}</button>
+        <button type="submit" class="btn btn-primary btn-sm"
+            [disabled]="formCategory.invalid || formCategory.pending || !loadCategory"><i class="fa fa-save"></i>
+            {{ btnStoreUpdate }}</button>
     </div>
 </form>

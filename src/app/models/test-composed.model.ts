@@ -1,4 +1,4 @@
-import { Title } from "./title.model";
+import { Category } from "./category.model";
 import { Test, TypeTest } from './test.model';
 import { Study } from './study.model';
 
@@ -11,23 +11,23 @@ interface ITestComposed {
     study_id?: number;
     status?: boolean;
     study?: Study;
-    titles?: Array<Title>;
+    categories?: Array<Category>;
 }
 
 export class TestComposed extends Test implements ITestComposed {
 
-    private _titles?: Array<Title> = [];
+    private _categories?: Array<Category> = [];
 
     constructor(testComposed?: ITestComposed) {
         super(testComposed?.id, testComposed?.name, testComposed?.slug, testComposed?.price, testComposed?.type, testComposed?.study_id, testComposed?.status, testComposed?.study);
-        this._titles = testComposed?.titles ?? [];
+        this._categories = testComposed?.categories ?? [];
     }
 
-    public get titles(): Array<Title> {
-        return this._titles;
+    public get categories(): Array<Category> {
+        return this._categories;
     }
-    public set titles(value: Array<Title>) {
-        this._titles = value;
+    public set categories(value: Array<Category>) {
+        this._categories = value;
     }
 
     toJSON() {

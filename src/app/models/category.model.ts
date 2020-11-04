@@ -1,6 +1,6 @@
 import { Parameter } from './parameter.model';
 
-interface ITitle {
+interface ICategory {
     id?: number;
     name?: string;
     slug?: string;
@@ -11,7 +11,7 @@ interface ITitle {
     parameters?: Array<Parameter>;
 }
 
-export class Title implements ITitle {
+export class Category implements ICategory {
     private _id?: number = null;
     private _name?: string = null;
     private _slug?: string = null;
@@ -21,15 +21,15 @@ export class Title implements ITitle {
     private _test_id?: number = null;
     private _parameters?: Array<Parameter> = [];
 
-    constructor(title?: ITitle) {
-        this._id = title?.id;
-        this._name = title?.name;
-        this._slug = title?.slug;
-        this._print = title?.print;
-        this._note = title?.note;
-        this._status = title?.status;
-        this._test_id = title?.test_id;
-        this._parameters = title?.parameters;
+    constructor(category?: ICategory) {
+        this._id = category?.id;
+        this._name = category?.name;
+        this._slug = category?.slug;
+        this._print = category?.print;
+        this._note = category?.note;
+        this._status = category?.status;
+        this._test_id = category?.test_id;
+        this._parameters = category?.parameters;
     }
 
     public get id(): number {

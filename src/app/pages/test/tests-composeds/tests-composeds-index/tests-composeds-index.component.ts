@@ -76,11 +76,11 @@ export class TestsComposedsIndexComponent implements OnInit, OnDestroy {
   }
 
   updateTest(id: number): void {
-    this.router.navigate(['test/tests-composeds/update', id]);
+    this.router.navigate(['test/tests-composed/update', id]);
   }
 
   showTest(id: number): void {
-    this.router.navigate(['test/tests-composeds/show', id]);
+    this.router.navigate(['test/tests-composed/show', id]);
   }
 
   destroyTest(id: number, name: string): void {

@@ -46,12 +46,12 @@ import { TestsSimplesStoreUpdateComponent } from './tests-simples/tests-simples-
 /* COMPONENTS TEST COMPOSEDS */
 import { TestsComposedsStoreUpdateComponent } from './tests-composeds/tests-composeds-store-update/tests-composeds-store-update.component';
 import { TestsComposedsShowComponent } from './tests-composeds/tests-composeds-show/tests-composeds-show.component';
-import { TitlesIndexComponent } from './tests-composeds/titles-index/titles-index.component';
+import { CategoriesIndexComponent } from './tests-composeds/categories-index/categories-index.component';
 import { ParametersIndexComponent } from './tests-composeds/parameters-index/parameters-index.component';
 import { TestsComposedsIndexComponent } from './tests-composeds/tests-composeds-index/tests-composeds-index.component';
 import { TestsComposedsFilterComponent } from './tests-composeds/tests-composeds-filter/tests-composeds-filter.component';
 import { ParametersStoreUpdateComponent } from './tests-composeds/parameters-store-update/parameters-store-update.component';
-import { TitlesStoreUpdateComponent } from './tests-composeds/titles-store-update/titles-store-update.component';
+import { CategoriesStoreUpdateComponent } from './tests-composeds/categories-store-update/categories-store-update.component';
 import { ParametersShowComponent } from './tests-composeds/parameters-show/parameters-show.component';
 
 /* COMPONENTS NORMAL VALUES */
@@ -79,16 +79,17 @@ import { TypeDataPipe } from '../../pipes/type-data.pipe';
     TestsSimplesIndexComponent,
     TestsSimplesStoreUpdateComponent,
     TestsComposedsStoreUpdateComponent,
-    TitlesIndexComponent,
+    CategoriesIndexComponent,
     ParametersIndexComponent,
     TestsComposedsIndexComponent,
     TestsComposedsFilterComponent,
     ParametersStoreUpdateComponent,
-    TitlesStoreUpdateComponent,
     ParametersShowComponent,
     TypeDataPipe,
     TestsComposedsShowComponent,
-    NormalValuesComponent
+    NormalValuesComponent,
+    CategoriesIndexComponent,
+    CategoriesStoreUpdateComponent
   ],
   imports: [
     CommonModule,

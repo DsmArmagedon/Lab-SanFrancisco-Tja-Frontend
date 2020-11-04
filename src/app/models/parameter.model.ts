@@ -1,7 +1,7 @@
 
 import { Unit } from './unit.model';
 import { TypeData } from './test.model';
-import { Title } from './title.model';
+import { Category } from './category.model';
 
 interface IParameter {
     id?: number;
@@ -12,9 +12,9 @@ interface IParameter {
     default_value?: string;
     status?: boolean;
     unit_id?: number;
-    title_id?: number;
+    category_id?: number;
     unit?: Unit;
-    title?: Title;
+    category?: Category;
 }
 
 export class Parameter implements IParameter {
@@ -26,22 +26,22 @@ export class Parameter implements IParameter {
     private _default_value?: string = null;
     private _status?: boolean = true;
     private _unit_id?: number = null;
-    private _title_id?: number = null;
+    private _category_id?: number = null;
     private _unit?: Unit;
-    private _title?: Title;
+    private _category?: Category;
 
     constructor(parameter?: IParameter) {
-        this._id = parameter?.id;
-        this._name = parameter?.name;
-        this._type_data = parameter?.type_data;
-        this._reference_values = parameter?.reference_values;
-        this._options = parameter?.options;
-        this._default_value = parameter?.default_value;
-        this._status = parameter?.status;
-        this._unit_id = parameter?.unit_id;
-        this._unit = parameter?.unit;
-        this._title_id = parameter?.title_id;
-        this._title = parameter?.title;
+        this._id = parameter?.id ?? null;
+        this._name = parameter?.name ?? null;
+        this._type_data = parameter?.type_data ?? null;
+        this._reference_values = parameter?.reference_values ?? null;
+        this._options = parameter?.options ?? null;
+        this._default_value = parameter?.default_value ?? null;
+        this._status = parameter?.status ?? true;
+        this._unit_id = parameter?.unit_id ?? null;
+        this._unit = parameter?.unit ?? null;
+        this._category_id = parameter?.category_id;
+        this._category = parameter?.category;
     }
 
     public get id(): number {
@@ -100,11 +100,11 @@ export class Parameter implements IParameter {
         this._unit_id = value;
     }
 
-    public get title_id(): number {
-        return this._title_id;
+    public get category_id(): number {
+        return this._category_id;
     }
-    public set title_id(value: number) {
-        this._title_id = value;
+    public set category_id(value: number) {
+        this._category_id = value;
     }
 
     public get unit(): Unit {
@@ -114,11 +114,11 @@ export class Parameter implements IParameter {
         this._unit = value;
     }
 
-    public get title(): Title {
-        return this._title;
+    public get category(): Category {
+        return this._category;
     }
-    public set title(value: Title) {
-        this._title = value;
+    public set category(value: Category) {
+        this._category = value;
     }
 
     toJSON() {

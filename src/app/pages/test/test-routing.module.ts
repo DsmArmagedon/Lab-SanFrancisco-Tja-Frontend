@@ -88,7 +88,7 @@ const routes: Routes = [
         }
       },
       {
-        path: 'tests-composeds',
+        path: 'tests-composed',
         component: TestsComposedsComponent,
         canActivate: [
           LoginGuard

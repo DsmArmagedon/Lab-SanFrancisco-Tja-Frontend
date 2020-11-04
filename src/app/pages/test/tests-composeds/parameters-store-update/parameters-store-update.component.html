@@ -41,14 +41,14 @@
             </div>
             <div class="col-md-7">
                 <div class="form-group">
-                    <label for="title_id">Título *</label>
-                    <app-load-input [loadInput]="loadTitles"></app-load-input>
-                    <ng-select [clearable]="false" *ngIf="loadTitles" placeholder="Seleccione un Título" id="title_id"
-                        bindValue="id" bindLabel="name" [items]="titlesDB" formControlName="title_id"
+                    <label for="category_id">Categoria *</label>
+                    <app-load-input [loadInput]="loadCategories"></app-load-input>
+                    <ng-select [clearable]="false" *ngIf="loadCategories" placeholder="Seleccione un Categoria"
+                        id="category_id" bindValue="id" bindLabel="name" [items]="categoriesDB" formControlName="category_id"
                         (change)="onChange($event)"></ng-select>
-                    <div class="text-invalid" *ngIf="gralService.validation(title_id)">
-                        <div *ngIf="title_id.hasError('required')">
-                            <i>El <b>Título</b> es obligatorio.</i>
+                    <div class="text-invalid" *ngIf="gralService.validation(category_id)">
+                        <div *ngIf="category_id.hasError('required')">
+                            <i>La <b>Categoria</b> es obligatorio.</i>
                         </div>
                     </div>
                 </div>
@@ -59,6 +59,11 @@
                     <ng-select id="type_data" (change)="resetDefaultValue($event)" bindLabel="name" bindValue="id"
                         [items]="typeDataDB" [searchable]="false" [clearable]="false"
                         placeholder="Seleccione un Tipo de Dato" formControlName="type_data"></ng-select>
+                        <div class="text-invalid" *ngIf="gralService.validation(type_data)">
+                            <div *ngIf="type_data.hasError('required')">
+                                <i>El <b>Tipo de Dato</b> es obligatorio.</i>
+                            </div>
+                        </div>
                 </div>
             </div>
             <div class="col-sm-12">

@@ -105,7 +105,7 @@
                                 </div>
                             </div>
                             <sub *ngIf="id.value">Nota: <i>Debe guardar los cambios antes de continuar con la edición de
-                                    Títulos y
+                                    Categorias y
                                     Parámetros.</i></sub>
                         </div>
                         <div class="align-middle-load" *ngIf="!loadTestComposed">
@@ -116,8 +116,8 @@
                     </div>
                 </form>
             </tab>
-            <tab heading="Títulos y Parámetros">
-                <app-titles-index (executeResetFormTestComposed)="resetFormTestComposed()"></app-titles-index>
+            <tab heading="Categorias y Parámetros">
+                <app-categories-index (executeResetFormTestComposed)="resetFormTestComposed()"></app-categories-index>
             </tab>
         </tabset>
     </div>

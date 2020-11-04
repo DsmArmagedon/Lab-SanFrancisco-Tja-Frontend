@@ -111,7 +111,7 @@ export class SiderbarComponent implements OnInit {
                         label: 'Pruebas Compuestas',
                         icon: 'fa fa-fw fa-file-text-o',
                         visible: true,
-                        routerLink: ['/test/tests-composeds']
+                        routerLink: ['/test/tests-composed']
                     },
                     {
                         label: 'Unidades',

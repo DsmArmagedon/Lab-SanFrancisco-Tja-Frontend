@@ -18,13 +18,13 @@
             <div class="card-body card-personality">
                 <div class="row justify-content-between">
                     <div class="col-md-4">
-                        <h5>Títulos</h5>
+                        <h5>Categorías</h5>
                     </div>
                     <div class="col-md-4 col-lg-5 text-right">
                         <button type="button" class="btn btn-outline-info btn-sm" [disabled]="idTestSelected == null"
-                            (click)="toUpdateTitles()"><i class="fa fa-fw fa-refresh"></i>Actualizar</button>
+                            (click)="toUpdateCategories()"><i class="fa fa-fw fa-refresh"></i>Actualizar</button>
                         <button type="button" class="btn btn-outline-success btn-sm ml-2"
-                            [disabled]="idTestSelected == null" (click)="storeTitles()"><i
+                            [disabled]="idTestSelected == null" (click)="storeCategories()"><i
                                 class="fa fa-fw fa-plus"></i>Añadir</button>
                     </div>
                 </div>
@@ -55,21 +55,21 @@
                             Acciones
                         </td>
                     </thead>
-                    <ng-container *ngIf="loadTitles; then tbody; else load">
+                    <ng-container *ngIf="loadCategories; then tbody; else load">
                     </ng-container>
 
                     <ng-template #tbody>
-                        <ng-container *ngIf="titles.length > 0; then withValues; else nothingValues">
+                        <ng-container *ngIf="categories.length > 0; then withValues; else nothingValues">
                         </ng-container>
                         <ng-template #withValues>
                             <tbody>
-                                <tr *ngFor="let title of titles"
-                                    [ngClass]="{'table-info': selectedRowIndex == title.id}">
+                                <tr *ngFor="let category of categories"
+                                    [ngClass]="{'table-info': selectedRowIndex == category.id}">
                                     <td>
-                                        {{ title.name }}
+                                        {{ category.name }}
                                     </td>
                                     <td class="text-center">
-                                        <ng-container *ngIf="title.print; then si; else no">
+                                        <ng-container *ngIf="category.print; then si; else no">
                                         </ng-container>
                                         <ng-template #si>
                                             <div class="badge badge-success">Si</div>
@@ -79,12 +79,12 @@
                                         </ng-template>
                                     </td>
                                     <td class="text-center">
-                                        <button class="btn btn-light btn-sm" *ngIf="title.note" popoverTitle="Nota"
-                                            popover="{{title.note}}" placement="top" outsideClick="true"><i
-                                                class="fa fa-fw fa-info"></i></button>
+                                        <button class="btn btn-light btn-sm" *ngIf="category.note"
+                                            popoverCategory="Nota" popover="{{category.note}}" placement="top"
+                                            outsideClick="true"><i class="fa fa-fw fa-info"></i></button>
                                     </td>
                                     <td class="text-center">
-                                        <ng-container *ngIf="title.status; then habilitado; else deshabilitado">
+                                        <ng-container *ngIf="category.status; then habilitado; else deshabilitado">
                                         </ng-container>
                                         <ng-template #habilitado>
                                             <div class="badge badge-success">Habilitado</div>
@@ -95,13 +95,13 @@
                                     </td>
                                     <td class="text-right">
                                         <button type="button" class="btn btn-warning btn-sm mr-1"
-                                            (click)="showParameters(title)" [disabled]="disabledButtonListParameters"
+                                            (click)="showParameters(category)" [disabled]="disabledButtonListParameters"
                                             title="Mostrar Parámetros"><i class="fa fa-fw fa-list fa-xs"></i> </button>
                                         <button type="button" class="btn btn-info btn-sm mr-1"
-                                            (click)="updateTitles(title)" title="Editar"><i
+                                            (click)="updateCategories(category)" title="Editar"><i
                                                 class="fa fa-fw fa-edit fa-xs"></i> </button>
                                         <button type="button" class="btn btn-danger btn-sm" title="Eliminar"
-                                            (click)="destroyTitles(title.id, title.name)"><i
+                                            (click)="destroyCategories(category.id, category.name)"><i
                                                 class="fa fa-fw fa-trash fa-xs"></i>
                                         </button>
                                     </td>
@@ -113,7 +113,7 @@
                                 <td colspan="8">
                                     <div class="alert alert-success">
                                         <div class="row justify-content-center">
-                                            <h5>No existen títulos registrados.</h5>
+                                            <h5>No existen categorías registradas.</h5>
                                         </div>
                                     </div>
                                 </td>
@@ -124,7 +124,7 @@
                         <tr>
                             <td colspan="5">
                                 <div class="row mt-3 justify-content-center">
-                                    <app-load [txtLoad]="'Cargando Títulos'"></app-load>
+                                    <app-load [txtLoad]="'Cargando Categorías'"></app-load>
                                 </div>
                             </td>
                         </tr>
